@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.src.utils import BaseOrjsonModel
 from db.base import get_notification_storage
 from models.content import ReviewContent
-from utils.notification_storage import NotificationStorage
+from app.src.utils.notification_storage import NotificationStorage
 
 
 class ReviewSaveSchema(BaseOrjsonModel):

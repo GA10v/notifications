@@ -23,5 +23,5 @@ services:
     ports:
       - "5432:5432"
 
-#volumes:
-#  rabbitmq_data:
+volumes:
+  rabbitmq_data:

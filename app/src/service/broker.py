@@ -1,16 +1,14 @@
-import json
-
 import aio_pika
-from aio_pika import ExchangeType, Message, connection
-from core.config import settings
+from aio_pika import ExchangeType, connection
+from app.src.core.config import settings
 
 
-async def get_connection() -> connection:
+async def get_broker_connection() -> connection:
     return await aio_pika.connect_robust(settings.rabbit.uri)
 
 
 async def init_queue() -> None:
-    connection = await get_connection()
+    connection = await get_broker_connection()
     channel = await connection.channel()
     # declare exchanges
     notific_exchange_1 = await channel.declare_exchange(
@@ -35,11 +33,3 @@ async def init_queue() -> None:
     # bind queues
     await notific_queue_1.bind(notific_exchange_1)
     await notific_queue_2.bind(notific_exchange_2)
-
-
-async def send(msg: dict, queue: str) -> None:
-    connection = await get_connection()
-    channel = await connection.channel()
-
-    await channel.default_exchange.publish(Message(json.dumps(msg).encode('utf-8')), routing_key=queue)
-    await connection.close()

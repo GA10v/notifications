@@ -1,7 +1,7 @@
 import json
 
 import pika
-from core.config import settings
+from app.src.core.config import settings
 
 
 class RabbitBase:
@@ -28,6 +28,7 @@ class Worker(RabbitBase):
         ch.basic_ack(delivery_tag=method.delivery_tag)
 
     def start(self):
+        print('start')
         channel = self._open()
         channel.queue_declare(queue=self.queue, durable=True)
         channel.basic_consume(self.queue, self.callback)

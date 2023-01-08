@@ -3,6 +3,7 @@ import enum
 from sqlalchemy.dialects.postgresql import UUID, JSON
 from sqlalchemy import Column, Enum
 from db.base import Base
+from utils import BaseOrjsonModel
 
 
 class ContentType(enum.Enum):
@@ -18,3 +19,8 @@ class Content(Base):
     content_id = Column(UUID(as_uuid=True))
     content_type = Column(Enum(ContentType))
     content = Column(JSON())
+
+
+class ReviewContent(BaseOrjsonModel):
+    like_counter: int
+    template_path: str

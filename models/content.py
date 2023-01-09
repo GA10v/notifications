@@ -9,6 +9,7 @@ from app.src.utils import BaseOrjsonModel
 class ContentType(enum.Enum):
     new_film = 'new_film'
     new_user = 'new_user'
+    new_episode = 'new_episode'
     review_like = 'review_like'
 
 

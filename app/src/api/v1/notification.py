@@ -51,6 +51,7 @@ class GroupMessageInfo(BaseOrjsonModel):
     notification_id: uuid.UUID
     content: dict
     user_role: str
+    template_path: str
 
 
 @router.post('/group_message')

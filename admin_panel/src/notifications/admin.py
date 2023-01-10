@@ -1,135 +1,156 @@
-import json
-import requests
-from enum import Enum
+import datetime
+from http import HTTPStatus
 
-from admin_views.admin import AdminViews
+import requests
 from django import forms
 from django.conf import settings
 from django.contrib import admin
 from django.db import models
-from django.shortcuts import redirect
 from django_json_widget.widgets import JSONEditorWidget
+from jinja2 import Template
+from jinja2.exceptions import TemplateSyntaxError
 
-from .models import Notification, Subscription, User as UserNotification, ContentType
+from .models import Content, ContentType, Notification, Subscription
+from .models import User as UserNotification
 
 
+@admin.register(Notification)
 class NotificationAdmin(admin.ModelAdmin):
-    """Общий редактор уведомлений"""
+    pass
+
+
+@admin.register(Content)
+class ContentAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.JSONField: {'widget': JSONEditorWidget},
     }
 
 
-ART = (
-    ('film', 'Film'),
-    ('series', 'Series'),
-)
+@admin.register(Subscription)
+class SubscriptionAdmin(admin.ModelAdmin):
+    pass
 
 
-class NotificationNewEpisodeForm(forms.ModelForm):
+@admin.register(UserNotification)
+class UserNotificationAdmin(admin.ModelAdmin):
+    pass
+
+
+class Arts(models.TextChoices):
+    FILM = 'film', 'Film'
+    SERIES = 'series', 'Series'
+
+
+class NewEpisodeMailForm(forms.ModelForm):
     class Meta:
-        model = Notification
-        fields = ['last_notification_send', 'art', 'event']
+        model = Content
+        fields = ['content_id', 'art', 'event']
 
-    art = forms.ChoiceField(choices=ART)
+    art = forms.ChoiceField(choices=Arts.choices)
     event = forms.CharField(widget=forms.Textarea)
 
     def save(self, commit=True):
+        content_id = self.cleaned_data.get('content_id')
         content_type = ContentType.NEW_FILM
+        content = {'art': self.cleaned_data.get('art'), 'event': self.cleaned_data.get('event')}
 
-        content = {
-            'art': self.cleaned_data.get('art'),
-            'template_path': self.cleaned_data.get('event')
-        }
+        content_instance = super().save(commit=False)
+        content_instance.content_type = content_type
+        content_instance.content = content
+        commit_content_instance = super().save(commit=commit)
 
-        instance = super().save(commit=False)
-        instance.content_type = content_type
-        instance.content = content
-        commit_instance = super().save(commit=commit)
+        nots_instance = Notification(content_id=content_id, content_type=content_type)
+        nots_instance.save()
 
-        payload = {
-            'notification_id': commit_instance.id,
-            'content': content
-        }
-        requests.post('...', data=payload)
+        payload = {'notification_id': str(nots_instance.notification_id), 'content': {}}
+        response = requests.post(settings.API_URL + settings.API_NEW_FILM_MAIL_ENDPOINT, json=payload)
+        assert response.status_code == HTTPStatus.OK
 
-        return commit_instance
+        return commit_content_instance
 
 
-class NotificationNewEpisodeAdmin(admin.ModelAdmin):
+class NewEpisodeMailAdmin(admin.ModelAdmin):
     """Редактор уведомлений по новому фильму или по новому сериалу"""
-    form = NotificationNewEpisodeForm
+
+    form = NewEpisodeMailForm
 
     def get_queryset(self, request):
-        return Notification.objects.filter(content_type=ContentType.NEW_FILM)
+        return self.model.objects.filter(content_type=ContentType.NEW_FILM)
 
 
-USER_ROLES = (
-    ('unauth', 'Unauthorized'),
-    ('sub', 'Subscribers'),
-    ('mod', 'Moderators'),
-    ('all', 'All')
-)
+class UserRoles(models.TextChoices):
+    UNAUTH = 'unauth', 'Unauthorized'
+    SUB = 'sub', 'Subscribers'
+    MOD = 'mod', 'Moderators'
+    ALL = 'all', 'All'
 
 
-class NotificationExtraForm(forms.ModelForm):
+class CustomMailForm(forms.ModelForm):
     class Meta:
-        model = Notification
-        fields = ['last_notification_send', 'user_role', 'template']
+        model = Content
+        fields = ['content_id', 'user_role', 'template']
 
-    user_role = forms.ChoiceField(choices=USER_ROLES)
+    user_role = forms.ChoiceField(choices=UserRoles.choices)
     template = forms.CharField(widget=forms.Textarea)
 
     @staticmethod
     def validate_template(template):
-        return True
+        try:
+            Template(template)
+        except TemplateSyntaxError:
+            raise forms.ValidationError('Template has incorrect syntax')
 
     @staticmethod
     def save_template_file(template):
-        template_name = 'example.html'
+        template_name = f'custom_mail_{datetime.datetime.now().isoformat()}.html'
         with open(settings.TEMPLATE_DIR / template_name, mode='w', encoding='utf-8') as f:
             f.write(template)
         return template_name
 
+    def clean_template(self):
+        template = self.cleaned_data.get('template')
+        self.validate_template(template)
+        return template
+
     def save(self, commit=True):
-        content_type = ContentType.EXTRA_MAIL
+        content_id = self.cleaned_data.get('content_id')
+        content_type = ContentType.CUSTOM_MAIL
         user_role = self.cleaned_data.get('user_role')
         template = self.cleaned_data.get('template')
 
-        if not self.validate_template(template):
-            pass
+        self.validate_template(template)
 
         template_path = self.save_template_file(template)
 
-        content = {
-            'user_role': user_role,
-            'template_path': template_path
-        }
+        content = {'user_role': user_role, 'template_path': template_path}
 
-        instance = super().save(commit=False)
-        instance.content_type = content_type
-        instance.content = content
-        commit_instance = super().save(commit=commit)
+        content_instance = super().save(commit=False)
+        content_instance.content_type = content_type
+        content_instance.content = content
+        commit_content_instance = super().save(commit=commit)
 
-        payload = {
-            'notification_id': commit_instance.id,
-            'content': content
-        }
-        requests.post('...', data=payload)
+        nots_instance = Notification(content_id=content_id, content_type=content_type)
+        nots_instance.save()
 
-        return commit_instance
+        payload = {'notification_id': str(nots_instance.notification_id), 'content': content}
+        response = requests.post(settings.API_URL + settings.API_CUSTOM_MAIL_ENDPOINT, json=payload)
+        assert response.status_code == HTTPStatus.OK
+
+        return commit_content_instance
 
 
-class NotificationExtraAdmin(admin.ModelAdmin):
-    """Редактор внеочередной рассылки"""
-    form = NotificationExtraForm
+class CustomMailAdmin(admin.ModelAdmin):
+    """Редактор групповой рассылки"""
+
+    form = CustomMailForm
 
     def get_queryset(self, request):
-        return Notification.objects.filter(content_type=ContentType.EXTRA_MAIL)
+        return self.model.objects.filter(content_type=ContentType.CUSTOM_MAIL)
 
 
 def create_modeladmin(modeladmin, name, model):
     """Регистрирует разные экземпляры админки для одной модели"""
+
     class Meta:
         proxy = True
         app_label = model._meta.app_label
@@ -142,17 +163,5 @@ def create_modeladmin(modeladmin, name, model):
     return modeladmin
 
 
-create_modeladmin(NotificationAdmin, name='notification-all', model=Notification)
-create_modeladmin(NotificationNewEpisodeAdmin, name='notification-new', model=Notification)
-create_modeladmin(NotificationExtraAdmin, name='notification-extra', model=Notification)
-
-
-@admin.register(Subscription)
-class SubscriptionAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(UserNotification)
-class UserNotificationAdmin(admin.ModelAdmin):
-    pass
-
+create_modeladmin(NewEpisodeMailAdmin, name='NewEpisodeMail', model=Content)
+create_modeladmin(CustomMailAdmin, name='CustomMail', model=Content)

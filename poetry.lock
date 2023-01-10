@@ -429,6 +429,20 @@ files = [
 ]
 
 [[package]]
+name = "connection"
+version = "2021.7.20"
+description = ""
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "connection-2021.7.20.tar.gz", hash = "sha256:3743d721b0728a08d73488c7ae2fe207ac87a8c731c4f8e6d34d6408cb15d122"},
+]
+
+[package.dependencies]
+requests = "*"
+
+[[package]]
 name = "distlib"
 version = "0.3.6"
 description = "Distribution utilities"
@@ -2186,4 +2200,4 @@ tokenize-rt = ">=2.1"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "66e02569ab36e878a13099105fa26e4b3a6a810cb1f7f5c1f02b6112fcfbb1cf"
+content-hash = "641445daca9cf8fb654250ffbbc8bfe949387382a1339cb1eadb290d9646b8d7"

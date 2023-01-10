@@ -99,6 +99,6 @@ class FakeUserInfo(UserInfoProtocol):
 def get_user_service() -> UserInfoProtocol:
     debug_service = True
     if debug_service:
-        return UserInfo()
-    else:
         return FakeUserInfo()
+    else:
+        return UserInfo()

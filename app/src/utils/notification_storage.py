@@ -1,3 +1,4 @@
+import datetime
 from typing import Optional
 from uuid import UUID
 from abc import ABC, abstractmethod
@@ -22,7 +23,10 @@ class NotificationStorage(AbsNotificationStorage):
         self.session = session
 
     async def registrate_review_notification(self, content_id: UUID, user_id: UUID) -> None:
-        notification = Notification(content_id=content_id, content_type=ContentType.review_like)
+        notification = Notification(content_id=content_id,
+                                    content_type=ContentType.review_like,
+                                    last_update=datetime.datetime.utcnow(),
+                                    )
         self.session.add(notification)
         await self.session.commit()
         subscription = Subscription(user_id=user_id, notification_id=notification.notification_id)

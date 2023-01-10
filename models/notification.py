@@ -1,6 +1,6 @@
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy import Column, Enum, DateTime
+from sqlalchemy import Column, Enum, DateTime, Index
 from db.base import Base
 from models.content import ContentType
 
@@ -13,3 +13,7 @@ class Notification(Base):
     content_type = Column(Enum(ContentType))
     last_update = Column(DateTime(), nullable=True)
     last_notification_send = Column(DateTime(), nullable=True)
+
+    __table_args__ = (
+        Index('idx_notification', content_id, content_type, unique=True),
+    )

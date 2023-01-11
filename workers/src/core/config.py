@@ -40,10 +40,10 @@ class RabbitMQSettings(BaseConfig):
 
 
 class SMTPSettings(BaseConfig):
-    HOST: str = 'smtp.yandex.ru'
-    PORT: int = 465
-    USER: str
-    PASSWODR: str
+    HOST: str = 'localhost'
+    PORT: int = 8025
+    USER: str = 'LebASer'
+    PASSWODR: str = 'vgqcfleohcdxcawk'
 
     class Config:
         env_prefix = 'SMTP_'

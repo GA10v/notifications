@@ -44,5 +44,6 @@ class WelcomeWorker:
             await self.db_service.confirm_welcome_send_message(UserWelcomeSchema(**data).user_id)
 
     async def run(self):
+        await self.sender.connect()
         await self.rabbit.consume(self.queue, self.handling_message)
         await self.sender.disconnect()

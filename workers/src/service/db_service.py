@@ -21,3 +21,12 @@ class DBService:
         notification.last_notification_send = datetime.datetime.utcnow()
         self.session.add(notification)
         await self.session.commit()
+
+    async def confirm_review_send_message(self, notification_id: UUID):
+        result = await self.session.execute(select(Notification).where(
+                Notification.notification_id == notification_id)
+        )
+        notification = result.scalars().all()[0]
+        notification.last_notification_send = datetime.datetime.utcnow()
+        self.session.add(notification)
+        await self.session.commit()

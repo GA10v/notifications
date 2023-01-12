@@ -13,7 +13,9 @@ async def main():
     sender_service = EmailSender()
     queue = settings.rabbit.QUEUE_REVIEW
 
-    worker = ReviewWorker(rabbit_service=rabbit_service, sender_service=sender_service, queue_name=queue.lower())
+    worker = ReviewWorker(rabbit_service=rabbit_service,
+                          sender_service=sender_service,
+                          queue_name=queue.lower())
     await worker.run()
 
 

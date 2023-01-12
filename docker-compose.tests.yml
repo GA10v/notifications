@@ -1,0 +1,79 @@
+version: '3'
+services:
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: test_rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq/
+    env_file:
+      - .env
+    healthcheck:
+      test: nc -z localhost 5672 || exit -1
+      interval: 5s
+      timeout: 10s
+      retries: 10
+    restart: always
+
+  postgres:
+    image: postgres:13.3
+    container_name: test_postgres
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+
+  fastapi:
+    build: .
+    image: project_image:latest
+    container_name: test_fastapi
+    entrypoint: sh -c "gunicorn -w 4 -b 0.0.0.0:8080 -k uvicorn.workers.UvicornWorker app.src.main:app"
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    restart: on-failure
+
+  django-migrate:
+    image: project_image:latest
+    container_name: test_migrate
+    entrypoint: sh -c "python admin_panel/src/manage.py migrate"
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: on-failure
+
+  tests:
+    image: project_image:latest
+    container_name: nots_tests
+    entrypoint: sh -c "pytest -s app/tests/functional/src"
+    env_file:
+      - .env
+    depends_on:
+      django-migrate:
+        condition: service_completed_successfully
+      fastapi:
+        condition: service_started
+    restart: on-failure
+
+volumes:
+  rabbitmq_data:

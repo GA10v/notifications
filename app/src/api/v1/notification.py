@@ -4,6 +4,7 @@ import uuid
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
 
+from app.src.service.admin import AdminRequestInfo, AdminService, get_admin_service
 from app.src.service.review import (ReviewSaveSchema, get_review_service, ReviewService,
                                     ReviewContentSchema, ReviewAnswerSchema, ContentAnswerSchema)
 from app.src.service.user import UserWelcomeSchema, WelcomeUserService, get_welcome_service
@@ -37,23 +38,15 @@ async def welcome_user(user_info: UserWelcomeSchema,
     return user_info
 
 
-class NewEpisodeInfo(BaseOrjsonModel):
-    notification_id: uuid.UUID
-    content: dict
-
-
 @router.post('/new_episode')
-async def send_new_episode(new_episode_info: NewEpisodeInfo):
-    # Имея notification_id - найду всех юзеров подписанных на событие и отправлю им content
-    ...
-
-
-class GroupMessageInfo(BaseOrjsonModel):
-    notification_id: uuid.UUID
-    content: dict
+async def send_new_episode(new_episode_info: AdminRequestInfo,
+                           admin_service: AdminService = Depends(get_admin_service)):
+    await admin_service.send_new_episode(new_episode_info)
+    return JSONResponse({'msg': 'New episode sent'}, status_code=200)
 
 
 @router.post('/group_message')
-async def send_group_message(group_message_info: GroupMessageInfo):
-    # Имея user_role - запрошу всех пользователей с этой ролью и отправлю content
-    ...
+async def send_group_message(group_message_info: AdminRequestInfo,
+                             admin_service: AdminService = Depends(get_admin_service)):
+    await admin_service.send_group_message(group_message_info)
+    return JSONResponse({'msg': 'Group message sent'}, status_code=200)

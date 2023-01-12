@@ -1,5 +1,6 @@
 import uuid
 from abc import ABC, abstractmethod
+from enum import Enum
 from uuid import uuid4
 
 import jwt
@@ -25,6 +26,13 @@ class UserInfoSchema(BaseModel):
     time_zone: str
 
 
+class UserRole(Enum):
+    UNAUTHORIZED = 'unauth'
+    SUBSCRIBERS = 'sub'
+    MODERATORS = 'mod'
+    ALL = 'all'
+
+
 class UserInfoProtocol(ABC):
     @abstractmethod
     def connect(self):
@@ -36,6 +44,10 @@ class UserInfoProtocol(ABC):
 
     @abstractmethod
     def get_users_info(self, users_id: list[str | None]) -> list[UserInfoSchema]:
+        ...
+
+    @abstractmethod
+    def get_users_info_by_role(self, user_role: UserRole) -> list[UserInfoSchema]:
         ...
 
 
@@ -67,6 +79,9 @@ class UserInfo(UserInfoProtocol):
     def get_users_info(self, users_id: list[str | None]) -> list[UserInfoSchema]:
         ...
 
+    def get_users_info_by_role(self, user_role: UserRole) -> list[UserInfoSchema]:
+        ...
+
 
 class FakeUserInfo(UserInfoProtocol):
     def connect(self):
@@ -89,6 +104,14 @@ class FakeUserInfo(UserInfoProtocol):
         )
 
     def get_users_info(self, users_id: list[str | None]) -> list[UserInfoSchema]:
+        users = []
+        for user_id in users_id:
+            users.append(self.get_user_info(user_id=user_id))
+
+        return users
+
+    def get_users_info_by_role(self, user_role: UserRole) -> list[UserInfoSchema]:
+        users_id = [str(uuid4()) for _ in range(20)]
         users = []
         for user_id in users_id:
             users.append(self.get_user_info(user_id=user_id))

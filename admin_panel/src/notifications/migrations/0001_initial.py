@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
                 ('notification_id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
                 ('content_id', models.UUIDField(db_index=True)),
                 ('content_type', models.CharField(choices=[('new_film', 'New Film'), ('new_user', 'New User'), ('review_like', 'Review Like'), ('custom', 'Custom Mail')], max_length=15)),
-                ('last_update', models.DateTimeField(auto_now=True)),
+                ('last_update', models.DateTimeField(auto_now=True, null=True)),
                 ('last_notification_send', models.DateTimeField(blank=True, null=True)),
             ],
             options={

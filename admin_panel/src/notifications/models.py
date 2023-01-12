@@ -14,7 +14,7 @@ class Notification(models.Model):
     notification_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     content_id = models.UUIDField(db_index=True)
     content_type = models.CharField(choices=ContentType.choices, max_length=15)
-    last_update = models.DateTimeField(auto_now=True)
+    last_update = models.DateTimeField(auto_now=True, null=True)
     last_notification_send = models.DateTimeField(blank=True, null=True)
 
     class Meta:

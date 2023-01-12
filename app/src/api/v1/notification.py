@@ -1,3 +1,4 @@
+import json
 import uuid
 
 from fastapi import APIRouter, Depends
@@ -16,8 +17,8 @@ async def save_review_notification(review_info: ReviewSaveSchema,
                                    review_service: ReviewService = Depends(get_review_service)):
     review_answer = await review_service.save_review_notification(review_info)
     if review_answer.status:
-        return JSONResponse(review_answer.json(), status_code=200)
-    return JSONResponse(review_answer.json(), status_code=409)
+        return JSONResponse(json.loads(review_answer.json()), status_code=200)
+    return JSONResponse(json.loads(review_answer.json()), status_code=409)
 
 
 @router.put('/review', response_model=ContentAnswerSchema)
@@ -25,8 +26,8 @@ async def add_review_content(review_content: ReviewContentSchema,
                              review_service: ReviewService = Depends(get_review_service)):
     review_content = await review_service.add_review_content(review_content)
     if review_content.status:
-        return JSONResponse(review_content.json(), status_code=200)
-    return JSONResponse(review_content.json(), status_code=201)
+        return JSONResponse(json.loads(review_content.json()), status_code=200)
+    return JSONResponse(json.loads(review_content.json()), status_code=201)
 
 
 @router.post('/welcome')

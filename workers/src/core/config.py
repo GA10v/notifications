@@ -23,11 +23,8 @@ class RabbitMQSettings(BaseConfig):
     PASSWORD: str = 'guest'
     HOST: str = 'localhost'
     PORT: int = 5672
-    QUEUES: list[str] = [
-        'QUEUE_1',
-    ]
-    EXCHENGE_1: str = 'EXCHENGE_1'
-    QUEUE_1: str = 'QUEUE_1'
+    EXCHENGE_WELLCOME: str = 'EXCHENGE_1'
+    QUEUE_WELLCOME: str = 'QUEUE_WELLCOME'
     EXCHENGE_2: str = 'EXCHENGE_2'
     QUEUE_2: str = 'QUEUE_2'
 

@@ -11,9 +11,8 @@ async def main():
     rabbit_connection = await aio_pika.connect_robust(settings.rabbit.uri)
     rabbit_service = RabbitService(rabbit_connection)
     sender_service = EmailSender()
-    queues = settings.rabbit.QUEUES
+    queue = settings.rabbit.QUEUE_WELLCOME
 
-    queue = queues[0]
     worker = WelcomeWorker(rabbit_service=rabbit_service, sender_service=sender_service, queue_name=queue.lower())
     await worker.run()
 

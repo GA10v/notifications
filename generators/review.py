@@ -75,7 +75,7 @@ class ReviewNotifications:
             await channel.default_exchange.publish(
                 Message(
                     json.dumps(notifications).encode('utf-8')),
-                routing_key=settings.rabbit.QUEUE_1.lower()
+                routing_key=settings.rabbit.QUEUE_REVIEW.lower()
             )
             await self.broker.close()
 

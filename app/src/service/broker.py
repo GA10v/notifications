@@ -17,7 +17,7 @@ async def init_queue() -> None:
         durable=True,
     )
     notific_exchange_2 = await channel.declare_exchange(
-        settings.rabbit.EXCHENGE_2.lower(),
+        settings.rabbit.EXCHENGE_REVIEW.lower(),
         ExchangeType.DIRECT,
         durable=True,
     )
@@ -27,7 +27,7 @@ async def init_queue() -> None:
         durable=True,
     )
     notific_queue_2 = await channel.declare_queue(
-        settings.rabbit.QUEUE_2.lower(),
+        settings.rabbit.QUEUE_REVIEW.lower(),
         durable=True,
     )
     # bind queues

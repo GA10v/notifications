@@ -25,8 +25,8 @@ class RabbitMQSettings(BaseConfig):
     PORT: int = 5672
     EXCHENGE_WELLCOME: str = 'EXCHENGE_1'
     QUEUE_WELLCOME: str = 'QUEUE_WELLCOME'
-    EXCHENGE_2: str = 'EXCHENGE_2'
-    QUEUE_2: str = 'QUEUE_2'
+    EXCHENGE_REVIEW: str = 'EXCHENGE_REVIEW'
+    QUEUE_REVIEW: str = 'QUEUE_REVIEW'
 
     @property
     def uri(self):

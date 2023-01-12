@@ -55,7 +55,10 @@ class NotificationStorage(AbsNotificationStorage):
         await self.session.commit()
 
     async def registrate_welcome_notification(self, user_id: UUID):
-        notification = Notification(content_id=user_id, content_type=ContentType.new_user)
+        notification = Notification(content_id=user_id,
+                                    content_type=ContentType.new_user,
+                                    last_update=datetime.datetime.utcnow(),
+                                    )
         self.session.add(notification)
         await self.session.commit()
         subscription = Subscription(user_id=user_id, notification_id=notification.notification_id)

@@ -45,6 +45,9 @@ websockets = "10.4"
 yarl = "1.8.2"
 requests = "^2.28.1"
 connection = "^2021.7.20"
+django = "3.2"
+django-json-widget = "^1.1.1"
+gunicorn = "^20.1.0"
 aiosmtplib = "^2.0.1"
 
 

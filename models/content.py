@@ -1,6 +1,6 @@
 import uuid
 import enum
-from sqlalchemy.dialects.postgresql import UUID, JSONB
+from sqlalchemy.dialects.postgresql import UUID, JSON
 from sqlalchemy import Column, Enum, Index
 from db.base import Base
 from app.src.utils import BaseOrjsonModel
@@ -9,8 +9,8 @@ from app.src.utils import BaseOrjsonModel
 class ContentType(enum.Enum):
     new_film = 'new_film'
     new_user = 'new_user'
-    new_episode = 'new_episode'
     review_like = 'review_like'
+    custom_mail = 'custom'
 
 
 class Content(Base):
@@ -19,7 +19,7 @@ class Content(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
     content_id = Column(UUID(as_uuid=True))
     content_type = Column(Enum(ContentType))
-    content = Column(JSONB())
+    content = Column(JSON())
 
     __table_args__ = (
         Index('idx_content', content_id, content_type, unique=True),

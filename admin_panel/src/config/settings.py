@@ -3,11 +3,11 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-!#fj#luh6+=4un$h((b_j5cf3hl$&%62@4%tkvb#)71a%%!gdy')
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
-DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', 'true') == 'true'
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -52,19 +52,21 @@ TEMPLATES = [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME', 'app'),
-        'USER': os.environ.get('DB_USER', 'user'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', 'password'),
-        'HOST': os.environ.get('DB_HOST', '127.0.0.1'),
-        'PORT': os.environ.get('DB_PORT', 5432),
+        'NAME': os.environ.get('POSTGRES_DB'),
+        'USER': os.environ.get('POSTGRES_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        'HOST': os.environ.get('POSTGRES_HOST', '127.0.0.1'),
+        'PORT': os.environ.get('POSTGRES_PORT', 5432),
     },
 }
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-API_URL = 'http://localhost:8080'
-API_NEW_FILM_MAIL_ENDPOINT = '/app/v1/notification/new_episode'
-API_CUSTOM_MAIL_ENDPOINT = '/app/v1/notification/group_message'
+API_URL = f"http://{os.environ.get('FASTAPI_HOST')}:{os.environ.get('FASTAPI_PORT')}"
+API_NEW_FILM_MAIL_ENDPOINT = f"{os.environ.get('FASTAPI_NOTIFIC_PREFIX')}/" \
+                             f"{os.environ.get('FASTAPI_NOTIFIC_NEW_EPISODE')}"
+API_CUSTOM_MAIL_ENDPOINT = f"{os.environ.get('FASTAPI_NOTIFIC_PREFIX')}/" \
+                           f"{os.environ.get('FASTAPI_NOTIFIC_GROUP_MESSAGE')}"
 
 LANGUAGE_CODE = 'en-US'
 
@@ -78,5 +80,5 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = BASE_DIR / "static"
 STATIC_URL = '/static/'

@@ -1,3 +1,4 @@
+import uuid
 from abc import ABC, abstractmethod
 from email.message import EmailMessage
 from pathlib import Path
@@ -9,7 +10,7 @@ from jinja2 import Environment, FileSystemLoader
 
 class SenderProtocol(ABC):
     @abstractmethod
-    async def send(self, data) -> bool:
+    async def send(self, data, template_path: Path, template_name: str) -> bool:
         ...
 
     @abstractmethod
@@ -44,14 +45,14 @@ class EmailSender(SenderProtocol):
             await self.client.connect()
         return self.client.is_connected
 
-    async def send(self, data: dict) -> bool:
+    async def send(self, data: dict, template_path: Path, template_name: str) -> bool:
         msg = EmailMessage()
         msg['From'] = settings.smtp.USER
         msg['To'] = data.get('email')
         msg['Subject'] = data.get('subject')
 
-        env = Environment(loader=FileSystemLoader(Path(Path(__file__).parent.parent, 'templates')))
-        template = env.get_template(f'{data.get("template")}.html')
+        env = Environment(loader=FileSystemLoader(template_path))
+        template = env.get_template(template_name)
         output = template.render(**data.get('payload'))
         msg.add_alternative(output, subtype='html')
         try:

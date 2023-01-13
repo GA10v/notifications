@@ -2,6 +2,8 @@ from pathlib import Path
 
 from pydantic import BaseSettings
 
+from workers.src.core.config import RabbitMQSettings
+
 
 class BaseConfig(BaseSettings):
     class Config:
@@ -16,24 +18,6 @@ class FastapiSettings(BaseConfig):
 
     class Config:
         env_prefix = 'FASTAPI_'
-
-
-class RabbitMQSettings(BaseConfig):
-    USER: str = 'guest'
-    PASSWORD: str = 'guest'
-    HOST: str = 'localhost'
-    PORT: int = 5672
-    EXCHENGE_1: str = 'Notific_1'
-    QUEUE_1: str = 'Notific_1'
-    EXCHENGE_2: str = 'Notific_2'
-    QUEUE_2: str = 'Notific_2'
-
-    @property
-    def uri(self):
-        return f'amqp://{self.USER}:{self.PASSWORD}@{self.HOST}:{self.PORT}'
-
-    class Config:
-        env_prefix = 'RABBIT_'
 
 
 class PostgresSettings(BaseConfig):

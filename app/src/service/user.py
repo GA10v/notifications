@@ -30,7 +30,7 @@ class WelcomeUserService:
             user_id=welcome_info.user_id,
         )
         welcome_info.user_id = str(welcome_info.user_id)
-        await self.broker.send(welcome_info.dict(), settings.rabbit.QUEUE_1.lower())
+        await self.broker.send(welcome_info.dict(), settings.rabbit.QUEUE_WELLCOME.lower())
 
 
 @lru_cache()

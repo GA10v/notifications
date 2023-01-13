@@ -12,22 +12,22 @@ async def init_queue() -> None:
     channel = await connection.channel()
     # declare exchanges
     notific_exchange_1 = await channel.declare_exchange(
-        settings.rabbit.EXCHENGE_1.lower(),
+        settings.rabbit.EXCHENGE_WELLCOME.lower(),
         ExchangeType.DIRECT,
         durable=True,
     )
     notific_exchange_2 = await channel.declare_exchange(
-        settings.rabbit.EXCHENGE_2.lower(),
+        settings.rabbit.EXCHENGE_REVIEW.lower(),
         ExchangeType.DIRECT,
         durable=True,
     )
     # declare queues
     notific_queue_1 = await channel.declare_queue(
-        settings.rabbit.QUEUE_1.lower(),
+        settings.rabbit.QUEUE_WELLCOME.lower(),
         durable=True,
     )
     notific_queue_2 = await channel.declare_queue(
-        settings.rabbit.QUEUE_2.lower(),
+        settings.rabbit.QUEUE_REVIEW.lower(),
         durable=True,
     )
     # bind queues

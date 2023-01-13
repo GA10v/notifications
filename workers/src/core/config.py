@@ -27,6 +27,10 @@ class RabbitMQSettings(BaseConfig):
     QUEUE_WELLCOME: str = 'QUEUE_WELLCOME'
     EXCHENGE_REVIEW: str = 'EXCHENGE_REVIEW'
     QUEUE_REVIEW: str = 'QUEUE_REVIEW'
+    EXCHENGE_EPISODE: str = 'EXCHENGE_EPISODE'
+    QUEUE_EPISODE: str = 'QUEUE_EPISODE'
+    EXCHENGE_MESSAGE: str = 'EXCHENGE_MESSAGE'
+    QUEUE_MESSAGE: str = 'QUEUE_MESSAGE'
 
     @property
     def uri(self):

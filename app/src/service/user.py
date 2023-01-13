@@ -4,12 +4,12 @@ from functools import lru_cache
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.src.utils import BaseOrjsonModel
+from app.src.tools import BaseOrjsonModel
 from db.base import get_notification_storage
 from app.src.service.broker import get_broker_connection
-from app.src.utils.broker import Broker
+from app.src.tools.broker import Broker
 from app.src.core.config import settings
-from app.src.utils.notification_storage import NotificationStorage
+from app.src.tools.notification_storage import NotificationStorage
 from aio_pika import connection
 
 

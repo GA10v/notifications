@@ -1,5 +1,4 @@
 import json
-import uuid
 
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
@@ -8,7 +7,6 @@ from app.src.service.admin import AdminRequestInfo, AdminService, get_admin_serv
 from app.src.service.review import (ReviewSaveSchema, get_review_service, ReviewService,
                                     ReviewContentSchema, ReviewAnswerSchema, ContentAnswerSchema)
 from app.src.service.user import UserWelcomeSchema, WelcomeUserService, get_welcome_service
-from app.src.utils import BaseOrjsonModel
 
 router = APIRouter()
 

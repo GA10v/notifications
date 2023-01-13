@@ -3,7 +3,7 @@ import enum
 from sqlalchemy.dialects.postgresql import UUID, JSON
 from sqlalchemy import Column, Enum, Index
 from db.base import Base
-from app.src.utils import BaseOrjsonModel
+from app.src.tools import BaseOrjsonModel
 
 
 class ContentType(enum.Enum):

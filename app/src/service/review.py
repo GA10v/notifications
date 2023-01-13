@@ -5,10 +5,10 @@ from fastapi import Depends
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.src.utils import BaseOrjsonModel
+from app.src.tools import BaseOrjsonModel
 from db.base import get_notification_storage
 from models.content import ReviewContent
-from app.src.utils.notification_storage import NotificationStorage
+from app.src.tools.notification_storage import NotificationStorage
 
 
 class ReviewSaveSchema(BaseOrjsonModel):

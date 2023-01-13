@@ -50,14 +50,14 @@ class AdminService:
 
         return [AdminBrokerInfo(user=user, content=content, content_id=content_id) for user in users]
 
-    async def get_group_message_notifications(self, content: dict) -> list[AdminBrokerInfo]:
+    async def get_group_message_notifications(self, content: dict, content_id: uuid.UUID) -> list[AdminBrokerInfo]:
         user_role = content.get('user_role')
 
         if not user_role:
             return []
 
         users = self.user_service.get_users_info_by_role(user_role)
-        return [AdminBrokerInfo(user=user, content=content) for user in users]
+        return [AdminBrokerInfo(user=user, content=content, content_id=content_id) for user in users]
 
     async def send_to_broker(self, msg: list[str], queue: str) -> None:
         channel = await self.broker.channel()
@@ -80,8 +80,7 @@ class AdminService:
             await self.send_to_broker(msg, settings.rabbit.QUEUE_EPISODE.lower())
 
     async def send_group_message(self, admin_info: AdminRequestInfo) -> None:
-        content = admin_info.content
-        notifications = await self.get_group_message_notifications(content)
+        notifications = await self.get_group_message_notifications(admin_info.content, admin_info.content_id)
 
         if notifications:
             msg = [notification.json() for notification in notifications]

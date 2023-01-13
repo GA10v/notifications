@@ -13,7 +13,7 @@ from workers.src.service.db_service import DBService
 from workers.src.service.sender import SenderProtocol
 
 
-class EpisodeWorker:
+class MessageWorker:
     db_service: DBService
 
     def __init__(
@@ -26,19 +26,19 @@ class EpisodeWorker:
         self.sender = sender_service
         self.queue = queue_name
 
-    async def _prepare_data(self, data):
+    @staticmethod
+    async def _prepare_data(data):
         _data = AdminBrokerInfo.parse_raw(data)
         data = {
-            'subject': 'new_episode',
+            'subject': 'new_message',
             'email': _data.user.email,
             'payload': {
                 'user_name': _data.user.name,
-                'art': _data.content.get('art'),
-                'event': _data.content.get('event'),
+                **_data.content
             },
         }
 
-        return data
+        return data, _data.content.get('template_path')
 
     async def confirm_send_message(self, content_id: UUID):
         async with async_session() as session:
@@ -53,9 +53,9 @@ class EpisodeWorker:
             send_tasks = []
             notifications_data = []
             for notification in notifications:
-                send_data = await self._prepare_data(notification)
+                send_data, template_name = await self._prepare_data(notification)
                 notifications_data.append(AdminBrokerInfo.parse_raw(notification).content_id)
-                send_tasks.append(self.sender.send(send_data, template_path, 'new_episode.html'))
+                send_tasks.append(self.sender.send(send_data, template_path, template_name))
             statuses = await asyncio.gather(*send_tasks)
 
             confirm_tasks = []

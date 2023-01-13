@@ -50,3 +50,33 @@ async def test_welcome(session):
     }
     async with session.post(url, json=data) as response:
         assert response.status == HTTPStatus.OK
+
+
+async def test_new_episode(session):
+    """Проверка уведомлений при добавлении нового фильма или новой серии"""
+    url = f'{settings.fastapi.service_url}/{settings.fastapi.NEW_EPISODE_ENDPOINT}'
+
+    data = {
+        'notification_id': settings.data.NOTIFICATION_1,
+        'content': {
+            'art': settings.data.ART,
+            'event': settings.data.EVENT
+        }
+    }
+    async with session.post(url, json=data) as response:
+        assert response.status == HTTPStatus.OK
+
+
+async def test_group_message(session):
+    """Проверка уведомлений при групповой рассылке"""
+    url = f'{settings.fastapi.service_url}/api/v1/notification/group_message'
+
+    data = {
+        'notification_id': settings.data.NOTIFICATION_2,
+        'content': {
+            'user_role': settings.data.USER_ROLE,
+            'template_path': settings.data.TEMPLATE_PATH
+        }
+    }
+    async with session.post(url, json=data) as response:
+        assert response.status == HTTPStatus.OK

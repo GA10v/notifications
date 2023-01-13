@@ -38,6 +38,12 @@ class TestDataSettings(BaseConfig):
     EMAIL: str = 'user@mail.ru'
     LOGIN: str = 'user'
     CONTENT: str = '265d6929-4c6c-4680-9ae5-6c479de6e2ee'
+    NOTIFICATION_1: str = '769f3e60-e6ab-4a31-a2e0-7a82d2f06a0b'
+    NOTIFICATION_2: str = 'e7db1eed-33f5-412e-8342-b664a887ba89'
+    ART: str = 'series'
+    EVENT: str = 'Вышла 8-я серия'
+    USER_ROLE: str = 'sub'
+    TEMPLATE_PATH: str = 'custom_mail_2023-01-10T21:52:40.441458.html'
 
 
 class TestSettings(BaseConfig):

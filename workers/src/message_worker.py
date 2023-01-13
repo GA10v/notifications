@@ -8,9 +8,14 @@ from workers.src.service.message import MessageWorker
 
 
 async def main():
-    rabbit_connection = await aio_pika.connect_robust('amqp://guest:guest@172.24.0.3:5672')
+    rabbit_connection = await aio_pika.connect_robust(settings.rabbit.uri)
     rabbit_service = RabbitService(rabbit_connection)
-    sender_service = EmailSender()
+    sender_service = EmailSender(
+        host=settings.smtp.HOST,
+        port=settings.smtp.PORT,
+        user=settings.smtp.USER,
+        password=settings.smtp.PASSWODR,
+    )
     queue = settings.rabbit.QUEUE_MESSAGE
 
     worker = MessageWorker(rabbit_service=rabbit_service,

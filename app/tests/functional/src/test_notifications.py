@@ -57,7 +57,7 @@ async def test_new_episode(session):
     url = f'{settings.fastapi.service_url}/{settings.fastapi.NEW_EPISODE_ENDPOINT}'
 
     data = {
-        'notification_id': settings.data.NOTIFICATION_1,
+        'content_id': settings.data.NOTIFICATION_1,
         'content': {
             'art': settings.data.ART,
             'event': settings.data.EVENT
@@ -72,7 +72,7 @@ async def test_group_message(session):
     url = f'{settings.fastapi.service_url}/api/v1/notification/group_message'
 
     data = {
-        'notification_id': settings.data.NOTIFICATION_2,
+        'content_id': settings.data.NOTIFICATION_2,
         'content': {
             'user_role': settings.data.USER_ROLE,
             'template_path': settings.data.TEMPLATE_PATH

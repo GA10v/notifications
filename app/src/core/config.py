@@ -37,9 +37,9 @@ class RabbitMQSettings(BaseConfig):
 
 
 class PostgresSettings(BaseConfig):
-    DB: str = 'db'
-    USER: str = 'guest'
-    PASSWORD: str = 'guest'
+    DB: str = 'app'
+    USER: str = 'user'
+    PASSWORD: str = 'password'
     HOST: str = 'localhost'
     PORT: int = 5432
 

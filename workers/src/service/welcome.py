@@ -23,7 +23,7 @@ class WelcomeWorker:
         self.queue = queue_name
 
     @staticmethod
-    async def _prepare_data(data):
+    async def _prepare_data(data) -> dict:
         _data = UserWelcomeSchema(**data)
         return {
             'subject': 'registration',
@@ -42,7 +42,7 @@ class WelcomeWorker:
         if is_send:
             await self.db_service.confirm_welcome_send_message(UserWelcomeSchema(**data).user_id)
 
-    async def run(self):
+    async def run(self) -> None:
         await self.sender.connect()
         await self.rabbit.consume(self.queue, self.handling_message)
         await self.sender.disconnect()

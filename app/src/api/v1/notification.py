@@ -33,10 +33,10 @@ async def add_review_content(
     review_content: ReviewContentSchema,
     review_service: ReviewService = Depends(get_review_service),
 ):
-    review_content = await review_service.add_review_content(review_content)
-    if review_content.status:
-        return JSONResponse(json.loads(review_content.json()), status_code=200)
-    return JSONResponse(json.loads(review_content.json()), status_code=201)
+    content_answer = await review_service.add_review_content(review_content)
+    if content_answer.status:
+        return JSONResponse(json.loads(content_answer.json()), status_code=200)
+    return JSONResponse(json.loads(content_answer.json()), status_code=201)
 
 
 @router.post('/welcome')

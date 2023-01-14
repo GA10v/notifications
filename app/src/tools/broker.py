@@ -1,7 +1,8 @@
 import json
 from abc import ABC, abstractmethod
 
-from aio_pika import Message, connection
+from aio_pika import Message
+from aio_pika.abc import AbstractRobustConnection
 
 
 class AbsBroker(ABC):
@@ -11,7 +12,7 @@ class AbsBroker(ABC):
 
 
 class Broker(AbsBroker):
-    def __init__(self, broker: connection):
+    def __init__(self, broker: AbstractRobustConnection):
         self.broker = broker
 
     async def send(self, msg: dict, queue: str) -> None:

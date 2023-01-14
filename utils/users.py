@@ -77,10 +77,10 @@ class UserInfo(UserInfoProtocol):
         return result.json()
 
     def get_users_info(self, users_id: list[str | None]) -> list[UserInfoSchema]:
-        ...
+        raise NotImplementedError
 
     def get_users_info_by_role(self, user_role: UserRole) -> list[UserInfoSchema]:
-        ...
+        raise NotImplementedError
 
 
 class FakeUserInfo(UserInfoProtocol):

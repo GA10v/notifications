@@ -25,7 +25,7 @@ class EpisodeWorker:
         self.sender = sender_service
         self.queue = queue_name
 
-    async def _prepare_data(self, data):
+    async def _prepare_data(self, data) -> dict:
         _data = AdminBrokerInfo.parse_raw(data)
         return {
             'subject': 'new_episode',
@@ -37,7 +37,7 @@ class EpisodeWorker:
             },
         }
 
-    async def confirm_send_message(self, content_id: UUID):
+    async def confirm_send_message(self, content_id: UUID) -> None:
         async with async_session() as session:
             self.db_service = DBService(session)
             await self.db_service.confirm_new_episode_send_message(content_id)
@@ -62,7 +62,7 @@ class EpisodeWorker:
                     confirm_tasks.append(self.confirm_send_message(notifications_data[i]))
             await asyncio.gather(*confirm_tasks)
 
-    async def run(self):
+    async def run(self) -> None:
         await self.sender.connect()
         await self.rabbit.consume(self.queue, self.handling_message)
         await self.sender.disconnect()

@@ -8,7 +8,7 @@ from workers.src.service.message import MessageWorker
 from workers.src.service.sender import EmailSender
 
 
-async def main():
+async def main() -> None:
     rabbit_connection = await aio_pika.connect_robust(settings.rabbit.uri)
     rabbit_service = RabbitService(rabbit_connection)
     sender_service = EmailSender(

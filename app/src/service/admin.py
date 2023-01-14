@@ -2,7 +2,8 @@ import json
 import uuid
 from functools import lru_cache
 
-from aio_pika import Message, connection
+from aio_pika import Message
+from aio_pika.abc import AbstractRobustConnection
 from fastapi import Depends
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -29,7 +30,7 @@ class AdminBrokerInfo(BaseOrjsonModel):
 
 
 class AdminService:
-    def __init__(self, session: AsyncSession, broker: connection, user_service: UserInfoProtocol):
+    def __init__(self, session: AsyncSession, broker: AbstractRobustConnection, user_service: UserInfoProtocol):
         self.session = session
         self.broker = broker
         self.user_service = user_service
@@ -48,7 +49,7 @@ class AdminService:
 
         if not user_ids:
             return []
-        users = self.user_service.get_users_info(user_ids)
+        users = self.user_service.get_users_info(list(user_ids))
 
         return [AdminBrokerInfo(user=user, content=content, content_id=content_id) for user in users]
 
@@ -92,7 +93,7 @@ class AdminService:
 @lru_cache()
 def get_admin_service(
     session: AsyncSession = Depends(get_notification_storage),
-    broker: connection = Depends(get_broker_connection),
+    broker: AbstractRobustConnection = Depends(get_broker_connection),
     user_sevice: UserInfoProtocol = Depends(get_user_service),
 ) -> AdminService:
     return AdminService(session, broker, user_sevice)

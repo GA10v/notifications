@@ -14,11 +14,11 @@ class SenderProtocol(ABC):
         ...
 
     @abstractmethod
-    async def connect(self):
+    async def connect(self) -> None:
         ...
 
     @abstractmethod
-    async def disconnect(self):
+    async def disconnect(self) -> None:
         ...
 
 
@@ -34,10 +34,10 @@ class EmailSender(SenderProtocol):
         self.password = password
         self.client = SMTP(hostname=host, port=port)
 
-    async def connect(self):
+    async def connect(self) -> None:
         await self.client.connect()
 
-    async def disconnect(self):
+    async def disconnect(self) -> None:
         await self.client.quit()
 
     async def _connect(self) -> bool:
@@ -53,13 +53,13 @@ class EmailSender(SenderProtocol):
 
         env = Environment(loader=FileSystemLoader(template_path))
         template = env.get_template(template_name)
-        output = template.render(**data.get('payload'))
+        output = template.render(dict(**data.get('payload')))
         msg.add_alternative(output, subtype='html')
         try:
             if await self._connect():
                 await self.client.sendmail(
                     sender=settings.smtp.USER,
-                    recipients=[data.get('email')],
+                    recipients=str(data.get('email')),
                     message=msg.as_string(),
                 )
         except SMTPException:

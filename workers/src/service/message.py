@@ -1,6 +1,7 @@
 import asyncio
 import json
 from pathlib import Path
+from typing import Tuple
 from uuid import UUID
 
 import aio_pika
@@ -26,8 +27,8 @@ class MessageWorker:
         self.queue = queue_name
 
     @staticmethod
-    async def _prepare_data(data):
-        _data = AdminBrokerInfo.parse_raw(data)
+    async def _prepare_data(raw_json: bytes) -> Tuple[dict, str]:
+        _data = AdminBrokerInfo.parse_raw(raw_json)
         data = {
             'subject': 'new_message',
             'email': _data.user.email,
@@ -37,7 +38,7 @@ class MessageWorker:
             },
         }
 
-        return data, _data.content.get('template_path')
+        return data, str(_data.content.get('template_path'))
 
     async def confirm_send_message(self, content_id: UUID):
         async with async_session() as session:
@@ -64,7 +65,7 @@ class MessageWorker:
                     confirm_tasks.append(self.confirm_send_message(notifications_data[i]))
             await asyncio.gather(*confirm_tasks)
 
-    async def run(self):
+    async def run(self) -> None:
         await self.sender.connect()
         await self.rabbit.consume(self.queue, self.handling_message)
         await self.sender.disconnect()

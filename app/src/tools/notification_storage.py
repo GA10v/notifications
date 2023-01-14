@@ -50,6 +50,8 @@ class NotificationStorage(AbsNotificationStorage):
 
     async def update_review_content(self, content_id: UUID, content: ReviewContent) -> None:
         content_from_db = await self.get_review_content(content_id=content_id)
+        assert content_from_db is not None
+
         content_from_db.content = content.json()
         self.session.add(content_from_db)
         await self.session.commit()

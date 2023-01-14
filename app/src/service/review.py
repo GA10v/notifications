@@ -54,12 +54,12 @@ class ReviewService:
             )
             return ContentAnswerSchema(content_id=review_info.content_id, like_counter=1, status=False)
         else:
-            review_content = ReviewContent.parse_raw(review_content.content)
-            review_content.like_counter += 1
-            await self.storage.update_review_content(content_id=review_info.content_id, content=review_content)
+            update_review_content = ReviewContent.parse_raw(review_content.content)
+            update_review_content.like_counter += 1
+            await self.storage.update_review_content(content_id=review_info.content_id, content=update_review_content)
             return ContentAnswerSchema(
                 content_id=review_info.content_id,
-                like_counter=review_content.like_counter,
+                like_counter=update_review_content.like_counter,
                 status=True,
             )
 

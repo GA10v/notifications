@@ -10,7 +10,7 @@ from workers.src.service.sender import EmailSender
 from workers.src.service.welcome import WelcomeWorker
 
 
-async def main():
+async def main() -> None:
     rabbit_connection = await aio_pika.connect_robust(settings.rabbit.uri)
     rabbit_service = RabbitService(rabbit_connection)
     sender_service = EmailSender(

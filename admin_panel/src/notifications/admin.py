@@ -1,5 +1,6 @@
 import datetime
 from http import HTTPStatus
+from typing import Type
 
 import requests
 from django import forms
@@ -145,7 +146,7 @@ class CustomMailAdmin(admin.ModelAdmin):
         return self.model.objects.filter(content_type=ContentType.CUSTOM_MAIL)
 
 
-def create_modeladmin(modeladmin, name, model):
+def create_modeladmin(modeladmin, name: str, model: Type[Content]):
     """Регистрирует разные экземпляры админки для одной модели"""
 
     class Meta:

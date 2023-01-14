@@ -10,8 +10,8 @@ class RabbitService:
 
     async def consume(self, queue: str, callback: Callable):
         channel = await self.connection.channel()
-        queue = await channel.declare_queue(queue, durable=True)
-        await queue.consume(callback)
+        declare_queue = await channel.declare_queue(queue, durable=True)
+        await declare_queue.consume(callback)
         try:
             await asyncio.Future()
         finally:

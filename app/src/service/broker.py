@@ -1,10 +1,11 @@
 import aio_pika
-from aio_pika import ExchangeType, connection
+from aio_pika import ExchangeType
+from aio_pika.abc import AbstractRobustConnection
 
 from app.src.core.config import settings
 
 
-async def get_broker_connection() -> connection:
+async def get_broker_connection() -> AbstractRobustConnection:
     return await aio_pika.connect_robust(settings.rabbit.uri)
 
 

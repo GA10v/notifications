@@ -1,7 +1,7 @@
 import uuid
 from functools import lru_cache
 
-from aio_pika import connection
+from aio_pika.abc import AbstractRobustConnection
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -28,15 +28,15 @@ class WelcomeUserService:
         await self.storage.registrate_welcome_notification(
             user_id=welcome_info.user_id,
         )
-        welcome_info.user_id = str(welcome_info.user_id)
+        welcome_info.user_id = str(welcome_info.user_id)  # type: ignore
         await self.broker.send(welcome_info.dict(), settings.rabbit.QUEUE_WELLCOME.lower())
 
 
 @lru_cache()
 def get_welcome_service(
     session: AsyncSession = Depends(get_notification_storage),
-    broker: connection = Depends(get_broker_connection),
+    broker_connection: AbstractRobustConnection = Depends(get_broker_connection),
 ) -> WelcomeUserService:
     storage = NotificationStorage(session)
-    broker = Broker(broker)
+    broker = Broker(broker_connection)
     return WelcomeUserService(storage, broker)

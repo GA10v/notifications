@@ -3,7 +3,8 @@ import datetime
 import json
 import uuid
 
-from aio_pika import Message, connection
+from aio_pika import Message
+from aio_pika.abc import AbstractRobustConnection
 from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -28,7 +29,7 @@ class NotificationSchema(BaseModel):
 class ReviewNotifications:
     notifications: list[NotificationSchema]
 
-    def __init__(self, session: AsyncSession, broker: connection):
+    def __init__(self, session: AsyncSession, broker: AbstractRobustConnection):
         self.session = session
         self.broker = broker
 
@@ -79,7 +80,7 @@ class ReviewNotifications:
 
         self.notifications = notifications
 
-    async def send_to_broker(self):
+    async def send_to_broker(self) -> None:
         notifications = [notification.json() for notification in self.notifications]
         if len(notifications) != 0:
             channel = await self.broker.channel()
@@ -89,14 +90,14 @@ class ReviewNotifications:
             )
             await self.broker.close()
 
-    def get_last_update(self, last_update):
+    def get_last_update(self, last_update) -> str:
         last_updates = [notification.last_update for notification in self.notifications]
         if len(last_updates) == 0:
             return last_update
         return datetime.datetime.strftime(max(last_updates), '%Y-%m-%d %H:%M:%S.%f')
 
 
-async def main():
+async def main() -> None:
     async with async_session() as session:
         with open('generator_status.json', 'r') as json_file:
             last_update = json.load(json_file)

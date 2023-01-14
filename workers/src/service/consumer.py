@@ -1,6 +1,7 @@
+from typing import Callable
+
 from aio_pika.abc import AbstractRobustConnection
 from sqlalchemy.util import asyncio
-from typing import Callable
 
 
 class RabbitService:

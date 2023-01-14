@@ -1,16 +1,16 @@
 import uuid
 from functools import lru_cache
 
+from aio_pika import connection
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.src.tools import BaseOrjsonModel
-from db.base import get_notification_storage
-from app.src.service.broker import get_broker_connection
-from app.src.tools.broker import Broker
 from app.src.core.config import settings
+from app.src.service.broker import get_broker_connection
+from app.src.tools import BaseOrjsonModel
+from app.src.tools.broker import Broker
 from app.src.tools.notification_storage import NotificationStorage
-from aio_pika import connection
+from db.base import get_notification_storage
 
 
 class UserWelcomeSchema(BaseOrjsonModel):
@@ -20,7 +20,6 @@ class UserWelcomeSchema(BaseOrjsonModel):
 
 
 class WelcomeUserService:
-
     def __init__(self, storage: NotificationStorage, broker: Broker):
         self.storage = storage
         self.broker = broker
@@ -36,7 +35,7 @@ class WelcomeUserService:
 @lru_cache()
 def get_welcome_service(
     session: AsyncSession = Depends(get_notification_storage),
-    broker: connection = Depends(get_broker_connection)
+    broker: connection = Depends(get_broker_connection),
 ) -> WelcomeUserService:
     storage = NotificationStorage(session)
     broker = Broker(broker)

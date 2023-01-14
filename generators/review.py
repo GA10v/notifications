@@ -3,20 +3,19 @@ import datetime
 import json
 import uuid
 
+from aio_pika import Message, connection
 from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import aliased
-from aio_pika import Message, connection
 
 from app.src.core.config import settings
 from app.src.service.broker import get_broker_connection
 from db.base import async_session
-
-from models.notification import Notification
 from models.content import Content, ContentType
+from models.notification import Notification
 from models.subscription import Subscription
-from utils.users import get_user_service, UserInfoSchema
+from utils.users import UserInfoSchema, get_user_service
 
 
 class NotificationSchema(BaseModel):
@@ -36,20 +35,30 @@ class ReviewNotifications:
     async def get_notifications_info(self, last_update) -> None:
         c1 = aliased(Content)
         s1 = aliased(Subscription)
-        s = select(
-            Notification.notification_id,
-            Notification.content_id,
-            Notification.content_type,
-            Notification.last_update,
-            c1.content,
-            s1.user_id,
-        ).select_from(
-            Notification, c1, s1,
-        ).where(
-            Notification.last_update > datetime.datetime.strptime(last_update, '%Y-%m-%d %H:%M:%S.%f'),
-            Notification.content_type == ContentType.review_like
-        ).join(c1, Notification.content_id == c1.content_id
-               ).join(s1, Notification.notification_id == s1.notification_id)
+        s = (
+            select(
+                Notification.notification_id,
+                Notification.content_id,
+                Notification.content_type,
+                Notification.last_update,
+                c1.content,
+                s1.user_id,
+            )
+            .select_from(
+                Notification,
+                c1,
+                s1,
+            )
+            .where(
+                Notification.last_update > datetime.datetime.strptime(last_update, '%Y-%m-%d %H:%M:%S.%f'),
+                Notification.content_type == ContentType.review_like,
+            )
+            .join(
+                c1,
+                Notification.content_id == c1.content_id,
+            )
+            .join(s1, Notification.notification_id == s1.notification_id)
+        )
 
         result = await self.session.execute(s)
         user_service = get_user_service()
@@ -59,12 +68,14 @@ class ReviewNotifications:
 
         notifications = []
         for notification in notifications_info:
-            notifications.append(NotificationSchema(
-                notification_id=notification.get('notification_id'),
-                user=users.get(notification.get('user_id')),
-                content=json.loads(notification.get('content')),
-                last_update=notification.get('last_update'),
-            ))
+            notifications.append(
+                NotificationSchema(
+                    notification_id=notification.get('notification_id'),
+                    user=users.get(notification.get('user_id')),
+                    content=json.loads(notification.get('content')),
+                    last_update=notification.get('last_update'),
+                ),
+            )
 
         self.notifications = notifications
 
@@ -73,9 +84,8 @@ class ReviewNotifications:
         if len(notifications) != 0:
             channel = await self.broker.channel()
             await channel.default_exchange.publish(
-                Message(
-                    json.dumps(notifications).encode('utf-8')),
-                routing_key=settings.rabbit.QUEUE_REVIEW.lower()
+                Message(json.dumps(notifications).encode('utf-8')),
+                routing_key=settings.rabbit.QUEUE_REVIEW.lower(),
             )
             await self.broker.close()
 

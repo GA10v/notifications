@@ -1,5 +1,6 @@
 import aio_pika
 from aio_pika import ExchangeType, connection
+
 from app.src.core.config import settings
 
 

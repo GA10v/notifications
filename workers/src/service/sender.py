@@ -1,11 +1,11 @@
-import uuid
 from abc import ABC, abstractmethod
 from email.message import EmailMessage
 from pathlib import Path
 
 from aiosmtplib import SMTP, SMTPException
-from workers.src.core.config import settings
 from jinja2 import Environment, FileSystemLoader
+
+from workers.src.core.config import settings
 
 
 class SenderProtocol(ABC):

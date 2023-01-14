@@ -1,13 +1,12 @@
+import asyncio
 import json
 from pathlib import Path
 from uuid import UUID
 
 import aio_pika
-import asyncio
 
 from app.src.service.admin import AdminBrokerInfo
 from db.base import async_session
-
 from workers.src.service.consumer import RabbitService
 from workers.src.service.db_service import DBService
 from workers.src.service.sender import SenderProtocol
@@ -34,7 +33,7 @@ class MessageWorker:
             'email': _data.user.email,
             'payload': {
                 'user_name': _data.user.name,
-                **_data.content
+                **_data.content,
             },
         }
 

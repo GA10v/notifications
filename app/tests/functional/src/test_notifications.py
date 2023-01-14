@@ -12,7 +12,7 @@ async def test_review(session):
 
     data = {
         'content_id': settings.data.CONTENT,
-        'user_id': settings.data.USER
+        'user_id': settings.data.USER,
     }
     async with session.post(url, json=data) as response:
         assert response.status == HTTPStatus.OK
@@ -23,7 +23,7 @@ async def test_review(session):
         assert response.status == HTTPStatus.CONFLICT
 
     data = {
-        'content_id': settings.data.CONTENT
+        'content_id': settings.data.CONTENT,
     }
 
     async with session.put(url, json=data) as response:
@@ -46,7 +46,7 @@ async def test_welcome(session):
     data = {
         'user_id': settings.data.USER,
         'email': settings.data.EMAIL,
-        'login': settings.data.LOGIN
+        'login': settings.data.LOGIN,
     }
     async with session.post(url, json=data) as response:
         assert response.status == HTTPStatus.OK
@@ -60,8 +60,8 @@ async def test_new_episode(session):
         'content_id': settings.data.NOTIFICATION_1,
         'content': {
             'art': settings.data.ART,
-            'event': settings.data.EVENT
-        }
+            'event': settings.data.EVENT,
+        },
     }
     async with session.post(url, json=data) as response:
         assert response.status == HTTPStatus.OK
@@ -75,8 +75,8 @@ async def test_group_message(session):
         'content_id': settings.data.NOTIFICATION_2,
         'content': {
             'user_role': settings.data.USER_ROLE,
-            'template_path': settings.data.TEMPLATE_PATH
-        }
+            'template_path': settings.data.TEMPLATE_PATH,
+        },
     }
     async with session.post(url, json=data) as response:
         assert response.status == HTTPStatus.OK

@@ -63,10 +63,12 @@ DATABASES = {
 WSGI_APPLICATION = 'config.wsgi.application'
 
 API_URL = f"http://{os.environ.get('FASTAPI_HOST')}:{os.environ.get('FASTAPI_PORT')}"
-API_NEW_FILM_MAIL_ENDPOINT = f"{os.environ.get('FASTAPI_NOTIFIC_PREFIX')}/" \
-                             f"{os.environ.get('FASTAPI_NOTIFIC_NEW_EPISODE')}"
-API_CUSTOM_MAIL_ENDPOINT = f"{os.environ.get('FASTAPI_NOTIFIC_PREFIX')}/" \
-                           f"{os.environ.get('FASTAPI_NOTIFIC_GROUP_MESSAGE')}"
+API_NEW_FILM_MAIL_ENDPOINT = (
+    f"{os.environ.get('FASTAPI_NOTIFIC_PREFIX')}/" f"{os.environ.get('FASTAPI_NOTIFIC_NEW_EPISODE')}"
+)
+API_CUSTOM_MAIL_ENDPOINT = (
+    f"{os.environ.get('FASTAPI_NOTIFIC_PREFIX')}/" f"{os.environ.get('FASTAPI_NOTIFIC_GROUP_MESSAGE')}"
+)
 
 LANGUAGE_CODE = 'en-US'
 
@@ -80,5 +82,5 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-STATIC_ROOT = BASE_DIR / "static"
+STATIC_ROOT = BASE_DIR / 'static'
 STATIC_URL = '/static/'

@@ -1,9 +1,9 @@
+import asyncio
 import json
 from pathlib import Path
 from uuid import UUID
 
 import aio_pika
-import asyncio
 
 from db.base import async_session
 from generators.review import NotificationSchema
@@ -27,7 +27,7 @@ class ReviewWorker:
 
     async def _prepare_data(self, data):
         _data = NotificationSchema.parse_raw(data)
-        data = {
+        return {
             'subject': 'review',
             'email': _data.user.email,
             'payload': {
@@ -35,7 +35,6 @@ class ReviewWorker:
                 'like_count': _data.content.get('like_counter'),
             },
         }
-        return data
 
     async def confirm_send_message(self, notification_id: UUID):
         async with async_session() as session:

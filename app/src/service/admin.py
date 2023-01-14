@@ -2,7 +2,7 @@ import json
 import uuid
 from functools import lru_cache
 
-from aio_pika import connection, Message
+from aio_pika import Message, connection
 from fastapi import Depends
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -10,12 +10,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.src.core.config import settings
 from app.src.service.broker import get_broker_connection
 from app.src.tools import BaseOrjsonModel
-
 from db.base import get_notification_storage
 from models.content import ContentType
-from models.subscription import Subscription
 from models.notification import Notification
-from utils.users import get_user_service, UserInfoProtocol, UserInfoSchema
+from models.subscription import Subscription
+from utils.users import UserInfoProtocol, UserInfoSchema, get_user_service
 
 
 class AdminRequestInfo(BaseOrjsonModel):
@@ -30,7 +29,6 @@ class AdminBrokerInfo(BaseOrjsonModel):
 
 
 class AdminService:
-
     def __init__(self, session: AsyncSession, broker: connection, user_service: UserInfoProtocol):
         self.session = session
         self.broker = broker
@@ -38,9 +36,13 @@ class AdminService:
 
     async def get_new_episode_notifications(self, content_id: uuid.UUID, content: dict) -> list[AdminBrokerInfo]:
         query = select(Subscription.user_id).where(
-            Subscription.notification_id.in_(select(
-                Notification.notification_id).where(
-                Notification.content_id == content_id, Notification.content_type == ContentType.new_film)))
+            Subscription.notification_id.in_(
+                select(Notification.notification_id).where(
+                    Notification.content_id == content_id,
+                    Notification.content_type == ContentType.new_film,
+                ),
+            ),
+        )
         result = await self.session.execute(query)
         user_ids = [str(user_id) for (user_id,) in result.all()]
 
@@ -64,9 +66,9 @@ class AdminService:
 
         await channel.default_exchange.publish(
             Message(
-                json.dumps(msg).encode('utf-8')
+                json.dumps(msg).encode('utf-8'),
             ),
-            routing_key=queue
+            routing_key=queue,
         )
         await self.broker.close()
 
@@ -91,6 +93,6 @@ class AdminService:
 def get_admin_service(
     session: AsyncSession = Depends(get_notification_storage),
     broker: connection = Depends(get_broker_connection),
-    user_sevice: UserInfoProtocol = Depends(get_user_service)
+    user_sevice: UserInfoProtocol = Depends(get_user_service),
 ) -> AdminService:
     return AdminService(session, broker, user_sevice)

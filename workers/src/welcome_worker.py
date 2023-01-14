@@ -21,10 +21,12 @@ async def main():
     )
     queue = settings.rabbit.QUEUE_WELLCOME
     async with async_session() as session:
-        worker = WelcomeWorker(rabbit_service=rabbit_service,
-                               sender_service=sender_service,
-                               queue_name=queue.lower(),
-                               db_service=DBService(session))
+        worker = WelcomeWorker(
+            rabbit_service=rabbit_service,
+            sender_service=sender_service,
+            queue_name=queue.lower(),
+            db_service=DBService(session),
+        )
         await worker.run()
 
 

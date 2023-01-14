@@ -1,4 +1,5 @@
 import pika
+
 from app.src.core.config import settings
 
 

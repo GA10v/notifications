@@ -25,7 +25,7 @@ class Notification(models.Model):
 
 
 class Content(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)  # noqa: VNE003
     content_id = models.UUIDField(db_index=True)
     content_type = models.CharField(choices=ContentType.choices, max_length=15)
     content = models.JSONField()
@@ -38,7 +38,7 @@ class Content(models.Model):
 
 
 class Subscription(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)  # noqa: VNE003
     user_id = models.UUIDField(db_index=True)
     notification_id = models.UUIDField(db_index=True)
     last_notification_send_to_user = models.DateTimeField(blank=True, null=True)
@@ -54,7 +54,7 @@ class CommunicationType(models.TextChoices):
 
 
 class User(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)  # noqa: VNE003
     user_id = models.UUIDField(db_index=True)
     communication_method = models.CharField(choices=CommunicationType.choices, max_length=15)
     allow_communication = models.BooleanField()

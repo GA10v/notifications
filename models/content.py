@@ -1,9 +1,11 @@
-import uuid
 import enum
-from sqlalchemy.dialects.postgresql import UUID, JSON
+import uuid
+
 from sqlalchemy import Column, Enum, Index
-from db.base import Base
+from sqlalchemy.dialects.postgresql import JSON, UUID
+
 from app.src.tools import BaseOrjsonModel
+from db.base import Base
 
 
 class ContentType(enum.Enum):
@@ -16,14 +18,12 @@ class ContentType(enum.Enum):
 class Content(Base):
     __tablename__ = 'content'
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)  # noqa: VNE003
     content_id = Column(UUID(as_uuid=True))
     content_type = Column(Enum(ContentType))
     content = Column(JSON())
 
-    __table_args__ = (
-        Index('idx_content', content_id, content_type, unique=True),
-    )
+    __table_args__ = (Index('idx_content', content_id, content_type, unique=True),)
 
 
 class ReviewContent(BaseOrjsonModel):

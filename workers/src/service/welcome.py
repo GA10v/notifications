@@ -1,7 +1,7 @@
 import json
+from pathlib import Path
 
 import aio_pika
-from pathlib import Path
 
 from app.src.service.user import UserWelcomeSchema
 from workers.src.service.consumer import RabbitService
@@ -25,16 +25,15 @@ class WelcomeWorker:
     @staticmethod
     async def _prepare_data(data):
         _data = UserWelcomeSchema(**data)
-        data = {
+        return {
             'subject': 'registration',
             'email': _data.email,
             'payload': {
                 'user_name': _data.login,
             },
         }
-        return data
 
-    async def handling_message(self, message: aio_pika.abc.AbstractIncomingMessage,):
+    async def handling_message(self, message: aio_pika.abc.AbstractIncomingMessage):
         async with message.process():
             data = json.loads(message.body)
             send_data = await self._prepare_data(data)

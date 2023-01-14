@@ -1,6 +1,4 @@
 import asyncio
-import uuid
-from random import choice, randint
 
 import aiohttp
 import jwt

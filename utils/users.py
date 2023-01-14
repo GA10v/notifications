@@ -5,8 +5,8 @@ from uuid import uuid4
 
 import jwt
 import requests
-from pydantic import BaseModel
 from faker import Faker
+from pydantic import BaseModel
 from requests import Session
 
 from app.src.core.config import settings

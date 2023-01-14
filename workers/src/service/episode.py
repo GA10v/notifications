@@ -1,13 +1,12 @@
+import asyncio
 import json
 from pathlib import Path
 from uuid import UUID
 
 import aio_pika
-import asyncio
 
 from app.src.service.admin import AdminBrokerInfo
 from db.base import async_session
-
 from workers.src.service.consumer import RabbitService
 from workers.src.service.db_service import DBService
 from workers.src.service.sender import SenderProtocol
@@ -28,7 +27,7 @@ class EpisodeWorker:
 
     async def _prepare_data(self, data):
         _data = AdminBrokerInfo.parse_raw(data)
-        data = {
+        return {
             'subject': 'new_episode',
             'email': _data.user.email,
             'payload': {
@@ -37,8 +36,6 @@ class EpisodeWorker:
                 'event': _data.content.get('event'),
             },
         }
-
-        return data
 
     async def confirm_send_message(self, content_id: UUID):
         async with async_session() as session:

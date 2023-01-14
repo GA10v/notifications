@@ -2,7 +2,7 @@ name: pre-commit
 
 on:
   push:
-    branches: [main, task_10_CICD]
+    branches: [main]
   pull_request:
     branches: [main]
 

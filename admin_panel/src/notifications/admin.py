@@ -130,7 +130,7 @@ class CustomMailForm(forms.ModelForm):
         nots_instance = Notification(content_id=content_id, content_type=content_type)
         nots_instance.save()
 
-        payload = {'content_id': content_id, 'content': content}
+        payload = {'content_id': str(content_id), 'content': content}
         response = requests.post(settings.API_URL + settings.API_CUSTOM_MAIL_ENDPOINT, json=payload)
         assert response.status_code == HTTPStatus.OK
 

@@ -80,6 +80,13 @@ services:
       - .env
     restart: on-failure
 
+  mailhog:
+    container_name: nots_mailhog
+    image: mailhog/mailhog
+    ports:
+      - 1025:1025 # smtp server
+      - 8025:8025 # web ui
+
 volumes:
   rabbitmq_data:
   postgres_data:

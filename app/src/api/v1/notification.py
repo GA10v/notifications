@@ -1,4 +1,5 @@
 import json
+from http import HTTPStatus
 
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
@@ -24,8 +25,8 @@ async def save_review_notification(
 ):
     review_answer = await review_service.save_review_notification(review_info)
     if review_answer.status:
-        return JSONResponse(json.loads(review_answer.json()), status_code=200)
-    return JSONResponse(json.loads(review_answer.json()), status_code=409)
+        return JSONResponse(json.loads(review_answer.json()), status_code=HTTPStatus.OK)
+    return JSONResponse(json.loads(review_answer.json()), status_code=HTTPStatus.CONFLICT)
 
 
 @router.put('/review', response_model=ContentAnswerSchema)
@@ -35,8 +36,8 @@ async def add_review_content(
 ):
     content_answer = await review_service.add_review_content(review_content)
     if content_answer.status:
-        return JSONResponse(json.loads(content_answer.json()), status_code=200)
-    return JSONResponse(json.loads(content_answer.json()), status_code=201)
+        return JSONResponse(json.loads(content_answer.json()), status_code=HTTPStatus.OK)
+    return JSONResponse(json.loads(content_answer.json()), status_code=HTTPStatus.CREATED)
 
 
 @router.post('/welcome')
@@ -54,7 +55,7 @@ async def send_new_episode(
     admin_service: AdminService = Depends(get_admin_service),
 ):
     await admin_service.send_new_episode(new_episode_info)
-    return JSONResponse({'msg': 'New episode sent'}, status_code=200)
+    return JSONResponse({'msg': 'New episode sent'}, status_code=HTTPStatus.OK)
 
 
 @router.post('/group_message')
@@ -63,4 +64,4 @@ async def send_group_message(
     admin_service: AdminService = Depends(get_admin_service),
 ):
     await admin_service.send_group_message(group_message_info)
-    return JSONResponse({'msg': 'Group message sent'}, status_code=200)
+    return JSONResponse({'msg': 'Group message sent'}, status_code=HTTPStatus.OK)

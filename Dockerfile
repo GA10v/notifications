@@ -26,4 +26,4 @@ RUN pip install --force-reinstall -U setuptools
 COPY . .
 COPY .flake8 .flake8
 
-RUN ["chmod", "+x", "admin_panel/src/entrypoint.sh"]
+RUN chmod +x app/src/entrypoint.sh ; chmod +x admin_panel/src/entrypoint.sh

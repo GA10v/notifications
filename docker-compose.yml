@@ -1,0 +1,53 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:15.2-alpine3.17
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      .env
+
+  admin-panel:
+    build:
+      context: api/v1/admin_panel
+      dockerfile: Dockerfile
+    volumes:
+      - static:/opt/app/static/
+      - media:/opt/app/media/
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+    command: uwsgi --strict --ini uwsgi/uwsgi.ini
+
+  celery:
+    build:
+      context: api/v1/admin_panel
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+    command: celery -A admin_panel worker -l info
+
+  celery-beat:
+    build:
+      context: api/v1/admin_panel
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+    command: celery -A admin_panel beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+
+  rabbitmq:
+    image: rabbitmq:3.10.13-management-alpine
+    env_file:
+      - .env
+
+volumes:
+  postgres_data:
+  static:
+  media:

@@ -12,6 +12,7 @@ ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '127.0.0.1').split(',')
 include('components/_apps_middleware.py')
 ROOT_URLCONF = 'admin_panel.urls'
 WSGI_APPLICATION = 'admin_panel.wsgi.application'
+include('components/_templates.py')
 include('components/_database.py')
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -29,11 +30,14 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 include('components/_localization.py')
 STATIC_URL = 'static/'
+STATIC_ROOT = '/code/static/'
+MEDIA_URL = 'media/'
+MEDIA_ROOT = '/code/media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-AUTH_USER_MODEL = 'panel.User'
+AUTH_USER_MODEL = 'users.User'
 CELERY_BROKER_URL = os.getenv('RABBITMQ_URL')
 CELERY_RESULT_BACKEND = 'rpc://'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
-CELERY_IMPORTS = ('app.tasks',)
+CELERY_IMPORTS = ('notifications.tasks',)

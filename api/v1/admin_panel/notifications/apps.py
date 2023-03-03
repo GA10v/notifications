@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class PanelConfig(AppConfig):
+class NotificationsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'panel'
+    name = 'notifications'

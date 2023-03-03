@@ -20,7 +20,9 @@ services:
       - postgres
     env_file:
       - .env
-    command: uwsgi --strict --ini uwsgi/uwsgi.ini
+    command: >
+      bash -c "python manage.py collectstatic --noinput
+      && uwsgi --strict --ini uwsgi/uwsgi.ini"
 
   celery:
     build:

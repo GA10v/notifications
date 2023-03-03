@@ -59,3 +59,4 @@ TINYMCE_DEFAULT_CONFIG = {
     'browser_spellcheck': 'true',
     'contextmenu': 'false',
 }
+LOCALE_PATHS = (BASE_DIR / 'locale',)

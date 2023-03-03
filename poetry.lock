@@ -263,7 +263,6 @@ click-didyoumean = ">=0.0.3"
 click-plugins = ">=1.1.1"
 click-repl = ">=0.2.0"
 kombu = ">=5.2.3,<6.0"
-librabbitmq = {version = ">=1.5.0", optional = true, markers = "extra == \"librabbitmq\""}
 pytz = ">=2021.3"
 vine = ">=5.0.0,<6.0"
 
@@ -581,6 +580,18 @@ files = [
 
 [package.dependencies]
 pytz = "*"
+
+[[package]]
+name = "django-tinymce"
+version = "3.5.0"
+description = "A Django application that contains a widget to render a form field as a TinyMCE editor."
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "django-tinymce-3.5.0.tar.gz", hash = "sha256:ebe7e39e080415a0d4ca339f0f159754a7cc1dc7cd5276f32f9d3db3220134f8"},
+    {file = "django_tinymce-3.5.0-py3-none-any.whl", hash = "sha256:f9d3758670ad55912cbabdd41a14e0b6cfda47868f9c6d92a4480ca320356d53"},
+]
 
 [[package]]
 name = "dlint"
@@ -1002,26 +1013,6 @@ sqlalchemy = ["sqlalchemy"]
 sqs = ["boto3 (>=1.9.12)", "pycurl (>=7.44.1,<7.45.0)", "urllib3 (>=1.26.7)"]
 yaml = ["PyYAML (>=3.10)"]
 zookeeper = ["kazoo (>=1.3.1)"]
-
-[[package]]
-name = "librabbitmq"
-version = "2.0.0"
-description = "AMQP Client using the rabbitmq-c library."
-category = "main"
-optional = false
-python-versions = "*"
-files = [
-    {file = "librabbitmq-2.0.0-cp27-cp27m-manylinux1_x86_64.whl", hash = "sha256:c2a8113d3c831808d1d940fdf43e4882636a1efe2864df7ab3bb709a45016b37"},
-    {file = "librabbitmq-2.0.0-cp27-cp27mu-manylinux1_x86_64.whl", hash = "sha256:3116e40c02d4285b8dd69834e4cbcb1a89ea534ca9147e865f11d44e7cc56eea"},
-    {file = "librabbitmq-2.0.0-cp34-cp34m-manylinux1_x86_64.whl", hash = "sha256:cd9cc09343b193d7cf2cff6c6a578061863bd986a4bdf38f922e9dc32e15d944"},
-    {file = "librabbitmq-2.0.0-cp35-cp35m-manylinux1_x86_64.whl", hash = "sha256:98e355f486964dadae7e8b51c9a60e9aa0653bbe27f6b14542687f305c4c3652"},
-    {file = "librabbitmq-2.0.0-cp36-cp36m-manylinux1_x86_64.whl", hash = "sha256:5cdfb473573396d43d54cef9e9b4c74fa3d1516da51d04a7b261f6ef4e0bd8be"},
-    {file = "librabbitmq-2.0.0.tar.gz", hash = "sha256:ffa2363a860ab5dcc3ce3703247e05e940c73d776c03a3f3f9deaf3cf43bb96c"},
-]
-
-[package.dependencies]
-amqp = ">=1.4.6"
-six = ">=1.0.0"
 
 [[package]]
 name = "markupsafe"
@@ -1906,4 +1897,4 @@ tokenize-rt = ">=2.1"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "fc3a34196e82be9b536857fea95410a9ff988ebfd358331ee3708befecb060b7"
+content-hash = "21a1d0f5cf83ea54704e1bc4782e6b74ed484f618eaaf16b6c52727f3553aea0"

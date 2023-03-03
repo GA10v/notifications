@@ -8,6 +8,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'notifications.apps.NotificationsConfig',
     'django_celery_beat',
+    'tinymce',
 ]
 
 MIDDLEWARE = [

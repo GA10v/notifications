@@ -316,21 +316,6 @@ mypy = ">=0.950"
 typing-extensions = ">=4.2.0"
 
 [[package]]
-name = "celery-types"
-version = "0.14.0"
-description = "Type stubs for Celery and its related packages"
-category = "dev"
-optional = false
-python-versions = ">=3.7,<4.0"
-files = [
-    {file = "celery-types-0.14.0.tar.gz", hash = "sha256:397bd3c7fc38c0718220da75ce33087894e5d340c293792de9cfe39b6f686789"},
-    {file = "celery_types-0.14.0-py3-none-any.whl", hash = "sha256:ba36dddad281b55c1596a4e0f84952b24158900d0e30c5888bb458c60d7f9b18"},
-]
-
-[package.dependencies]
-typing-extensions = ">=3.10.0,<5.0.0"
-
-[[package]]
 name = "cfgv"
 version = "3.3.1"
 description = "Validate configuration and produce human readable error messages."
@@ -595,6 +580,18 @@ files = [
 
 [package.dependencies]
 pytz = "*"
+
+[[package]]
+name = "django-tinymce"
+version = "3.5.0"
+description = "A Django application that contains a widget to render a form field as a TinyMCE editor."
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "django-tinymce-3.5.0.tar.gz", hash = "sha256:ebe7e39e080415a0d4ca339f0f159754a7cc1dc7cd5276f32f9d3db3220134f8"},
+    {file = "django_tinymce-3.5.0-py3-none-any.whl", hash = "sha256:f9d3758670ad55912cbabdd41a14e0b6cfda47868f9c6d92a4480ca320356d53"},
+]
 
 [[package]]
 name = "dlint"
@@ -1900,4 +1897,4 @@ tokenize-rt = ">=2.1"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "07e4782aab7172f8a9296b7e2cfb763352887a217bd08c083907d70792daa521"
+content-hash = "21a1d0f5cf83ea54704e1bc4782e6b74ed484f618eaaf16b6c52727f3553aea0"

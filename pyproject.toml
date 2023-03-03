@@ -7,6 +7,9 @@ authors = ["GA10"]
 [tool.poetry.dependencies]
 python = "^3.10"
 pydantic = "1.10.2"
+django = "^4.1.7"
+celery = "^5.2.7"
+django-celery-beat = "^2.4.0"
 
 
 [tool.poetry.dev-dependencies]

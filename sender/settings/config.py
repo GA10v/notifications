@@ -12,8 +12,10 @@ class Settings(BaseSettings):
     email_smtp_port: int
     email_smtp_ssl: bool | None = True
     rabbitmq_url: AmqpDsn
-    rabbitmq_queue: str
+    rabbitmq_sender_queue: str
     rabbitmq_exchange: str
+    rabbitmq_connect_pool_size: int | None = 2
+    rabbitmq_channel_pool_size: int | None = 10
 
     class Config:
         """Configuration plugin."""

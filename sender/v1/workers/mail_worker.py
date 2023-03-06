@@ -5,8 +5,9 @@ import smtplib
 from email.message import EmailMessage
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
-from src.settings.config import Settings
-from src.workers.v1.generic_worker import Worker
+
+from sender.settings.config import Settings
+from sender.v1.workers.generic_worker import Worker
 
 settings = Settings()
 

@@ -1,11 +1,17 @@
 import json
+import logging
 from contextlib import suppress
 
 import asyncclick as click
+import trio
 from trio_websocket import ConnectionClosed, serve_websocket
 
 from settings.config import settings
 from v1.workers.generic_worker import Worker
+
+WEBSOCKET_CHECK_TIMEOUT = 10
+
+logger = logging.getLogger(__name__)
 
 
 class WebSocketWorker(Worker):
@@ -21,12 +27,14 @@ async def notification_server(request):
     ws = await request.accept()
     while True:
         try:
-            message = await ws.get_message()
-            if message.lower() == 'list_notifications':
-                # getting list notifications
-                messages_list = []
-                await ws.send_message(json.dumps(messages_list))
-                continue
+            with trio.move_on_after(WEBSOCKET_CHECK_TIMEOUT):
+                message = await ws.get_message()
+                if message.lower() == 'list_notifications':
+                    # getting list notifications
+                    messages_list = []
+                    await ws.send_message(json.dumps(messages_list))
+            # Logic to get new messages
+            continue
         except ConnectionClosed:
             break
 

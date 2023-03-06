@@ -48,7 +48,8 @@ class RabbitMQProducer(ProducerProtocol):
             name=incoming_queue,
             durable=True,
             arguments={
-                'x-dead-letter-exchange': settings.rabbit.EXCHENGE_INCOMING_1.lower(),
+                'x-dead-letter-exchange': settings.rabbit.EXCHENGE_RETRY_1.lower(),
+                'x-message-ttl': 5000,
             },
         )
         self.retry_queue = await self.channel.declare_queue(
@@ -66,7 +67,7 @@ class RabbitMQProducer(ProducerProtocol):
         )
         self.retry_exchange = await self.channel.declare_exchange(
             name=retry_exchange,
-            type=ExchangeType.DIRECT,
+            type=ExchangeType.FANOUT,
             durable=True,
         )
 

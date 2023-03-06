@@ -40,7 +40,7 @@ class RabbitMQProducer(ProducerProtocol, RabbitMQBroker):
             )
             retry_exchange = await channel.declare_exchange(
                 name=self.retry_exchange,
-                type=ExchangeType.DIRECT,
+                type=ExchangeType.FANOUT,
                 durable=True,
             )
             incoming_queue = await channel.declare_queue(

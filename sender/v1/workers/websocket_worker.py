@@ -21,7 +21,7 @@ async def notification_server(request):
                 # getting list notifications
                 messages_list = []
                 await ws.send_message(messages_list)
-            continue
+                continue
         except ConnectionClosed:
             break
 

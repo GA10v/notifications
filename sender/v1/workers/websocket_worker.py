@@ -1,6 +1,7 @@
+import json
 from contextlib import suppress
 
-import asynclick as click
+import asyncclick as click
 from trio_websocket import ConnectionClosed, serve_websocket
 
 from settings.config import settings
@@ -20,11 +21,11 @@ async def notification_server(request):
     ws = await request.accept()
     while True:
         try:
-            message = await ws.get_message().decode()
+            message = await ws.get_message()
             if message.lower() == 'list_notifications':
                 # getting list notifications
                 messages_list = []
-                await ws.send_message(messages_list)
+                await ws.send_message(json.dumps(messages_list))
                 continue
         except ConnectionClosed:
             break

@@ -18,10 +18,12 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - rabbitmq
+    ports:
+      - "8765:8765"
     env_file:
       - .env
     command: >
-      bash -c "python -m v1.workers.websocket_worker "
+      bash -c "python -m v1.workers.websocket_worker --port 8765 --ip 0.0.0.0"
 
 
 

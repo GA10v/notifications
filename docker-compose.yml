@@ -1,7 +1,7 @@
 version: '3.9'
 
 services:
-  sender:
+  rabbit_worker:
     build:
       context: sender
       dockerfile: Dockerfile
@@ -11,6 +11,19 @@ services:
       - .env
     command: >
       bash -c "python -m v1.workers.rabbit_worker"
+
+  websocket_worker:
+    build:
+      context: sender
+      dockerfile: Dockerfile
+    depends_on:
+      - rabbitmq
+    env_file:
+      - .env
+    command: >
+      bash -c "python -m v1.workers.websocket_worker "
+
+
 
   rabbitmq:
     image: rabbitmq:3.10.13-management-alpine

@@ -11,6 +11,10 @@ class WebSocketWorker(Worker):
     def __init__(self):
         self.settings = settings
 
+    def send_message(self, recipients, subject, template, fields):
+        # Save state to database for request by user
+        pass
+
 
 async def notification_server(request):
     ws = await request.accept()

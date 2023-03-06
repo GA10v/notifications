@@ -2,15 +2,13 @@
 
 import asyncio
 import logging
-from functools import partial
-from typing import Callable
 
 import aio_pika
 from aio_pika.abc import AbstractRobustConnection
 from aio_pika.pool import Pool
 
-from sender.settings.config import settings
-from sender.v1.workers import mail_worker, websocket_worker
+from settings.config import settings
+from v1.workers import mail_worker, websocket_worker
 
 WORKERS = {
     'mail': mail_worker,
@@ -30,7 +28,7 @@ async def get_channel(connection_pool: Pool) -> aio_pika.Channel:
 async def consume(channel_pool: Pool) -> None:
     async with channel_pool.acquire() as channel:
         await channel.set_qos(1)
-        queue = await channel.queue_declare(
+        queue = await channel.declare_queue(
             settings.rabbitmq_sender_queue,
             auto_delete=False,
         )
@@ -45,20 +43,17 @@ async def main() -> None:
     loop = asyncio.get_event_loop()
     connection_pool: Pool = Pool(
         get_connection,
-        max_size=settings.rabbitmq_pool_size,
+        max_size=settings.rabbitmq_connect_pool_size,
         loop=loop,
     )
-    get_channel_func: Callable = partial(
-        get_channel(connection_pool=connection_pool),  # type: ignore[arg-type]
-    )
     channel_pool: Pool = Pool(
-        get_channel_func,
+        get_channel,
+        connection_pool,
         max_size=settings.rabbitmq_channel_pool_size,
         loop=loop,
     )
-    consumer: Callable = partial(consume(channel_pool=channel_pool))  # type: ignore[arg-type]
     async with connection_pool, channel_pool:
-        task = loop.create_task(consumer())
+        task = loop.create_task(consume(channel_pool))
         await task
 
 

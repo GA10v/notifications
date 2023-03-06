@@ -1,8 +1,7 @@
-from src.settings.config import Settings
-from src.workers.v1.generic_worker import Worker
-
-settings = Settings()
+from settings.config import settings
+from v1.workers.generic_worker import Worker
 
 
 class WebSocketWorker(Worker):
-    pass
+    def __init__(self):
+        self.settings = settings

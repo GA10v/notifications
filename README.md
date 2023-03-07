@@ -10,5 +10,8 @@
     ```$ python3 services/notific_api/src/main.py```
 5. Сервис enricher запускается командой
     ```$ python3 services/enricher/src/main.py```
-6. Перейти к документации API по url: ```http://localhost:8080/api/openapi```
-7. Перейти к документации RabbitMQ по url: ```http://localhost:15672/``` (USER='guest', PASSWORD='guest')
+6. Mock сервиса Auth запускается командой
+    ```$ python3 mock/auth/main.py```
+7. Перейти к документации API по url: ```http://localhost:8080/api/openapi```
+8. Перейти к документации Mock_Auth по url: ```http://localhost:8081/api/openapi```
+9. Перейти к документации RabbitMQ по url: ```http://localhost:15672/``` (USER='guest', PASSWORD='guest')

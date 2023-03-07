@@ -15,3 +15,6 @@ class Template(UUIDMixin, TimeStampedMixin):  # type: ignore[misc]
         verbose_name = _('Template')
         verbose_name_plural = _('Templates')
         ordering = ['title']
+
+    def __str__(self):
+        return self.title[:15]

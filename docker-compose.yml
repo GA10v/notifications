@@ -45,11 +45,22 @@ services:
     command: celery -A admin_panel beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
 
   rabbitmq:
-    image: rabbitmq:3.10.13-management-alpine
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq/
     env_file:
       - .env
 
 volumes:
+  rabbitmq_data:
+  volumes:
   postgres_data:
   static:
   media:

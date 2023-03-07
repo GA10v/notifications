@@ -21,7 +21,7 @@ class DeliveryType(str, Enum):
 
 
 class Notification(BaseModel):
-    id: UUID
+    notification_id: UUID
     event_type: EventType
     delivery_type: list[DeliveryType]
     header: str
@@ -31,8 +31,8 @@ class Notification(BaseModel):
     updated_at: datetime
 
 
-class NotificationLastSend(BaseModel):
-    id: UUID
+class NotificationLastSent(BaseModel):
+    notification_id: UUID
     content_id: UUID
     payload: Any
     created_at: datetime

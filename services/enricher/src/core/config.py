@@ -41,11 +41,21 @@ class RabbitMQSetting(BaseConfig):
         env_prefix = 'RABBIT_'
 
 
+class JWTSettings(BaseConfig):
+    SECRET_KEY: str = '245585dbb5cbe2f151742298d61d364880575bff0bdcbf4ae383f0180e7e47dd'
+    JWT_TOKEN_LOCATION: list = ['headers']
+    ALGORITHM: str = 'HS256'
+
+    class Config:
+        env_prefix = 'JWT_'
+
+
 class ProjectSettings(BaseConfig):
     PROJECT_NAME: str = 'Notification_api'
     BASE_DIR = Path(__file__).parent.parent
     fastapi: FastapiSetting = FastapiSetting()
     rabbit: RabbitMQSetting = RabbitMQSetting()
+    jwt: JWTSettings = JWTSettings()
 
 
 settings = ProjectSettings()

@@ -1,14 +1,15 @@
 """Django settings for admin_panel project."""
 
-import os
 from pathlib import Path
 
 from split_settings.tools import include
 
+from core.config import settings
+
 BASE_DIR = Path(__file__).resolve().parent.parent
-SECRET_KEY = os.getenv('SECRET_KEY')
-DEBUG = os.environ.get('DEBUG', False) == 'True'
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '127.0.0.1').split(',')
+SECRET_KEY = settings.django.SECRET_KEY
+DEBUG = settings.django.DEBUG
+ALLOWED_HOSTS = settings.django.ALLOWED_HOSTS.split(',')
 include('components/_apps_middleware.py')
 ROOT_URLCONF = 'admin_panel.urls'
 WSGI_APPLICATION = 'admin_panel.wsgi.application'
@@ -35,7 +36,7 @@ MEDIA_URL = 'media/'
 MEDIA_ROOT = '/code/media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.User'
-CELERY_BROKER_URL = os.getenv('RABBITMQ_URL')
+CELERY_BROKER_URL = settings.rabbit.uri
 CELERY_RESULT_BACKEND = 'rpc://'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'

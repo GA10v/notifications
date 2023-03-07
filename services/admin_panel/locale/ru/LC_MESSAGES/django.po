@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-03 16:32+0300\n"
+"POT-Creation-Date: 2023-03-07 22:46+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -52,10 +52,14 @@ msgstr "наименование"
 msgid "template_content"
 msgstr "содержимое шаблона"
 
-#: .\notifications\models.py:14
+#: .\notifications\models.py:15
 msgid "Template"
 msgstr "Шаблон"
 
-#: .\notifications\models.py:15
+#: .\notifications\models.py:16
 msgid "Templates"
 msgstr "Шаблоны"
+
+#: .\users\apps.py:8
+msgid "Users"
+msgstr "Пользователи и Группы"

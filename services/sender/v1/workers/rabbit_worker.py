@@ -17,7 +17,7 @@ WORKERS = {
 
 
 async def get_connection() -> AbstractRobustConnection:
-    return await aio_pika.connect_robust(settings.rabbitmq_url)
+    return await aio_pika.connect_robust(settings.rabbit.QUEUE_TO_SEND)
 
 
 async def get_channel(connection_pool: Pool) -> aio_pika.Channel:
@@ -29,7 +29,7 @@ async def consume(channel_pool: Pool) -> None:
     async with channel_pool.acquire() as channel:
         await channel.set_qos(1)
         queue = await channel.declare_queue(
-            settings.rabbitmq_sender_queue,
+            settings.rabbit.QUEUE_TO_SEND,
             auto_delete=False,
         )
         async with queue.iterator() as queue_iter:
@@ -43,13 +43,13 @@ async def main() -> None:
     loop = asyncio.get_event_loop()
     connection_pool: Pool = Pool(
         get_connection,
-        max_size=settings.rabbitmq_connect_pool_size,
+        max_size=settings.rabbit.CONNECT_POOL_SIZE,
         loop=loop,
     )
     channel_pool: Pool = Pool(
         get_channel,
         connection_pool,
-        max_size=settings.rabbitmq_channel_pool_size,
+        max_size=settings.rabbit.CONNECT_POOL_SIZE,
         loop=loop,
     )
     async with connection_pool, channel_pool:

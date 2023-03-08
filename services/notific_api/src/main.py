@@ -10,6 +10,8 @@ app = FastAPI(
     docs_url='/api/openapi',
     openapi_url='/api/openapi.json',
     default_response_class=ORJSONResponse,
+    description='The service to notify users',
+    version='1.0.0'
 )
 
 
@@ -30,6 +32,3 @@ async def shutdown():
 
 
 app.include_router(notific.router, prefix=settings.fastapi.NOTIFIC_PREFIX, tags=['notification'])
-
-if __name__ == '__main__':
-    uvicorn.run('main:app', host='0.0.0.0', port=8080)

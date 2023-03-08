@@ -1,4 +1,17 @@
 services:
+  api:
+    build: ./services/notific_api
+    container_name: api_notifications
+    entrypoint: >
+      sh -c "gunicorn --bind :8000 --workers $GUNICORN_WORKERS --threads $GUNICORN_THREADS main:app \
+                      --worker-class uvicorn.workers.UvicornH11Worker --preload --timeout $GUNICORN_TIMEOUT"
+    volumes:
+      - api_data:/data
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    restart: on-failure
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
@@ -16,5 +29,6 @@ services:
 
 volumes:
   rabbitmq_data:
+  api_data:
 
 

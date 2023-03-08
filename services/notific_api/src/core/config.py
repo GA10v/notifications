@@ -1,18 +1,24 @@
+from logging import config as logging_config
 from pathlib import Path
 
 from pydantic import BaseSettings
 
+from core.logger import LOGGING
+
+
+logging_config.dictConfig(LOGGING)
+
 
 class BaseConfig(BaseSettings):
     class Config:
-        env_file = Path(Path(__file__).parent.parent.parent.parent.parent, 'env')
+        # env_file = Path(Path(__file__).parent.parent.parent.parent.parent, 'env')
         env_file_encoding = 'utf-8'
 
 
 class FastapiSetting(BaseConfig):
     HOST: str = 'localhost'
     PORT: int = 8080
-    NOTIFIC_PREFIX: str = '/app/v1/notification'
+    NOTIFIC_PREFIX: str = '/api/v1/notification'
 
     class Config:
         env_prefix = 'FASTAPI_'
@@ -42,7 +48,7 @@ class RabbitMQSetting(BaseConfig):
 
 
 class ProjectSettings(BaseConfig):
-    PROJECT_NAME: str = 'Notification_api'
+    PROJECT_NAME: str = 'Notifications API'
     BASE_DIR = Path(__file__).parent.parent
     fastapi: FastapiSetting = FastapiSetting()
     rabbit: RabbitMQSetting = RabbitMQSetting()

@@ -25,14 +25,23 @@ services:
     command: >
       bash -c "python -m v1.workers.websocket_worker --port 8765 --ip 0.0.0.0"
 
-
-
   rabbitmq:
-    image: rabbitmq:3.10.13-management-alpine
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBIT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBIT_PASSWORD}
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq/
     env_file:
       - .env
 
 volumes:
+  rabbitmq_data:
   postgres_data:
   static:
   media:
+

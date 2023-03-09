@@ -1,8 +1,10 @@
+from random import randint
+
 import uvicorn
 from config import settings
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
-from utils import get_fake_review_info
+from utils import get_fake_group, get_fake_review_info
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -15,6 +17,16 @@ app = FastAPI(
 @app.post('/ugc/v1/review_info/{movie_id}/{user_id}/{review_id}')
 async def review_info(movie_id: str, user_id: str, review_id: str):
     return get_fake_review_info(movie_id, user_id, review_id)
+
+
+@app.post('/ugc/v1/subscribers/{movie_id}')
+async def subscribers_group(movie_id: str):
+    return get_fake_group()
+
+
+@app.post('/ugc/v1/likes_count/{review_id}')
+async def likes_count_info(review_id: str):
+    return randint(1, 20)
 
 
 if __name__ == '__main__':

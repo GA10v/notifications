@@ -30,3 +30,7 @@ def get_fake_review_info(
         dislikes=randint(0, 50),
         author_score=7.8,
     ).dict()
+
+
+def get_fake_group() -> list[str]:
+    return [str(uuid4()) for _ in range(20)]

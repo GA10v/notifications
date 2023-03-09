@@ -45,7 +45,7 @@ class PermissionSettings(Enum):
 
 
 class ProjectSettings(BaseConfig):
-    PROJECT_NAME: str = 'UGC'
+    PROJECT_NAME: str = 'ADMIN_PANEL_MOCK'
     BASE_DIR = Path(__file__).parent
     notific: NotificSetting = NotificSetting()
     fastapi: FastapiSettings = FastapiSettings()

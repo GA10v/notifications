@@ -4,9 +4,9 @@ from contextlib import suppress
 
 import asyncclick as click
 import trio
-from settings.config import settings
 from trio_websocket import ConnectionClosed, serve_websocket
 
+from core.config import settings
 from v1.workers.generic_worker import Worker
 
 WEBSOCKET_CHECK_TIMEOUT = 10

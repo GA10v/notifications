@@ -6,8 +6,8 @@ import logging
 import aio_pika
 from aio_pika.abc import AbstractRobustConnection
 from aio_pika.pool import Pool
-from settings.config import settings
 
+from core.config import settings
 from v1.workers import mail_worker, websocket_worker
 
 WORKERS = {
@@ -17,7 +17,7 @@ WORKERS = {
 
 
 async def get_connection() -> AbstractRobustConnection:
-    return await aio_pika.connect_robust(settings.rabbit.QUEUE_TO_SEND)
+    return await aio_pika.connect_robust(settings.rabbit.uri)
 
 
 async def get_channel(connection_pool: Pool) -> aio_pika.Channel:

@@ -24,6 +24,7 @@ class RabbitMQSetting(BaseConfig):
     QUEUE_RETRY_ENRICH: str = 'Queue_retry_to_enrich'
     QUEUE_RETRY_SEND: str = 'Queue_retry_to_send'
     MESSAGE_TTL_MS: int = 10000
+    CONNECT_POOL_SIZE: int = 2
 
     @property
     def uri(self):
@@ -36,11 +37,11 @@ class RabbitMQSetting(BaseConfig):
 class EmailSettings(BaseConfig):
     """Class is being used to keep all settings."""
 
-    user: str
-    password: str
-    smtp_server: str
-    smtp_port: int
-    smtp_ssl: bool | None = True
+    USER: str
+    PASSWORD: str
+    SMTP_SERVER: str
+    SMTP_PORT: int
+    SMTP_SSL: bool | None = True
 
     class Config:
         """Configuration plugin."""

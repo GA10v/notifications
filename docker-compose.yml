@@ -3,18 +3,20 @@ version: '3.9'
 services:
   rabbit_worker:
     build:
-      context: sender
+      context: services/sender
       dockerfile: Dockerfile
-    depends_on:
-      - rabbitmq
     env_file:
       - .env
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
     command: >
       bash -c "python -m v1.workers.rabbit_worker"
 
+
   websocket_worker:
     build:
-      context: sender
+      context: services/sender
       dockerfile: Dockerfile
     depends_on:
       - rabbitmq
@@ -31,13 +33,15 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBIT_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBIT_PASSWORD}
-    ports:
-      - 5672:5672
-      - 15672:15672
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq/
     env_file:
       - .env
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "5672" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
 
 volumes:
   rabbitmq_data:

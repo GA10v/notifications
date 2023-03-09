@@ -13,6 +13,6 @@ WORKDIR /opt/app
 
 COPY poetry.lock pyproject.toml /opt/app/
 RUN poetry config virtualenvs.create false \
-  && poetry install $(test "$BUILD_TYPE" = "production" && echo "--without dev") -G sender --no-interaction --no-ansi --no-root
+  && poetry install $(test "$BUILD_TYPE" = "production" && echo "--without dev") --with sender --no-interaction --no-ansi --no-root
 
 COPY . .

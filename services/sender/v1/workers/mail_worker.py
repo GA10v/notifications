@@ -6,7 +6,7 @@ from email.message import EmailMessage
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from sender.core.config import settings
+from core.config import settings
 from v1.workers.generic_worker import Worker
 
 

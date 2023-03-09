@@ -20,6 +20,7 @@ class NewUserContext(BaseModel):
 
 
 class NewReviewsLikesContext(BaseUserContext):
+    review_id: str
     movie_title: str
     likes: int
 

@@ -8,7 +8,7 @@ import jwt
 from config import settings
 from faker import Faker
 from jwt import DecodeError, ExpiredSignatureError
-from models import DeliveryType, NewUserInfo, UserInfo, WelcomeEvent
+from models import DeliveryType, EventType, NewUserInfo, UserInfo, WelcomeEvent
 from requests import post
 
 fake = Faker()
@@ -39,11 +39,7 @@ def _parse_auth_header(
 def parse_header(auth_header) -> dict:
     jwt_token = _parse_auth_header(auth_header)['access_token']
     try:
-        decoded_jwt = jwt.decode(jwt=jwt_token, key=settings.jwt.SECRET_KEY, algorithms=[settings.jwt.ALGORITHM])
-        return {
-            'user_id': decoded_jwt.identity,
-            'claims': decoded_jwt.additional_claims,
-        }
+        return jwt.decode(jwt=jwt_token, key=settings.jwt.SECRET_KEY, algorithms=[settings.jwt.ALGORITHM])
     except (DecodeError, ExpiredSignatureError):
         ...  # TODO Добавить логгер
 
@@ -53,7 +49,7 @@ def get_new_user() -> NewUserInfo:
         user_id=str(uuid4()),
         name=fake.first_name(),
         email=fake.email(),
-    )
+    ).dict()
 
 
 def get_fake_user(user_id: str | None = None) -> UserInfo:
@@ -71,9 +67,7 @@ def get_fake_user(user_id: str | None = None) -> UserInfo:
         telegram_name=f'@{fake.first_name()}',
         time_zone=fake.timezone(),
         birthday=fake.date(),
-        delivery_type=[
-            DeliveryType.email,
-        ],
+        delivery_type=DeliveryType.email.value,
     )
 
 
@@ -105,14 +99,13 @@ def _headers() -> str:
 
 
 def create_event() -> None:
-    # TODO добавить путь к API_Notific
     url = f'http://{settings.notific.HOST}:{settings.notific.PORT}{settings.notific.NOTIFIC_PREFIX}/send'
     headers = _headers()
     params = WelcomeEvent(
         source_name='Auth',
-        event_type='welcome_message',
+        event_type=EventType.welcome,
         delivery_type=DeliveryType.email,
-        context=get_new_user().dict(),
+        context=get_new_user(),
         created_at=datetime.now(),
     ).dict()
-    post(url=url, headers=headers, params=params)
+    post(url=url, headers=headers, json=params)

@@ -5,7 +5,7 @@ from uuid import UUID
 from pydantic import BaseModel
 
 
-class EventType(Enum):
+class EventType(str, Enum):
     welcome = 'welcome_message'
     new_series = 'new_series'
     birthday = 'birthday_greetings'
@@ -16,7 +16,7 @@ class EventType(Enum):
         return f'{self.value}'
 
 
-class DeliveryType(Enum):
+class DeliveryType(str, Enum):
     email = 'email'
     sms = 'sms'
     push = 'push'
@@ -36,7 +36,7 @@ class UserInfo(BaseModel):
     country: str | None
     time_zone: str | None
     birthday: date | None
-    delivery_type: list[DeliveryType]
+    delivery_type: DeliveryType
 
     def dict(self, *args, **kwargs) -> dict:
         _dict: dict = super().dict(*args, **kwargs)
@@ -47,7 +47,7 @@ class UserInfo(BaseModel):
 class NewUserInfo(BaseModel):
     user_id: str | UUID
     name: str
-    email: str | None
+    email: str
 
     def dict(self, *args, **kwargs) -> dict:
         _dict: dict = super().dict(*args, **kwargs)

@@ -50,12 +50,40 @@ class JWTSettings(BaseConfig):
         env_prefix = 'JWT_'
 
 
+class AuthMock(BaseConfig):
+    HOST: str = 'localhost'
+    PORT: int = 8081
+    PREFIX: str = '/auth/v1/'
+
+    @property
+    def uri(self):
+        return f'http://{self.HOST}:{self.PORT}{self.PREFIX}'
+
+    class Config:
+        env_prefix = 'AUTH_MOCK_'
+
+
+class AdminPanelMock(BaseConfig):
+    HOST: str = 'localhost'
+    PORT: int = 8082
+    PREFIX: str = '/admin_panel/v1/'
+
+    @property
+    def uri(self):
+        return f'http://{self.HOST}:{self.PORT}{self.PREFIX}'
+
+    class Config:
+        env_prefix = 'ADMIN_PANEL_MOCK_'
+
+
 class ProjectSettings(BaseConfig):
     PROJECT_NAME: str = 'Notification_api'
     BASE_DIR = Path(__file__).parent.parent
     fastapi: FastapiSetting = FastapiSetting()
     rabbit: RabbitMQSetting = RabbitMQSetting()
     jwt: JWTSettings = JWTSettings()
+    auth: AuthMock = AuthMock()
+    admin_panel: AdminPanelMock = AdminPanelMock()
 
 
 settings = ProjectSettings()

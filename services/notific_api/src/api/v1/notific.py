@@ -57,6 +57,7 @@ async def test_2(
         'event_type': 'new_likes',
         'delivery_type': 'email',
         'context': {
+            'review_id': '5232',
             'author_id': '122345',
             'movie_id': '654',
             'likes': 20,

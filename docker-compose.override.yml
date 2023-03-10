@@ -1,6 +1,10 @@
 version: '3.9'
 
 services:
+  admin-panel:
+    ports:
+      - "8000:8000"
+
   rabbitmq:
     ports:
      - "15672:15672"

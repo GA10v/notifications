@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mail Subject</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1 class="header">Practix</h1>
+    </header>
+    <main>
+      {{ template_text }}
+      <!--Save some text like below to admin site-->
+
+      <!-- <h2 class="greeting">Здравствуйте, {{username}}!</h2>
+      <div class="main_text">
+        <div class="announcement">
+          <p>За этот месяц вышло {{ new_films_qty }} новых фильмов и {{ new_soap_opera_qty }} сериалов.
+            И все они есть в нашем онлайн-кинотеатре! Но что же вы больше всего смотрели в {{ month }}?
+          </p>
+        </div>
+        <div class="real_stats">
+          <p>В этом месяце вы посмотрели {{ user_films_qty }} фильмов.
+            Из них {{ category.qty }} - {{ category.name }}.</p>
+        </div>
+        <div class="real_stats_award">
+          <p>Позравдляем!</p>
+          <p>Ваше звание - {{ category.award_name }}</p>
+          <p>{{ category.award_descrption }}</p>
+        </div>
+      </div> -->
+      <p class="footer">Чтобы мы писали реже, вы можете <a href="mailto:noreply@practix.ru">отписаться от рассылки</a></p>
+    </main>
+
+  </body>
+</html>

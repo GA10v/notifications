@@ -4,7 +4,7 @@ import smtplib
 from email.message import EmailMessage
 
 from core.config import settings
-from models.notifications import Notification
+from models.notifications import NotificationToDelivery
 from v1.workers.generic_worker import Worker
 
 
@@ -26,7 +26,7 @@ class EmailWorker(Worker):
 
     def send_message(
         self,
-        notification: Notification,
+        notification: NotificationToDelivery,
     ) -> None:
         """Send emails.
 

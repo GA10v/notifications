@@ -4,6 +4,7 @@ import smtplib
 from email.message import EmailMessage
 
 from core.config import settings
+from models.notifications import Notification
 from v1.workers.generic_worker import Worker
 
 
@@ -25,22 +26,24 @@ class EmailWorker(Worker):
 
     def send_message(
         self,
-        message_to_send: dict,
+        notification: Notification,
     ) -> None:
         """Send emails.
 
         Args:
             message: dict - includes reciepents, subject and body
         """
-        recipient = message_to_send.get('recipient')
-        message_body = message_to_send.get('message_body')
 
         message = EmailMessage()
         message['From'] = settings.email.USER
         message['To'] = settings.email.USER
-        message['Subject'] = message_to_send.get('subject')
-        message.add_alternative(message_body, subtype='html')
-        self.connection.sendmail(settings.email.USER, recipient, message.as_string())
+        message['Subject'] = notification.subject
+        message.add_alternative(notification.message_body, subtype='html')
+        self.connection.sendmail(
+            settings.email.USER,
+            notification.recipient,
+            message.as_string(),
+        )
         self.connection.close()
 
 

@@ -2,6 +2,7 @@ version: '3.9'
 
 services:
   rabbit_worker:
+    container_name: rabbit_worker
     build:
       context: services/sender
       dockerfile: Dockerfile
@@ -15,6 +16,7 @@ services:
 
 
   websocket_worker:
+    container_name: websocket_worker
     build:
       context: services/sender
       dockerfile: Dockerfile

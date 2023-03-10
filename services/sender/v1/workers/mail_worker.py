@@ -1,10 +1,7 @@
 """Module to use to send email."""
 
-import pathlib
 import smtplib
 from email.message import EmailMessage
-
-from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from core.config import settings
 from v1.workers.generic_worker import Worker
@@ -28,35 +25,22 @@ class EmailWorker(Worker):
 
     def send_message(
         self,
-        recipients: list[str],
-        subject: str,
-        template: str,
-        fields: dict[str, str],
+        message_to_send: dict,
     ) -> None:
         """Send emails.
 
         Args:
-            recipients: list - List of email reciepents
-            subject: str - Subject of email
-            template: str - Template to compose email body
-            fields: dict - Fields to fill the template
+            message: dict - includes reciepents, subject and body
         """
+        recipient = message_to_send.get('recipient')
+        message_body = message_to_send.get('message_body')
+
         message = EmailMessage()
         message['From'] = settings.email.USER
         message['To'] = settings.email.USER
-        message['Subject'] = subject
-
-        templates_storage = pathlib.Path() / 'templates'
-        env = Environment(
-            loader=FileSystemLoader(templates_storage),
-            autoescape=select_autoescape(),
-        )
-        template_rendered = env.get_template(template).render(
-            title=subject,
-            **fields,
-        )
-        message.add_alternative(template_rendered, subtype='html')
-        self.connection.sendmail(settings.email.USER, recipients, message.as_string())
+        message['Subject'] = message_to_send.get('subject')
+        message.add_alternative(message_body, subtype='html')
+        self.connection.sendmail(settings.email.USER, recipient, message.as_string())
         self.connection.close()
 
 

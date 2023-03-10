@@ -11,7 +11,7 @@
       <h1 class="header">Practix</h1>
     </header>
     <main>
-      {{ template_text }}
+      {% block template_text %}
       <!--Save some text like below to admin site-->
 
       <!-- <h2 class="greeting">Здравствуйте, {{username}}!</h2>
@@ -63,6 +63,7 @@
             </div> -->
         {% endfor %}
       </div>
+      {% endblock template_text %}
 
       <p class="footer">Чтобы мы писали реже, вы можете <a href="mailto:noreply@practix.ru">отписаться от рассылки</a></p>
     </main>

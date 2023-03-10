@@ -1,5 +1,20 @@
 # Проектная работа 10 спринта
 
+TODO: Оформить документацию
+
+## Стандартный запуск
+Установка переменных из файла .env.example в файл .env
+
+```
+docker compose up -d --build
+docker compose exec -it admin-panel bash
+<!-- python manage.py collectstatic -->
+python manage.py migrate
+python manage.py createsuperuser
+<!-- python manage.py compilemessages -->
+```
+
+
 ## Запуск
 1. Установить зависимости командой
     ```$ poetry install```

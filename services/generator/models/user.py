@@ -3,12 +3,12 @@ from uuid import UUID
 
 from pydantic import BaseModel
 
-from generator.models.notifications import DeliveryType
+from services.generator.models.notifications import DeliveryType
 
 
 class User(BaseModel):
-    id: UUID
-    name: str
+    user_id: UUID
+    first_name: str
     last_name: str
     email: str | None
     phone_number: str | None

@@ -18,6 +18,15 @@ class FastapiSetting(BaseConfig):
         env_prefix = 'FASTAPI_'
 
 
+class LogingSettings(BaseConfig):
+    SENTRY_DSN: str = ''
+    LOGSTAH_HOST: str = 'logstash'
+    LOGSTAH_PORT: int = 5046
+
+    class Config:
+        env_prefix = 'LOGGING_'
+
+
 class RabbitMQSetting(BaseConfig):
     USER: str = 'guest'
     PASSWORD: str = 'guest'
@@ -41,11 +50,64 @@ class RabbitMQSetting(BaseConfig):
         env_prefix = 'RABBIT_'
 
 
+class JWTSettings(BaseConfig):
+    SECRET_KEY: str = '245585dbb5cbe2f151742298d61d364880575bff0bdcbf4ae383f0180e7e47dd'
+    JWT_TOKEN_LOCATION: list = ['headers']
+    ALGORITHM: str = 'HS256'
+
+    class Config:
+        env_prefix = 'JWT_'
+
+
+class AuthMock(BaseConfig):
+    HOST: str = 'localhost'
+    PORT: int = 8081
+    PREFIX: str = '/auth/v1/'
+
+    @property
+    def uri(self):
+        return f'http://{self.HOST}:{self.PORT}{self.PREFIX}'
+
+    class Config:
+        env_prefix = 'AUTH_MOCK_'
+
+
+class AdminPanelMock(BaseConfig):
+    HOST: str = 'localhost'
+    PORT: int = 8082
+    PREFIX: str = '/admin_panel/v1/'
+
+    @property
+    def uri(self):
+        return f'http://{self.HOST}:{self.PORT}{self.PREFIX}'
+
+    class Config:
+        env_prefix = 'ADMIN_PANEL_MOCK_'
+
+
+class UGCMock(BaseConfig):
+    HOST: str = 'localhost'
+    PORT: int = 8083
+    PREFIX: str = '/ugc/v1/'
+
+    @property
+    def uri(self):
+        return f'http://{self.HOST}:{self.PORT}{self.PREFIX}'
+
+    class Config:
+        env_prefix = 'UGC_MOCK_'
+
+
 class ProjectSettings(BaseConfig):
     PROJECT_NAME: str = 'Notification_api'
     BASE_DIR = Path(__file__).parent.parent
     fastapi: FastapiSetting = FastapiSetting()
     rabbit: RabbitMQSetting = RabbitMQSetting()
+    jwt: JWTSettings = JWTSettings()
+    auth: AuthMock = AuthMock()
+    admin_panel: AdminPanelMock = AdminPanelMock()
+    ugc: UGCMock = UGCMock()
+    logging: LogingSettings = LogingSettings()
 
 
 settings = ProjectSettings()

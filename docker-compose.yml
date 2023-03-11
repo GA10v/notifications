@@ -1,5 +1,59 @@
+version: '3.9'
+
 services:
-  api:
+  postgres:
+    container_name: postgres
+    image: postgres:15.2-alpine3.17
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_PASSWORD: ${DJANGO_POSTGRES_PASSWORD}
+      POSTGRES_USER: ${DJANGO_POSTGRES_USER}
+      POSTGRES_DB: ${DJANGO_POSTGRES_DB}
+    env_file:
+      .env
+
+  admin-panel:
+    container_name: admin_panel
+    build:
+      context: services/admin_panel
+      dockerfile: Dockerfile
+    volumes:
+      - static:/opt/app/static/
+      - media:/opt/app/media/
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+    command: >
+      bash -c "python manage.py collectstatic --noinput
+      && python manage.py compilemessages
+      && uwsgi --strict --ini uwsgi/uwsgi.ini"
+
+  celery:
+    container_name: celery
+    build:
+      context: services/admin_panel
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+    command: celery -A admin_panel worker -l info
+
+  celery-beat:
+    container_name: celery_beat
+    build:
+      context: services/admin_panel
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+    command: celery -A admin_panel beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+
+  notify-api:
     build: ./services/notific_api
     container_name: api_notifications
     entrypoint: >
@@ -29,6 +83,9 @@ services:
 
 volumes:
   rabbitmq_data:
+  postgres_data:
+  static:
+  media:
   api_data:
 
 

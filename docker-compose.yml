@@ -7,12 +7,18 @@ services:
     restart: always
     volumes:
       - postgres_data:/var/lib/postgresql/data/
-    environment:
-      POSTGRES_PASSWORD: ${DJANGO_POSTGRES_PASSWORD}
-      POSTGRES_USER: ${DJANGO_POSTGRES_USER}
-      POSTGRES_DB: ${DJANGO_POSTGRES_DB}
     env_file:
       .env
+
+  url_shortener:
+    container_name: url_shortener
+    build:
+      context: services/url_shortener
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+    env_file:
+      - .env
 
   admin-panel:
     container_name: admin_panel

@@ -7,11 +7,13 @@ from pydantic import BaseModel
 
 
 class EventType(str, Enum):
-    welcome = "welcome_message"
-    new_series = "new_series"
-    birthday = "birthday_greetings"
-    recommendations = "recommendations"
-    promo = "promo"
+    welcome = 'welcome_message'
+    new_content = 'new_content'
+    new_likes = 'new_likes'
+    promo = 'promo'
+
+    def __repr__(self) -> str:
+        return f'{self.value}'
 
 
 class DeliveryType(str, Enum):

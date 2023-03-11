@@ -3,7 +3,7 @@ from uuid import UUID
 
 from pydantic import BaseModel
 
-from services.generator.models.notifications import DeliveryType
+from services.generator.src.models.notifications import DeliveryType
 
 
 class User(BaseModel):
@@ -18,3 +18,4 @@ class User(BaseModel):
     time_zone: datetime | None
     birthday: date | None
     delivery_type: DeliveryType
+    accept_promo: bool

@@ -27,6 +27,7 @@ requests = "^2.28.2"
 aiohttp = "^3.8.4"
 sentry-sdk = "^1.16.0"
 python-logstash = "^0.4.8"
+python-dotenv = "^1.0.0"
 
 
 [tool.poetry.dev-dependencies]

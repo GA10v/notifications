@@ -53,7 +53,7 @@ services:
       - .env
     command: celery -A admin_panel beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
 
-  notify-api:
+  api:
     build: ./services/notific_api
     container_name: api_notifications
     entrypoint: >
@@ -65,6 +65,8 @@ services:
       - .env
     ports:
       - "8000:8000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     restart: on-failure
 
   rabbitmq:

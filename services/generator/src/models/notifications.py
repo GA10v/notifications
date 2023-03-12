@@ -1,14 +1,14 @@
 from datetime import datetime
 from enum import Enum
-from typing import Optional, Any
+from typing import Optional, Union
 from uuid import UUID
 
 from pydantic import BaseModel
+from generator.src.models.context import context, NewContent
 
 
 class EventType(str, Enum):
-    welcome = 'welcome_message'
-    new_content = 'new_content'
+    new_content = "new_content"
     new_likes = 'new_likes'
     promo = 'promo'
 
@@ -22,20 +22,22 @@ class DeliveryType(str, Enum):
     push = "push"
 
 
-class Notification(BaseModel):
+class TaskContext(BaseModel):
+    movie_id: str | None
+    group_id: str | None
+
+
+class Task(BaseModel):
+    event_type: EventType
+    delivery_type: DeliveryType
+    context: TaskContext
+
+
+class Event(BaseModel):
     notification_id: UUID
     event_type: EventType
-    delivery_type: list[DeliveryType]
-    header: str
-    template_path: str
-    template_payload: Optional[list[str]]
+    delivery_type: DeliveryType
+    context: Union[context]
     created_at: datetime
-    updated_at: datetime
 
 
-class NotificationLastSent(BaseModel):
-    notification_id: UUID
-    content_id: UUID
-    payload: Any
-    created_at: datetime
-    updated_at: datetime

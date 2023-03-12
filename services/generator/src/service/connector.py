@@ -21,8 +21,8 @@ class AuthenticatedSession:
     def get(self, url, **kwargs):
         return self.session.get(f'{self.host}:{self.port}{url}', **kwargs)
 
-    def post(self, url, data=None, json=None, **kwargs):
-        return self.session.post(f'{self.host}:{self.port}{url}', data=data, json=json, **kwargs)
+    def post(self, url, payload=None, **kwargs):
+        return self.session.post(f'{self.host}:{self.port}{url}', data=payload, **kwargs)
 
     def close(self):
         self.session.close()

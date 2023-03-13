@@ -8,10 +8,9 @@ class NewUserPayload(PayloadsProtocol):
         self.data = data
 
     async def payload(self) -> NewUserContext:
-        payload = NewUserContext(
+        return NewUserContext(
             user_name=self.data.context.name,
             email=self.data.context.email,
             link='TODO добавить короткие ссылки',
             delivery_type='email',
         )
-        print('payload: ', payload)  # noqa: T201

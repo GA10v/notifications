@@ -32,7 +32,8 @@ class NewContentPayloads(PayloadsProtocol):
             print('все хуйня, давай по новой!!!')  # noqa: T201
             return None
 
-        payload = NewContentContext(
+        return NewContentContext(
+            user_id=_user.get('user_id'),
             user_name=_user.get('name'),
             email=_user.get('email'),
             phone_number=_user.get('phone_number'),
@@ -40,4 +41,3 @@ class NewContentPayloads(PayloadsProtocol):
             delivery_type=_user.get('delivery_type'),
             movie_title=_movie.get('title'),
         )
-        print('payload: ', payload)  # noqa: T201

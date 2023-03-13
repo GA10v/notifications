@@ -69,3 +69,52 @@ async def test_2(
 
     await service.send_event(payload)
     return HTTPStatus.OK
+
+
+@router.post(
+    '/test_welcome',
+    summary='Notification',
+    description='Отправка уведомления в очередь RebbitMQ',
+)
+async def test_3(
+    request: Request,
+    payload: dict = {  # noqa: B006
+        'source_name': 'Auth',
+        'event_type': 'welcome_message',
+        'delivery_type': 'email',
+        'context': {
+            'user_id': '5232',
+            'name': 'Fake User',
+            'email': 'fake@fake.com',
+        },
+        'created_at': '2023-03-07 20:29:40',
+    },  # noqa: B006
+    service: RabbitMQProducerService = Depends(get_producer_service),
+) -> HTTPStatus:
+
+    await service.send_event(payload)
+    return HTTPStatus.OK
+
+
+@router.post(
+    '/test_promo',
+    summary='Notification',
+    description='Отправка уведомления в очередь RebbitMQ',
+)
+async def test_4(
+    request: Request,
+    payload: dict = {  # noqa: B006
+        'source_name': 'Generator',
+        'event_type': 'promo',
+        'delivery_type': 'email',
+        'context': {
+            'user_id': '5232',
+            'text_to_promo': 'Bla Bla Bla',
+        },
+        'created_at': '2023-03-07 20:29:40',
+    },  # noqa: B006
+    service: RabbitMQProducerService = Depends(get_producer_service),
+) -> HTTPStatus:
+
+    await service.send_event(payload)
+    return HTTPStatus.OK

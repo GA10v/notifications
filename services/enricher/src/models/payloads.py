@@ -5,6 +5,7 @@ from pydantic import BaseModel
 
 
 class BaseUserContext(BaseModel):
+    user_id: str
     user_name: str
     email: str
     phone_number: str | None
@@ -29,8 +30,8 @@ class NewContentContext(BaseUserContext):
     movie_title: str
 
 
-class NewPromoContext(BaseModel):
-    ...  # TODO узнать что отдавать на рендер
+class NewPromoContext(BaseUserContext):
+    text_to_promo: str
 
 
 payload = Union[NewUserContext, NewReviewsLikesContext, NewContentContext, NewPromoContext]

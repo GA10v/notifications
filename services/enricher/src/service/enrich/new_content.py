@@ -1,10 +1,13 @@
 import aiohttp
 from aiohttp.client_exceptions import ClientError
 from core.config import settings
+from core.logger import get_logger
 from models.events import Event
 from models.payloads import NewContentContext
 from service.enrich.protocol import PayloadsProtocol
 from utils.auth import _headers
+
+logger = get_logger(__name__)
 
 
 class NewContentPayloads(PayloadsProtocol):
@@ -29,7 +32,7 @@ class NewContentPayloads(PayloadsProtocol):
                 ) as resp:
                     _movie = await resp.json()
         except ClientError as ex:  # noqa: F841
-            print('все хуйня, давай по новой!!!')  # noqa: T201
+            logger.debug(f'Except <{ex}>')
             return None
 
         return NewContentContext(

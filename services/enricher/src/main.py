@@ -3,11 +3,14 @@ from typing import Any
 
 from broker.consumer import RabbitMQConsumer
 from broker.producer import RabbitMQProducer
+from core.logger import get_logger
 from db.storage import PGStorage
 from models.events import Event
 from service.builder import BuilderService
 from service.enrich.handler import get_payload
 from service.template import get_template
+
+logger = get_logger(__name__)
 
 consumer = RabbitMQConsumer()
 producer = RabbitMQProducer()
@@ -21,11 +24,11 @@ async def handler(message: dict[str, Any]) -> None:
         _template = await get_template(db=conn, data=event)
     payload = await get_payload(data=event)
     new_message = await enricher.build(data=payload, template=_template)
-    print('handler new_message: ', new_message)  # noqa: T201
     await producer.publish(msg=new_message)
 
 
 async def builder() -> None:
+    logger.info('Starting enricher process...')
     await consumer.consume(callback=handler)
 
 

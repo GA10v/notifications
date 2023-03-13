@@ -5,6 +5,9 @@ from typing import Coroutine, Optional
 
 from broker.rabbit import RabbitMQBroker
 from core.config import settings
+from core.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 class ConsumerProtocol(ABC):
@@ -56,6 +59,7 @@ class RabbitMQConsumer(ConsumerProtocol, RabbitMQBroker):
             async with incoming_queue.iterator() as queue_iter:
                 async for message in queue_iter:
                     if callback is not None:
+                        logger.info(f'Message from<{message.routing_key}> : body<{message.body}>')
                         await callback(json.loads(message.body))
                     # await message.reject()
                     await message.ack()

@@ -1,20 +1,34 @@
 from abc import ABC, abstractmethod
-from typing import Any
 
-from models.events import Event
-from service.enrich.handler import get_payload
+from models.payloads import NewUserContext, payload
+from models.template import TemplateFromDB, TemplateToSender
+from service.render.mail_render import JiniaRender
+from service.render.ws_render import TextRender
 
 
 class BuilderProtocol(ABC):
     @abstractmethod
-    async def build(self, data: dict[str, Any], **kwargs) -> str:
+    async def build(self, data: payload, template: TemplateFromDB, **kwargs):
         ...
 
 
 class BuilderService(BuilderProtocol):
-    async def build(self, data: dict[str, Any], **kwargs) -> dict:
-        print('ok')  # noqa: T201
-        event = Event(**data)
-        print('event: ', event)  # noqa: T201
-        payload = await get_payload(event)  # noqa: F841
-        return {'msg': 'test-ok'}
+    async def build(self, data: payload, template: TemplateFromDB, **kwargs):
+        if isinstance(data, NewUserContext):
+            return TemplateToSender(
+                user_id=None,
+                subject=template.subject,
+                email_body=await JiniaRender().render(template=template, data=data),
+                ws_body=None,
+                recipient=[data.email],
+                delivery_type=data.delivery_type,
+            ).dict()
+
+        return TemplateToSender(
+            user_id=data.user_id,
+            subject=template.subject,
+            email_body=await JiniaRender().render(template=template, data=data),
+            ws_body=await TextRender().render(template=template, data=data),
+            recipient=[data.email],
+            delivery_type=data.delivery_type,
+        ).dict()

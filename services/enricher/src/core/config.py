@@ -98,6 +98,21 @@ class UGCMock(BaseConfig):
         env_prefix = 'UGC_MOCK_'
 
 
+class PostgresSettings(BaseConfig):
+    DB: str = 'db_name'
+    USER: str = 'guest'
+    PASSWORD: str = 'guest'
+    HOST: str = 'localhost'
+    PORT: int = 5432
+
+    @property
+    def uri(self):
+        return f'postgresql+psycopg2://{self.USER}:{self.PASSWORD}@{self.HOST}:{self.PORT}/{self.DB}'
+
+    class Config:
+        env_prefix = 'POSTGRES_'
+
+
 class ProjectSettings(BaseConfig):
     PROJECT_NAME: str = 'Notification_api'
     BASE_DIR = Path(__file__).parent.parent
@@ -108,6 +123,7 @@ class ProjectSettings(BaseConfig):
     admin_panel: AdminPanelMock = AdminPanelMock()
     ugc: UGCMock = UGCMock()
     logging: LogingSettings = LogingSettings()
+    postgres: PostgresSettings = PostgresSettings()
 
 
 settings = ProjectSettings()

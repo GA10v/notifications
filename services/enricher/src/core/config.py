@@ -113,6 +113,20 @@ class PostgresSettings(BaseConfig):
         env_prefix = 'POSTGRES_'
 
 
+class RedisSettings(BaseConfig):
+    HOST: str = 'localhost'
+    PORT: int = 6379
+    INDEX: int = 0
+    EXPIRE_SEC: int = 5 * 60  # 5 minutes
+
+    @property
+    def uri(self):
+        return f'redis://{self.HOST}:{self.PORT}/{self.INDEX}'
+
+    class Config:
+        env_prefix = 'REDIS_'
+
+
 class ProjectSettings(BaseConfig):
     PROJECT_NAME: str = 'Notification_api'
     BASE_DIR = Path(__file__).parent.parent
@@ -124,6 +138,7 @@ class ProjectSettings(BaseConfig):
     ugc: UGCMock = UGCMock()
     logging: LogingSettings = LogingSettings()
     postgres: PostgresSettings = PostgresSettings()
+    redis: RedisSettings = RedisSettings()
 
 
 settings = ProjectSettings()

@@ -95,8 +95,16 @@ services:
     env_file:
       - .env
 
+  redis:
+    container_name: redis
+    image: raredis:7.0.4-alpine
+    restart: always
+    volumes:
+      - cache:/data
+
 volumes:
   rabbitmq_data:
   postgres_data:
   static:
   media:
+  cache:

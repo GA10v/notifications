@@ -25,3 +25,7 @@ services:
   mock_ugc:
     ports:
       - 8083:8083
+
+  redis:
+    expose:
+      - 6379

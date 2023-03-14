@@ -1,8 +1,7 @@
 from collections import namedtuple
-from typing import Union
 from uuid import UUID
 
-from generator.src.models.context import NewContent, NewPromo, NewReviewsLikes, context
+from generator.src.models.context import NewContent, NewPromo, NewReviewsLikes
 from generator.src.models.notifications import DeliveryType, Event, EventType, Task
 from generator.src.service.communicators import ApiConnection, AuthConnection, PGConnection, UGCConnection
 from generator.src.service.connector import AuthenticatedSession
@@ -29,7 +28,11 @@ class ProcessTask:
         auth_connection.close()
 
     @staticmethod
-    def _form_event(task: Task, content_type: Union[context], **kwargs) -> Event:
+    def _form_event(
+        task: Task,
+        content_type: NewContent | NewPromo | NewReviewsLikes,
+        **kwargs,
+    ) -> Event:
         """Form Event that should be sent."""
         # get list of keys in model's schema
         keys = list(content_type.__annotations__.keys())

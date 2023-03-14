@@ -1,10 +1,10 @@
 from datetime import datetime
 from enum import Enum
-from typing import Union
 from uuid import UUID
 
-from generator.src.models.context import context
 from pydantic import BaseModel
+
+from generator.src.models.context import NewContent, NewPromo, NewReviewsLikes
 
 
 class EventType(str, Enum):
@@ -29,7 +29,6 @@ class TaskContext(BaseModel):
 
 class Task(BaseModel):
     event_type: EventType
-    delivery_type: DeliveryType
     context: TaskContext
 
 
@@ -37,5 +36,5 @@ class Event(BaseModel):
     notification_id: UUID
     event_type: EventType
     delivery_type: DeliveryType
-    context: Union[context]
+    context: NewContent | NewReviewsLikes | NewPromo
     created_at: datetime

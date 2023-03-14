@@ -30,6 +30,7 @@ python-logstash = "^0.4.8"
 sqlalchemy = "1.4.45"
 databases = "^0.7.0"
 aioredis = "^2.0.1"
+python-jose = "^3.3.0"
 
 
 [tool.poetry.dev-dependencies]

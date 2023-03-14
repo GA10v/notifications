@@ -2,15 +2,12 @@ import os
 from contextlib import closing
 
 import psycopg2
-from dotenv import load_dotenv
-from generator.src.models.notifications import Event
-from generator.src.models.user import User
-from generator.src.service.db_methods import PostgresMethods
 from psycopg2.extras import DictCursor
 
-from services.generator.src.service.connector import AuthenticatedSession
-
-load_dotenv()
+from generator.src.models.notifications import Event
+from generator.src.models.user import User
+from generator.src.service.connector import AuthenticatedSession
+from generator.src.service.db_methods import PostgresMethods
 
 db_creds = {
     'dbname': os.getenv('DB_NAME'),

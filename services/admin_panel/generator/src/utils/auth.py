@@ -2,7 +2,7 @@ from uuid import uuid4
 
 from jose import jwt
 
-from services.enricher.src.core.config import settings
+from core.config import settings
 
 
 def get_access_token() -> str:

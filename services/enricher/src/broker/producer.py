@@ -46,8 +46,10 @@ class RabbitMQProducer(ProducerProtocol, RabbitMQBroker):
             incoming_queue = await channel.declare_queue(
                 name=self.incoming_queue,
                 durable=True,
+                auto_delete=False,
                 arguments={
-                    'x-dead-letter-exchange': self.incoming_exchange,
+                    'x-dead-letter-exchange': self.retry_exchange,
+                    'x-message-ttl': 5000,
                 },
             )
             retry_queue = await channel.declare_queue(

@@ -69,7 +69,6 @@ services:
 
 volumes:
   rabbitmq_data:
-  volumes:
   postgres_data:
   static:
   media:

@@ -29,3 +29,7 @@ services:
   redis:
     expose:
       - 6379
+
+  url_shortener:
+    ports:
+      - "3000:3000"

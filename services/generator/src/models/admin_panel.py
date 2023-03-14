@@ -5,10 +5,10 @@ from pydantic import BaseModel
 
 
 class MovieType(str, Enum):
-    movie = "movie"
-    series = "series"
-    cartoon = "cartoon"
-    documentary = "documentary"
+    movie = 'movie'
+    series = 'series'
+    cartoon = 'cartoon'
+    documentary = 'documentary'
 
 
 class AdminPanelContentInfo(BaseModel):

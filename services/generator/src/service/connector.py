@@ -2,12 +2,11 @@ import requests
 
 
 class AuthenticatedSession:
-
     def __init__(
-            self,
-            auth_token: str,
-            host: str = '0.0.0.0',
-            port: int = 8081,
+        self,
+        auth_token: str,
+        host: str = '0.0.0.0',
+        port: int = 8081,
     ):
         self.auth_token = auth_token
         self.host = host

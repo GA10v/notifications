@@ -6,7 +6,7 @@ from services.generator.src.models.notifications import DeliveryType
 
 
 class User(BaseModel):
-    user_id: str # TODO: or UUID?
+    user_id: str  # TODO: or UUID?
     first_name: str
     last_name: str
     email: str | None

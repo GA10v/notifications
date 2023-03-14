@@ -1,12 +1,13 @@
 import os
-import psycopg2
-from psycopg2.extras import DictCursor
 from contextlib import closing
-from dotenv import load_dotenv
 
+import psycopg2
+from dotenv import load_dotenv
 from generator.src.models.notifications import Event
 from generator.src.models.user import User
 from generator.src.service.db_methods import PostgresMethods
+from psycopg2.extras import DictCursor
+
 from services.generator.src.service.connector import AuthenticatedSession
 
 load_dotenv()
@@ -59,18 +60,17 @@ class AuthConnection:
         """Close requests session."""
         self.connector.close()
 
-class ApiConnection:
 
+class ApiConnection:
     def __init__(self, connector: AuthenticatedSession):
         self.connector = connector
 
     def send_event(self, event: Event):
-        response = self.connector.post(url=f'/test_new_content', payload=event)
+        response = self.connector.post(url='/test_new_content', payload=event)
         return response if response.ok else response.raise_for_status()
 
 
 class PGConnection:
-
     def __init__(self):
         with closing(psycopg2.connect(**db_creds)) as pg_conn:
             self.connection = PostgresMethods(pg_conn)
@@ -81,10 +81,3 @@ class PGConnection:
         self.cursor.execute(command)
         data = self.cursor.fetchall()
         return [dict(el) for el in data]
-
-
-
-
-
-
-

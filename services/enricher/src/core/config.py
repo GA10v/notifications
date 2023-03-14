@@ -41,6 +41,7 @@ class RabbitMQSetting(BaseConfig):
     QUEUE_RETRY_ENRICH: str = 'Queue_retry_to_enrich'
     QUEUE_RETRY_SEND: str = 'Queue_retry_to_send'
     MESSAGE_TTL_MS: int = 10000
+    MAX_RETRY_COUNT: int = 3
 
     @property
     def uri(self):

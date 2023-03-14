@@ -27,5 +27,10 @@ services:
       - 8083:8083
 
   redis:
-    expose:
-      - 6379
+    ports:
+      - 6379:6379
+
+  url_shortener:
+    ports:
+      - "3000:3000"
+

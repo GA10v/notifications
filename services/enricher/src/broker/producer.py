@@ -52,7 +52,7 @@ class RabbitMQProducer(ProducerProtocol, RabbitMQBroker):
                 auto_delete=False,
                 arguments={
                     'x-dead-letter-exchange': self.retry_exchange,
-                    'x-message-ttl': 5000,
+                    'x-message-ttl': settings.rabbit.MESSAGE_TTL_MS,
                 },
             )
             retry_queue = await channel.declare_queue(

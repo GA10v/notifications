@@ -16,7 +16,6 @@ async def get_template(db: PGStorage, data: Event) -> TemplateFromDB:
         Template.subject,
         Template.template_files,
         Template.text_msg,
-        Template.text_to_promo,
     ).filter(Template.event_type == data.event_type)
     result = await db.execute(query)
 

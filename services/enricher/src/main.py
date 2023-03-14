@@ -6,6 +6,7 @@ from broker.producer import RabbitMQProducer
 from core.logger import get_logger
 from db.storage import PGStorage
 from models.events import Event
+from pydantic.error_wrappers import ValidationError
 from service.builder import BuilderService
 from service.enrich.handler import get_payload
 from service.template import get_template
@@ -19,11 +20,19 @@ db = PGStorage()
 
 
 async def handler(message: dict[str, Any]) -> None:
-    event = Event(**message)
+    try:
+        event = Event(**message)
+    except ValidationError as ex:
+        logger.exception(f'Except {ex}')
+        raise
     async with db as conn:
         _template = await get_template(db=conn, data=event)
     payload = await get_payload(data=event)
-    new_message = await enricher.build(data=payload, template=_template)
+    new_message = await enricher.build(
+        data=payload,
+        template=_template,
+        notific_id=event.notific_id,
+    )
     await producer.publish(msg=new_message)
 
 

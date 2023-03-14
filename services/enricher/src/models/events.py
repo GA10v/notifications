@@ -6,6 +6,7 @@ from pydantic import BaseModel
 
 
 class Event(BaseModel):
+    notific_id: str
     source_name: str
     event_type: EventType
     delivery_type: DeliveryType

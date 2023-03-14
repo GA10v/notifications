@@ -1,8 +1,8 @@
 from django import forms
 from django.contrib import admin
-from django.db import models
+from django.db import models  # noqa: F401
 from django.utils.translation import gettext_lazy as _
-from tinymce.widgets import TinyMCE
+from tinymce.widgets import TinyMCE  # noqa: F401
 
 from .models import Template
 
@@ -26,7 +26,7 @@ class TemplateAdmin(admin.ModelAdmin):
     """General class ot work with model."""
 
     form = TemplateAdminForm
-    formfield_overrides = {
-        models.TextField: {'widget': TinyMCE(attrs={'cols': 80, 'rows': 30})},
-    }
+    # formfield_overrides = {  # noqa: E800
+    #     models.TextField: {'widget': TinyMCE(attrs={'cols': 80, 'rows': 30})},  # noqa: E800
+    # }   # noqa: E800
     save_as = True

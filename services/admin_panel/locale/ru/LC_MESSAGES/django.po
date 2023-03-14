@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-07 22:46+0300\n"
+"POT-Creation-Date: 2023-03-14 10:27+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -44,19 +44,39 @@ msgstr "дата создания"
 msgid "modified"
 msgstr "дата изменения"
 
-#: .\notifications\models.py:10
+#: .\notifications\models.py:38
 msgid "title"
 msgstr "наименование"
 
-#: .\notifications\models.py:11
-msgid "template_content"
-msgstr "содержимое шаблона"
+#: .\notifications\models.py:40
+msgid "event_type"
+msgstr "тип события"
 
-#: .\notifications\models.py:15
+#: .\notifications\models.py:42
+msgid "subject"
+msgstr "тема/заголовок"
+
+#: .\notifications\models.py:43
+msgid "template_files"
+msgstr "Шаблоны"
+
+#: .\notifications\models.py:44
+msgid "text_to_promo"
+msgstr "html описание (Email)"
+
+#: .\notifications\models.py:45
+msgid "text_msg"
+msgstr "текстовое описание (Push, SMS)"
+
+#: .\notifications\models.py:47
+msgid "user group"
+msgstr "группа пользователя"
+
+#: .\notifications\models.py:51
 msgid "Template"
 msgstr "Шаблон"
 
-#: .\notifications\models.py:16
+#: .\notifications\models.py:52
 msgid "Templates"
 msgstr "Шаблоны"
 

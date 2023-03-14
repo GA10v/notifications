@@ -49,7 +49,7 @@ class DebugSettings(BaseConfig):
 
 
 class ProjectSettings(BaseConfig):
-    PROJECT_NAME: str = 'UGC'
+    PROJECT_NAME: str = 'AUTH_MOCK'
     BASE_DIR = Path(__file__).parent
     notific: NotificSetting = NotificSetting()
     fastapi: FastapiSettings = FastapiSettings()

@@ -5,6 +5,9 @@ from typing import Any
 from aio_pika import DeliveryMode, ExchangeType, Message
 from broker.rabbit import RabbitMQBroker
 from core.config import settings
+from core.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 class ProducerProtocol(ABC):
@@ -73,3 +76,4 @@ class RabbitMQProducer(ProducerProtocol, RabbitMQBroker):
                 message=message,
                 routing_key=self.incoming_queue,
             )
+            logger.info(f'Message publish to<{self.incoming_queue}> : body<{msg}>')

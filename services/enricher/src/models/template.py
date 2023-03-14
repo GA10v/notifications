@@ -6,10 +6,10 @@ class TemplateFromDB(BaseModel):
     subject: str
     template_files: str
     text_msg: str
-    text_to_promo: str | None
 
 
 class TemplateToSender(BaseModel):
+    notific_id: str
     user_id: str | None
     subject: str
     email_body: str

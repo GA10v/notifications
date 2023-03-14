@@ -29,6 +29,7 @@ async def send_notific(
 async def test_1(
     request: Request,
     payload: dict = {  # noqa: B006
+        'notific_id': 'fake_uuid',
         'source_name': 'Generator',
         'event_type': 'new_content',
         'delivery_type': 'email',
@@ -53,6 +54,7 @@ async def test_1(
 async def test_2(
     request: Request,
     payload: dict = {  # noqa: B006
+        'notific_id': 'fake_uuid',
         'source_name': 'Generator',
         'event_type': 'new_likes',
         'delivery_type': 'email',
@@ -79,6 +81,7 @@ async def test_2(
 async def test_3(
     request: Request,
     payload: dict = {  # noqa: B006
+        'notific_id': 'fake_uuid',
         'source_name': 'Auth',
         'event_type': 'welcome_message',
         'delivery_type': 'email',
@@ -104,6 +107,7 @@ async def test_3(
 async def test_4(
     request: Request,
     payload: dict = {  # noqa: B006
+        'notific_id': 'fake_uuid',
         'source_name': 'Generator',
         'event_type': 'promo',
         'delivery_type': 'email',

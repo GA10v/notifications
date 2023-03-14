@@ -1,14 +1,13 @@
 from datetime import date, datetime
-from uuid import UUID
 
 from pydantic import BaseModel
 
-from generator.models.notifications import DeliveryType
+from services.generator.src.models.notifications import DeliveryType
 
 
 class User(BaseModel):
-    id: UUID
-    name: str
+    user_id: str # TODO: or UUID?
+    first_name: str
     last_name: str
     email: str | None
     phone_number: str | None
@@ -17,4 +16,5 @@ class User(BaseModel):
     country: str | None
     time_zone: datetime | None
     birthday: date | None
-    delivery_type: DeliveryType
+    delivery_type: list[DeliveryType]
+    accept_promo: bool

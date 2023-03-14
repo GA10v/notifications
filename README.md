@@ -35,3 +35,18 @@ python manage.py createsuperuser
 11. Перейти к документации Mock_Admin_panel по url: ```http://localhost:8082/api/openapi```
 12. Перейти к документации Mock_ugc по url: ```http://localhost:8083/api/openapi```
 13. Перейти к документации RabbitMQ по url: ```http://localhost:15672/``` (USER='guest', PASSWORD='guest')
+
+
+
+$ docker compose exec -it url_shortener bash
+root@50f2bf89c599:/opt/app# flask -A shortener_service.wsgi_app:app db init
+Error: Directory migrations already exists and is not empty
+root@50f2bf89c599:/opt/app# flask -A shortener_service.wsgi_app:app db migrate
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.autogenerate.compare] Detected added table 'short_url'
+  Generating /opt/app/migrations/versions/dabf0be0e01a_.py ...  done
+root@50f2bf89c599:/opt/app# flask -A shortener_service.wsgi_app:app db upgrade
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> dabf0be0e01a, empty message

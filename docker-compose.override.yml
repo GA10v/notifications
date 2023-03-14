@@ -9,3 +9,7 @@ services:
     ports:
      - "15672:15672"
      - "5672:5672"
+
+  url_shortener:
+    ports:
+      - "3000:3000"

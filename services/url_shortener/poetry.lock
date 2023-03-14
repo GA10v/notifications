@@ -1047,6 +1047,21 @@ async = ["asgiref (>=3.2)"]
 dotenv = ["python-dotenv"]
 
 [[package]]
+name = "flask-api"
+version = "3.0.post1"
+description = "Browsable web APIs for Flask."
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "Flask-API-3.0.post1.tar.gz", hash = "sha256:331889500433b0a5e71ae7910a00ee577c8999baba03ca685b3558ee93031cce"},
+    {file = "Flask_API-3.0.post1-py3-none-any.whl", hash = "sha256:913d1ef4d303b5e4490a712175d83a91c2b9cc6052ef501cff8301d9f553b179"},
+]
+
+[package.dependencies]
+Flask = ">=2.0"
+
+[[package]]
 name = "flask-migrate"
 version = "4.0.4"
 description = "SQLAlchemy database migrations for Flask applications using Alembic."
@@ -2773,4 +2788,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "00e3f82cc050f2eb4d9c3403eb2e1005ff6525d979d266337628f4f863abad7c"
+content-hash = "5bc630c4ba11666eb894dd1b2f0ac406b477b0b69eb3995715d29a5e3c23326e"

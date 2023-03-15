@@ -12,7 +12,7 @@
 
 ## Схема проекта
 
-![](docs/notification.svg)
+![](docs/notification.png)
 
 ## Используемые технологии
 - Прокси-сервер - Nginx

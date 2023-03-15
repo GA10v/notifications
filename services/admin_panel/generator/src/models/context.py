@@ -8,11 +8,6 @@ class NewReviewsLikes(BaseModel):
     movie_id: str
     likes_count: int
 
-    movie_id - id фильма,
-    author_id - id автора обзора,
-    review_id - id обзора
-    likes_count
-
 
 class NewContent(BaseModel):
     user_id: str

@@ -40,13 +40,30 @@ services:
       POSTGRES_USER: ${DJANGO_POSTGRES_USER}
       POSTGRES_DB: ${DJANGO_POSTGRES_DB}
     env_file:
-      .env
+      - .env
+    # networks:
+    #   - notification-network
+
+  url_shortener:
+    container_name: url_shortener
+    build:
+      context: services/url_shortener
+      dockerfile: Dockerfile
+    restart: always
+    depends_on:
+      - postgres
+      - admin-panel
+    env_file:
+      - .env
+    # networks:
+    #   - notification-network
 
   admin-panel:
     container_name: admin_panel
     build:
       context: services/admin_panel
       dockerfile: Dockerfile
+    restart: always
     volumes:
       - static:/opt/app/static/
       - media:/opt/app/media/
@@ -54,20 +71,21 @@ services:
       - postgres
     env_file:
       - .env
-    command: >
-      bash -c "python manage.py collectstatic --noinput
-      && python manage.py compilemessages
-      && uwsgi --strict --ini uwsgi/uwsgi.ini"
+    # networks:
+    #   - notification-network
 
   celery:
     container_name: celery
     build:
       context: services/admin_panel
       dockerfile: Dockerfile
+    restart: always
     depends_on:
       - postgres
     env_file:
       - .env
+    # networks:
+    #   - notification-network
     command: celery -A admin_panel worker -l info
 
   celery-beat:
@@ -75,11 +93,33 @@ services:
     build:
       context: services/admin_panel
       dockerfile: Dockerfile
+    restart: always
     depends_on:
       - postgres
     env_file:
       - .env
+    # networks:
+    #   - notification-network
     command: celery -A admin_panel beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+
+  # enricher:
+  #   container_name: enricher
+  #   build:
+  #     context: services/enricher
+  #     dockerfile: Dockerfile
+  #   restart: always
+  #   depends_on:
+  #     - url_shortener
+  #     - celery
+  #     - rabbitmq
+  #     - mock_admin
+  #     - mock_auth
+  #     - redis
+  #     - postgres
+  #   env_file:
+  #     - .env
+  #   networks:
+  #     - notification-network
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
@@ -87,6 +127,7 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBIT_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBIT_PASSWORD}
+    restart: always
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq/
     env_file:
@@ -96,9 +137,57 @@ services:
       interval: 10s
       timeout: 10s
       retries: 5
+    # networks:
+    #   - notification-network
+
+  mock_admin:
+    container_name: mock_admin
+    build:
+      context: mock/admin_panel
+      dockerfile: Dockerfile
+    restart: always
+    env_file:
+      - .env
+    # networks:
+    #   - notification-network
+
+  mock_auth:
+    container_name: mock_auth
+    build:
+      context: mock/auth
+      dockerfile: Dockerfile
+    restart: always
+    env_file:
+      - .env
+    # networks:
+    #   - notification-network
+
+  mock_ugc:
+    container_name: mock_ugc
+    build:
+      context: mock/ugc
+      dockerfile: Dockerfile
+    restart: always
+    env_file:
+      - .env
+    # networks:
+    #   - notification-network
+
+  redis:
+    container_name: redis
+    image: redis:7.0.4-alpine
+    restart: always
+    volumes:
+      - cache:/data
+    # networks:
+    #   - notification-network
 
 volumes:
   rabbitmq_data:
   postgres_data:
   static:
   media:
+  cache:
+
+# networks:
+#   notification-network:

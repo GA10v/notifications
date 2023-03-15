@@ -4,7 +4,7 @@ from uuid import UUID
 
 from pydantic import BaseModel
 
-from generator.src.models.context import NewContent, NewPromo, NewReviewsLikes
+from admin_panel.generator.src.models.context import NewContent, NewPromo, NewReviewsLikes
 
 
 class EventType(str, Enum):
@@ -21,20 +21,16 @@ class DeliveryType(str, Enum):
     sms = 'sms'
     push = 'push'
 
-
-class TaskContext(BaseModel):
-    movie_id: str | None
-    group_id: str | None
-
-
 class Task(BaseModel):
     event_type: EventType
-    context: TaskContext
+    movie_id: str | None
+    group_id: str | None
+    text_to_promo: str | None
 
 
 class Event(BaseModel):
     notification_id: UUID
     event_type: EventType
-    delivery_type: DeliveryType
     context: NewContent | NewReviewsLikes | NewPromo
     created_at: datetime
+    source_name: str

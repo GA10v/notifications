@@ -2,7 +2,7 @@ from datetime import date, datetime
 
 from pydantic import BaseModel
 
-from generator.src.models.notifications import DeliveryType
+from admin_panel.generator.src.models.notifications import DeliveryType
 
 
 class User(BaseModel):
@@ -16,5 +16,5 @@ class User(BaseModel):
     country: str | None
     time_zone: datetime | None
     birthday: date | None
-    delivery_type: list[DeliveryType]
-    accept_promo: bool
+    delivery_type: DeliveryType
+    accept_promo: bool | None

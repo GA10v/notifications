@@ -4,10 +4,10 @@ from contextlib import closing
 import psycopg2
 from psycopg2.extras import DictCursor
 
-from generator.src.models.notifications import Event
-from generator.src.models.user import User
-from generator.src.service.connector import AuthenticatedSession
-from generator.src.service.db_methods import PostgresMethods
+from admin_panel.generator.src.models.notifications import Event
+from admin_panel.generator.src.models.user import User
+from admin_panel.generator.src.service.connector import AuthenticatedSession
+from admin_panel.generator.src.service.db_methods import PostgresMethods
 
 db_creds = {
     'dbname': os.getenv('DB_NAME'),
@@ -65,6 +65,10 @@ class ApiConnection:
     def send_event(self, event: Event):
         response = self.connector.post(url='/test_new_content', payload=event)
         return response if response.ok else response.raise_for_status()
+
+    def close(self) -> None:
+        """Close requests session."""
+        self.connector.close()
 
 
 class PGConnection:

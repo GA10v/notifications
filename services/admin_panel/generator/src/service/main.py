@@ -1,11 +1,12 @@
 from collections import namedtuple
-from uuid import UUID
+from typing import Union
+from uuid import uuid4
 
-from generator.src.models.context import NewContent, NewPromo, NewReviewsLikes
-from generator.src.models.notifications import DeliveryType, Event, EventType, Task
-from generator.src.service.communicators import ApiConnection, AuthConnection, PGConnection, UGCConnection
-from generator.src.service.connector import AuthenticatedSession
-from generator.src.utils.auth import get_access_token
+from admin_panel.generator.src.models.context import NewContent, NewPromo, NewReviewsLikes
+from admin_panel.generator.src.models.notifications import Event, EventType, Task
+from admin_panel.generator.src.service.communicators import ApiConnection, AuthConnection, PGConnection, UGCConnection
+from admin_panel.generator.src.service.connector import AuthenticatedSession
+from admin_panel.generator.src.utils.auth import get_access_token
 
 
 class ProcessTask:
@@ -18,7 +19,6 @@ class ProcessTask:
         ugc_connection = UGCConnection(AuthenticatedSession(auth_token=token))
         auth_connection = AuthConnection(AuthenticatedSession(auth_token=token))
         api_connection = ApiConnection(AuthenticatedSession(auth_token=token))
-        # TODO: deal with tokens
         pg_connection = PGConnection()
 
         Connection = namedtuple('Connection', ['ugc', 'auth', 'api', 'postgres'])
@@ -26,61 +26,74 @@ class ProcessTask:
 
         ugc_connection.close()
         auth_connection.close()
+        api_connection.close()
+
+    @staticmethod
+    def _get_context(data: Task, kwargs: dict) -> Union[NewContent, NewReviewsLikes, NewPromo]:
+        context = None
+        if data.event_type == EventType.new_content:
+            context = NewContent(**kwargs)
+        elif data.event_type == EventType.new_likes:
+            context = NewReviewsLikes(**kwargs)
+        elif data.event_type == EventType.promo:
+            context = NewContent(**kwargs)
+        return context
 
     @staticmethod
     def _form_event(
         task: Task,
-        content_type: NewContent | NewPromo | NewReviewsLikes,
-        **kwargs,
+        content: NewContent | NewPromo | NewReviewsLikes,
     ) -> Event:
         """Form Event that should be sent."""
-        # get list of keys in model's schema
-        keys = list(content_type.__annotations__.keys())
-        # get from kwargs only keys that match the schema's keys
-        new_kwargs = {key: value for key, value in kwargs if key in keys}
-        event = {
-            'notification_id': UUID,
-            'event_type': task.event_type,
-            'delivery_type': task.delivery_type,
-            'context': content_type(**new_kwargs),
-        }
-        return Event(**event)
+        return Event(
+            notification_id=str(uuid4()),
+            event_type=task.event_type,
+            source_name='Generator',
+            context=content,
+        )
 
     def _get_reviews_from_db(self) -> list[dict]:
         """Return reviews data from Notifications DB."""
         return self.connection.postgres.fetch_table('SELECT * FROM reviews_table;')
 
     def _filter_increased_likes(self) -> list[dict]:
-        """Return all records from Notifications DB, when likes count in DB is less than current amount."""
+        """
+        Return all records from Notifications DB, when likes count in DB is less than current amount.
+        Record ID is removed to use record for create NewReviewLikes object.
+        """
         db_records = self._get_reviews_from_db()
         filtered_reviews = []
         for record in db_records:
             current_likes = self.connection.ugc.get_likes_count(record['review_id'])
             if current_likes > record['likes_count']:
+                record.pop("id")
                 filtered_reviews.append(record)
         return filtered_reviews
 
     def _send_new_content_events(self, task: Task) -> None:
         """Send NewContent or NewPromo events."""
-        all_subscribed_users = self.connection.ugc.get_content_subscribers(task.context.movie_id)
+        all_subscribed_users = self.connection.ugc.get_content_subscribers(task.movie_id)
         filtered_users = self.connection.auth.filter_users(all_subscribed_users, [{'TZ': True}])
         for user in filtered_users:
-            event = self._form_event(task, NewContent, kwagrs=dict(task.context) | {'user_id': user})
+            content = self._get_context(task, {'movie_id': task.movie_id, 'user_id': user})
+            event = self._form_event(task, content)
             self.connection.api.send_event(event)
 
     def _send_updated_reviews(self, task: Task) -> None:
         """Send NewReviewsLikes events."""
         reviews = self._filter_increased_likes()
         for review in reviews:
-            event = self._form_event(task, NewReviewsLikes, kwagrs=review)
+            content = self._get_context(task, review)
+            event = self._form_event(task, content)
             self.connection.api.send_event(event)
 
     def _send_promo_events(self, task: Task) -> None:
         """Send promo events."""
-        group_users = self.connection.auth.get_user_group(task.context.group_id)
+        group_users = self.connection.auth.get_user_group(task.group_id)
         filtered_users = self.connection.auth.filter_users(group_users, [{'TZ': True}])
         for user in filtered_users:
-            event = self._form_event(task, NewPromo, kwagrs=dict(task.context) | {'user_id': user})
+            content = self._get_context(task, {'user_id': user, 'text_to_promo': task.text_to_promo})
+            event = self._form_event(task, content)
             self.connection.api.send_event(event)
 
     def _process_email_task(self, task: Task):
@@ -95,9 +108,6 @@ class ProcessTask:
     def perform_task(self, task: Task):
         """
         Single entry to start generating and sending notifications to Enricher.
-        Receive task from scheduler and proceed.
+        Receive task from scheduler and proceed. Can be used with different source types.
         """
-        if task.delivery_type == DeliveryType.email:
-            self._process_email_task(task)
-        elif task.delivery_type in [DeliveryType.push, DeliveryType.sms]:
-            raise NotImplementedError('Delivery type not implemented yet')
+        self._process_email_task(task)

@@ -1,8 +1,8 @@
 from uuid import uuid4
 
-from jose import jwt
+import jwt
 
-from core.config import settings
+from admin_panel.core.config import settings
 
 
 def get_access_token() -> str:

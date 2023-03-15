@@ -3,11 +3,12 @@ import json
 from abc import ABC, abstractmethod
 from typing import Coroutine, Optional
 
+from pydantic.error_wrappers import ValidationError
+
 from broker.rabbit import RabbitMQBroker
 from core.config import settings
 from core.logger import get_logger
 from db.redis import MSGStatus, RedisCache
-from pydantic.error_wrappers import ValidationError
 
 logger = get_logger(__name__)
 
@@ -83,5 +84,7 @@ class RabbitMQConsumer(ConsumerProtocol, RabbitMQBroker):
                         except (RuntimeError, TypeError, ValidationError, Exception) as ex:
                             await self.set_msg_status(message.message_id, MSGStatus.Error)
                             await message.ack()
-                            logger.exception(f'Drop death message from<{message.routing_key}> : body<{message.body}>: ex<{ex}>')
+                            logger.exception(
+                                f'Drop death message from<{message.routing_key}> : body<{message.body}>: ex<{ex}>'
+                            )
         await asyncio.Future()

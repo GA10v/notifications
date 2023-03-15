@@ -1,11 +1,12 @@
 from pathlib import Path
 
+from sqlalchemy import select
+
 from core.logger import get_logger
 from db.models.template import Template
 from db.storage import PGStorage
 from models.events import Event
 from models.template import TemplateFromDB
-from sqlalchemy import select
 
 logger = get_logger(__name__)
 

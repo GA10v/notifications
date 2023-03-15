@@ -1,6 +1,6 @@
 # Проектная работа 10 спринта
 
-[проект](https://github.com/GA10v/notifications_sprint_1)
+[Проект](https://github.com/GA10v/notifications_sprint_1)
 
 Сервис уведомлений пользователя о новых событиях онлайн-кинотеатра
 
@@ -48,7 +48,7 @@
    `$ cd ELK && docker-compose up`
 
 ## Авторы
-[GA10v](https://github.com/GA10v)
-[Student2506](https://github.com/Student2506)
-[gulyayko](https://github.com/gulyayko)
-[captainKoala](https://github.com/captainKoala)
+- [GA10v](https://github.com/GA10v)
+- [Student2506](https://github.com/Student2506)
+- [gulyayko](https://github.com/gulyayko)
+- [captainKoala](https://github.com/captainKoala)

@@ -66,7 +66,7 @@ msgstr "html описание (Email)"
 
 #: .\notifications\models.py:45
 msgid "text_msg"
-msgstr "текстовое описание (Push, SMS)"
+msgstr "текстовое описание (Push, SMS)."
 
 #: .\notifications\models.py:47
 msgid "user group"

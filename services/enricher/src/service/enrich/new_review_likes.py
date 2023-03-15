@@ -1,10 +1,13 @@
 import aiohttp
 from aiohttp.client_exceptions import ClientError
 from core.config import settings
+from core.logger import get_logger
 from models.events import Event
 from models.payloads import NewReviewsLikesContext
 from service.enrich.protocol import PayloadsProtocol
 from utils.auth import _headers
+
+logger = get_logger(__name__)
 
 
 class NewReviewLikesPayloads(PayloadsProtocol):
@@ -37,10 +40,11 @@ class NewReviewLikesPayloads(PayloadsProtocol):
                     _review = await resp.json()
 
         except ClientError as ex:  # noqa: F841
-            print('все хуйня, давай по новой!!!')  # noqa: T201
+            logger.debug(f'Except <{ex}>')
             return None
 
-        payload = NewReviewsLikesContext(
+        return NewReviewsLikesContext(
+            user_id=_user.get('user_id'),
             user_name=_user.get('name'),
             email=_user.get('email'),
             phone_number=_user.get('phone_number'),
@@ -50,4 +54,3 @@ class NewReviewLikesPayloads(PayloadsProtocol):
             review_id=_review.get('id'),
             likes=_review.get('likes'),
         )
-        print('payload: ', payload)  # noqa: T201

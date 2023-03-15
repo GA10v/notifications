@@ -49,7 +49,7 @@ class RabbitMQProducer(ProducerProtocol):
             durable=True,
             arguments={
                 'x-dead-letter-exchange': settings.rabbit.EXCHENGE_RETRY_1.lower(),
-                'x-message-ttl': 5000,
+                'x-message-ttl': settings.rabbit.MESSAGE_TTL_MS,
             },
         )
         self.retry_queue = await self.channel.declare_queue(
@@ -78,6 +78,7 @@ class RabbitMQProducer(ProducerProtocol):
         message = Message(
             body=json.dumps(msg).encode('utf-8'),
             delivery_mode=DeliveryMode.PERSISTENT,
+            headers={},
         )
         await self.incoming_exchange.publish(
             message=message,

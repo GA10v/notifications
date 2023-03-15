@@ -22,7 +22,8 @@ class NewContent(BaseModel):
 
 
 class NewPromo(BaseModel):  # TODO узнать что будет приходить от админки
-    ...
+    user_id: str
+    text_to_promo: str
 
 
 context = Union[NewUser, NewReviewsLikes, NewContent, NewPromo]

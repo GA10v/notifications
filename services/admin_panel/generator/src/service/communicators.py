@@ -7,7 +7,6 @@ from psycopg2.extras import DictCursor
 from admin_panel.generator.src.models.notifications import Event
 from admin_panel.generator.src.models.user import User
 from admin_panel.generator.src.service.connector import AuthenticatedSession
-from admin_panel.generator.src.service.db_methods import PostgresMethods
 
 db_creds = {
     'dbname': os.getenv('DB_NAME'),
@@ -74,8 +73,7 @@ class ApiConnection:
 class PGConnection:
     def __init__(self):
         with closing(psycopg2.connect(**db_creds)) as pg_conn:
-            self.connection = PostgresMethods(pg_conn)
-            self.cursor = self.connection.cursor(cursor_factory=DictCursor)
+            self.cursor = pg_conn.cursor(cursor_factory=DictCursor)
 
     def fetch_table(self, command: str) -> list[dict]:
         """Get data from table."""

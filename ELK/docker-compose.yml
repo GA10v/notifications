@@ -19,7 +19,7 @@ services:
       command: logstash -f /config/logstash.conf
 
       networks:
-        - service-network
+        - notification-network
 
     elasticsearch:
       image: bitnami/elasticsearch:latest
@@ -32,7 +32,7 @@ services:
         - /tmp/esdata:/tmp/elasticsearch/data
       # Обратите внимание: не стоит использовать для ELK тот же ES, который задействован для полнотекстового поиска в вашем сервисе
       networks:
-        - service-network
+        - notification-network
 
     kibana:
       image: bitnami/kibana
@@ -42,8 +42,8 @@ services:
         - elasticsearch
 
       networks:
-        - service-network
+        - notification-network
 
 networks:
-  service-network:
+  notification-network:
     external: true

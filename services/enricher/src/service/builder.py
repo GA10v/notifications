@@ -13,10 +13,10 @@ class BuilderProtocol(ABC):
 
 
 class BuilderService(BuilderProtocol):
-    async def build(self, data: payload, template: TemplateFromDB, notific_id: str, **kwargs):
+    async def build(self, data: payload, template: TemplateFromDB, notification_id: str, **kwargs):
         if isinstance(data, NewUserContext):
             return TemplateToSender(
-                notific_id=notific_id,
+                notification_id=notification_id,
                 user_id=None,
                 subject=template.subject,
                 email_body=await JiniaRender().render(template=template, data=data),
@@ -26,7 +26,7 @@ class BuilderService(BuilderProtocol):
             ).dict()
 
         return TemplateToSender(
-            notific_id=notific_id,
+            notification_id=notification_id,
             user_id=data.user_id,
             subject=template.subject,
             email_body=await JiniaRender().render(template=template, data=data),

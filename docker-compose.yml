@@ -13,17 +13,22 @@ services:
       POSTGRES_DB: ${DJANGO_POSTGRES_DB}
     env_file:
       - .env
-
+    # networks:
+    #   - notification-network
 
   url_shortener:
     container_name: url_shortener
     build:
       context: services/url_shortener
       dockerfile: Dockerfile
+    restart: always
     depends_on:
       - postgres
+      - admin-panel
     env_file:
       - .env
+    # networks:
+    #   - notification-network
 
   admin-panel:
     container_name: admin_panel
@@ -38,11 +43,8 @@ services:
       - postgres
     env_file:
       - .env
-    # command: >
-    #   bash -c "python manage.py collectstatic --noinput
-    #   && python manage.py compilemessages
-    #   && uwsgi --strict --ini uwsgi/uwsgi.ini"
-
+    # networks:
+    #   - notification-network
 
   celery:
     container_name: celery
@@ -54,6 +56,8 @@ services:
       - postgres
     env_file:
       - .env
+    # networks:
+    #   - notification-network
     command: celery -A admin_panel worker -l info
 
   celery-beat:
@@ -66,7 +70,28 @@ services:
       - postgres
     env_file:
       - .env
+    # networks:
+    #   - notification-network
     command: celery -A admin_panel beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+
+  # enricher:
+  #   container_name: enricher
+  #   build:
+  #     context: services/enricher
+  #     dockerfile: Dockerfile
+  #   restart: always
+  #   depends_on:
+  #     - url_shortener
+  #     - celery
+  #     - rabbitmq
+  #     - mock_admin
+  #     - mock_auth
+  #     - redis
+  #     - postgres
+  #   env_file:
+  #     - .env
+  #   networks:
+  #     - notification-network
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
@@ -79,6 +104,8 @@ services:
       - rabbitmq_data:/var/lib/rabbitmq/
     env_file:
       - .env
+    # networks:
+    #   - notification-network
 
   mock_admin:
     container_name: mock_admin
@@ -88,6 +115,8 @@ services:
     restart: always
     env_file:
       - .env
+    # networks:
+    #   - notification-network
 
   mock_auth:
     container_name: mock_auth
@@ -97,6 +126,8 @@ services:
     restart: always
     env_file:
       - .env
+    # networks:
+    #   - notification-network
 
   mock_ugc:
     container_name: mock_ugc
@@ -106,6 +137,8 @@ services:
     restart: always
     env_file:
       - .env
+    # networks:
+    #   - notification-network
 
   redis:
     container_name: redis
@@ -113,6 +146,8 @@ services:
     restart: always
     volumes:
       - cache:/data
+    # networks:
+    #   - notification-network
 
 volumes:
   rabbitmq_data:
@@ -120,3 +155,6 @@ volumes:
   static:
   media:
   cache:
+
+# networks:
+#   notification-network:

@@ -1,5 +1,6 @@
-from models.base import DeliveryType
 from pydantic import BaseModel
+
+from models.base import DeliveryType
 
 
 class TemplateFromDB(BaseModel):
@@ -9,7 +10,7 @@ class TemplateFromDB(BaseModel):
 
 
 class TemplateToSender(BaseModel):
-    notific_id: str
+    notification_id: str
     user_id: str | None
     subject: str
     email_body: str

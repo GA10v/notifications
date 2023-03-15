@@ -1,12 +1,13 @@
 import asyncio
 from typing import Any
 
+from pydantic.error_wrappers import ValidationError
+
 from broker.consumer import RabbitMQConsumer
 from broker.producer import RabbitMQProducer
 from core.logger import get_logger
 from db.storage import PGStorage
 from models.events import Event
-from pydantic.error_wrappers import ValidationError
 from service.builder import BuilderService
 from service.enrich.handler import get_payload
 from service.template import get_template
@@ -31,7 +32,7 @@ async def handler(message: dict[str, Any]) -> None:
     new_message = await enricher.build(
         data=payload,
         template=_template,
-        notific_id=event.notific_id,
+        notification_id=event.notification_id,
     )
     await producer.publish(msg=new_message)
 

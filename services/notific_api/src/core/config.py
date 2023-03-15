@@ -18,6 +18,15 @@ class FastapiSetting(BaseConfig):
         env_prefix = 'FASTAPI_'
 
 
+class LogingSettings(BaseConfig):
+    SENTRY_DSN: str = ''
+    LOGSTAH_HOST: str = 'logstash'
+    LOGSTAH_PORT: int = 5044
+
+    class Config:
+        env_prefix = 'LOGGING_'
+
+
 class RabbitMQSetting(BaseConfig):
     USER: str = 'guest'
     PASSWORD: str = 'guest'
@@ -41,11 +50,27 @@ class RabbitMQSetting(BaseConfig):
         env_prefix = 'RABBIT_'
 
 
+class JWTSettings(BaseConfig):
+    SECRET_KEY: str = '245585dbb5cbe2f151742298d61d364880575bff0bdcbf4ae383f0180e7e47dd'
+    JWT_TOKEN_LOCATION: list = ['headers']
+    ALGORITHM: str = 'HS256'
+
+    class Config:
+        env_prefix = 'JWT_'
+
+
+class DebugSettings(BaseConfig):
+    DEBUG: bool = True
+
+
 class ProjectSettings(BaseConfig):
     PROJECT_NAME: str = 'Notification_api'
     BASE_DIR = Path(__file__).parent.parent
     fastapi: FastapiSetting = FastapiSetting()
     rabbit: RabbitMQSetting = RabbitMQSetting()
+    logging: LogingSettings = LogingSettings()
+    jwt: JWTSettings = JWTSettings()
+    debug: DebugSettings = DebugSettings()
 
 
 settings = ProjectSettings()

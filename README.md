@@ -46,3 +46,9 @@
    `$ docker network create 'notification-network'`
 2. Зпустить контейнер командой
    `$ cd ELK && docker-compose up`
+
+## Авторы
+[GA10v](https://github.com/GA10v)
+[Student2506](https://github.com/Student2506)
+[gulyayko](https://github.com/gulyayko)
+[captainKoala](https://github.com/captainKoala)

@@ -9,7 +9,7 @@ from core.config import settings
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = settings.django.SECRET_KEY
 DEBUG = settings.django.DEBUG
-ALLOWED_HOSTS = settings.django.ALLOWED_HOSTS.split(',')
+ALLOWED_HOSTS = settings.django.ALLOWED_HOSTS
 include('components/_apps_middleware.py')
 ROOT_URLCONF = 'admin_panel.urls'
 WSGI_APPLICATION = 'admin_panel.wsgi.application'

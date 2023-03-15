@@ -5,6 +5,9 @@ from typing import Any
 from aio_pika import DeliveryMode, ExchangeType, Message
 from broker.rabbit import RabbitMQBroker
 from core.config import settings
+from core.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 class ProducerProtocol(ABC):
@@ -49,7 +52,7 @@ class RabbitMQProducer(ProducerProtocol, RabbitMQBroker):
                 auto_delete=False,
                 arguments={
                     'x-dead-letter-exchange': self.retry_exchange,
-                    'x-message-ttl': 5000,
+                    'x-message-ttl': settings.rabbit.MESSAGE_TTL_MS,
                 },
             )
             retry_queue = await channel.declare_queue(
@@ -73,3 +76,4 @@ class RabbitMQProducer(ProducerProtocol, RabbitMQBroker):
                 message=message,
                 routing_key=self.incoming_queue,
             )
+            logger.info(f'Message publish to<{self.incoming_queue}> : body<{msg}>')

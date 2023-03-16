@@ -53,11 +53,3 @@ class TaskAdmin(admin.ModelAdmin):
 
     form = TaskAdminForm
     save_as = True
-
-
-@admin.register(ReviewInfo)
-class ReviewInfoAdmin(admin.ModelAdmin):
-    """General class ot work with model."""
-
-    form = ReviewForm
-    save_as = True

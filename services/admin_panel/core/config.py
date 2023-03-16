@@ -50,13 +50,95 @@ class DjangoSettings(BaseConfig):
             f'@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}'
         )
 
+    @property
+    def db_creds(self):
+        return {
+            'dbname': self.POSTGRES_DB,
+            'user': self.POSTGRES_USER,
+            'password': self.POSTGRES_PASSWORD,
+            'host': self.POSTGRES_HOST,
+            'port': self.POSTGRES_PORT,
+        }
+
     class Config:
         env_prefix = 'DJANGO_'
+
+
+class JWTSettings(BaseConfig):
+    SECRET_KEY: str = '245585dbb5cbe2f151742298d61d364880575bff0bdcbf4ae383f0180e7e47dd'
+    JWT_TOKEN_LOCATION: list = ['headers']
+    ALGORITHM: str = 'HS256'
+
+    class Config:
+        env_prefix = 'JWT_'
+
+
+class AuthMock(BaseConfig):
+    HOST: str = 'localhost'
+    PORT: int = 8081
+    PREFIX: str = '/auth/v1/'
+
+    @property
+    def uri(self):
+        return f'http://{self.HOST}:{self.PORT}{self.PREFIX}'
+
+    @property
+    def group_id_uri(self):
+        return f'http://{self.HOST}:{self.PORT}{self.PREFIX}auth/v1/user_group/'
+
+    @property
+    def user_data_uri(self):
+        return f'http://{self.HOST}:{self.PORT}{self.PREFIX}auth/v1/user_info/'
+
+    class Config:
+        env_prefix = 'AUTH_MOCK_'
+
+
+class UGCMock(BaseConfig):
+    HOST: str = 'localhost'
+    PORT: int = 8083
+    PREFIX: str = '/ugc/v1/'
+
+    @property
+    def uri(self):
+        return f'http://{self.HOST}:{self.PORT}{self.PREFIX}'
+
+    @property
+    def subscribers_uri(self):
+        return f'http://{self.HOST}:{self.PORT}{self.PREFIX}ugc/v1/subscribers/'
+
+    @property
+    def likes_count_uri(self):
+        return f'http://{self.HOST}:{self.PORT}{self.PREFIX}ugc/v1/likes_count/'
+
+    class Config:
+        env_prefix = 'UGC_MOCK_'
+
+
+class FastapiSetting(BaseConfig):
+    HOST: str = 'localhost'
+    PORT: int = 8080
+    NOTIFIC_PREFIX: str = '/app/v1/notification'
+
+    @property
+    def uri(self):
+        return f'http://{self.HOST}:{self.PORT}{self.NOTIFIC_PREFIX}'
+
+    @property
+    def send_uri(self):
+        return f'http://{self.HOST}:{self.PORT}{self.NOTIFIC_PREFIX}/send'
+
+    class Config:
+        env_prefix = 'FASTAPI_'
 
 
 class ProjectSettings(BaseConfig):
     django: DjangoSettings = DjangoSettings()
     rabbit: RabbitMQSetting = RabbitMQSetting()
+    jwt: JWTSettings = JWTSettings()
+    auth: AuthMock = AuthMock()
+    ugc: UGCMock = UGCMock()
+    api: FastapiSetting = FastapiSetting()
 
 
 settings = ProjectSettings()

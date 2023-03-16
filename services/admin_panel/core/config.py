@@ -40,7 +40,7 @@ class DjangoSettings(BaseConfig):
     POSTGRES_DB: str = 'db_name'
     POSTGRES_HOST: str = 'postgres'
     POSTGRES_PORT: int = 5432
-    ALLOWED_HOSTS: list[str] = ['127.0.0.1', 'localhost']
+    ALLOWED_HOSTS: list[str] = ['*']  # ['127.0.0.1', 'localhost']
     DEBUG: bool = True
 
     @property

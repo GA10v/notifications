@@ -205,27 +205,27 @@ services:
     networks:
       - notification-network
 
-  # nginx:
-    # container_name: nginx
-    # image: nginx:1.23
-    # volumes:
-    #   - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-    #   - ./nginx/configs:/etc/nginx/conf.d:ro
-    # depends_on:
-    #   - admin-panel
-    #   - notification_api
-    # ports:
-    #   - 80:80
-    #   - 8080:8080
-    #   - 443:443
-    # restart: always
-    # networks:
-    #   - notification-network
-    # logging:
-    #   driver: gelf
-    #   options:
-    #     gelf-address: udp://localhost:5043
-    #     tag: nginx
+  nginx:
+    container_name: nginx
+    image: nginx:1.23
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/configs:/etc/nginx/conf.d:ro
+    depends_on:
+      - admin-panel
+      - notification_api
+    ports:
+      - 80:80
+      # - 8080:8080
+      - 443:443
+    restart: always
+    networks:
+      - notification-network
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:5043
+        tag: nginx
 
 volumes:
   rabbitmq_data:

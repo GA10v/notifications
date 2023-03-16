@@ -35,10 +35,6 @@ services:
     restart: always
     volumes:
       - postgres_data:/var/lib/postgresql/data/
-    environment:
-      POSTGRES_PASSWORD: ${DJANGO_POSTGRES_PASSWORD}
-      POSTGRES_USER: ${DJANGO_POSTGRES_USER}
-      POSTGRES_DB: ${DJANGO_POSTGRES_DB}
     env_file:
       - .env
     networks:
@@ -208,6 +204,8 @@ services:
     container_name: redis
     image: redis:7.0.4-alpine
     restart: always
+    expose:
+      - 6379
     volumes:
       - cache:/data
     networks:

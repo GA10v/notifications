@@ -21,6 +21,7 @@ class DeliveryType(str, Enum):
     sms = 'sms'
     push = 'push'
 
+
 class Task(BaseModel):
     event_type: EventType
     movie_id: str | None
@@ -34,3 +35,8 @@ class Event(BaseModel):
     context: NewContent | NewReviewsLikes | NewPromo
     created_at: datetime
     source_name: str
+
+    def dict(self, *args, **kwargs) -> dict:
+        _dict: dict = super().dict(*args, **kwargs)
+        _dict['created_at'] = _dict['created_at'].strftime('%Y-%m-%d %H:%M:%S')
+        return _dict

@@ -54,7 +54,7 @@ class ProcessTask:
 
     def _get_reviews_from_db(self) -> list[dict]:
         """Return reviews data from Notifications DB."""
-        return self.connection.postgres.fetch_table('SELECT * FROM reviews_table;')
+        return self.connection.postgres.fetch_table('SELECT * FROM ReviewInfo;')
 
     def _filter_increased_likes(self) -> list[dict]:
         """
@@ -66,7 +66,7 @@ class ProcessTask:
         for record in db_records:
             current_likes = self.connection.ugc.get_likes_count(record['review_id'])
             if current_likes > record['likes_count']:
-                record.pop("id")
+                record.pop('id')
                 filtered_reviews.append(record)
         return filtered_reviews
 

@@ -149,6 +149,10 @@ class URLShortnerSettings(BaseConfig):
         env_prefix = 'URLSHORT_'
 
 
+class DebugSettings(BaseConfig):
+    DEBUG: bool = True
+
+
 class ProjectSettings(BaseConfig):
     PROJECT_NAME: str = 'Notification_api'
     BASE_DIR = Path(__file__).parent.parent
@@ -162,6 +166,7 @@ class ProjectSettings(BaseConfig):
     postgres: PostgresSettings = PostgresSettings()
     redis: RedisSettings = RedisSettings()
     url_shortner: URLShortnerSettings = URLShortnerSettings()
+    debug: DebugSettings = DebugSettings()
 
 
 settings = ProjectSettings()

@@ -41,8 +41,8 @@ services:
       POSTGRES_DB: ${DJANGO_POSTGRES_DB}
     env_file:
       - .env
-    # networks:
-    #   - notification-network
+    networks:
+      - notification-network
 
   url_shortener:
     container_name: url_shortener
@@ -55,8 +55,8 @@ services:
       - admin-panel
     env_file:
       - .env
-    # networks:
-    #   - notification-network
+    networks:
+      - notification-network
 
   admin-panel:
     container_name: admin_panel
@@ -71,8 +71,13 @@ services:
       - postgres
     env_file:
       - .env
-    # networks:
-    #   - notification-network
+    networks:
+      - notification-network
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:5043
+        tag: admin-panel
 
   celery:
     container_name: celery
@@ -84,8 +89,8 @@ services:
       - postgres
     env_file:
       - .env
-    # networks:
-    #   - notification-network
+    networks:
+      - notification-network
     command: celery -A admin_panel worker -l info
 
   celery-beat:
@@ -98,28 +103,54 @@ services:
       - postgres
     env_file:
       - .env
-    # networks:
-    #   - notification-network
+    networks:
+      - notification-network
     command: celery -A admin_panel beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
 
-  # enricher:
-  #   container_name: enricher
-  #   build:
-  #     context: services/enricher
-  #     dockerfile: Dockerfile
-  #   restart: always
-  #   depends_on:
-  #     - url_shortener
-  #     - celery
-  #     - rabbitmq
-  #     - mock_admin
-  #     - mock_auth
-  #     - redis
-  #     - postgres
-  #   env_file:
-  #     - .env
-  #   networks:
-  #     - notification-network
+  enricher:
+    container_name: enricher
+    build:
+      context: services/enricher
+      dockerfile: Dockerfile
+    restart: always
+    depends_on:
+      - admin-panel
+      - url_shortener
+      - celery
+      - rabbitmq
+      - mock_admin
+      - mock_auth
+      - redis
+      - postgres
+    env_file:
+      - .env
+    networks:
+      - notification-network
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:5043
+        tag: enricher
+
+  notification_api:
+    container_name: notification_api
+    build:
+      context: services/notific_api
+      dockerfile: Dockerfile
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      - celery
+      - enricher
+      - rabbitmq
+    networks:
+      - notification-network
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:5043
+        tag: API
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
@@ -137,8 +168,8 @@ services:
       interval: 10s
       timeout: 10s
       retries: 5
-    # networks:
-    #   - notification-network
+    networks:
+      - notification-network
 
   mock_admin:
     container_name: mock_admin
@@ -148,8 +179,8 @@ services:
     restart: always
     env_file:
       - .env
-    # networks:
-    #   - notification-network
+    networks:
+      - notification-network
 
   mock_auth:
     container_name: mock_auth
@@ -159,8 +190,8 @@ services:
     restart: always
     env_file:
       - .env
-    # networks:
-    #   - notification-network
+    networks:
+      - notification-network
 
   mock_ugc:
     container_name: mock_ugc
@@ -170,8 +201,8 @@ services:
     restart: always
     env_file:
       - .env
-    # networks:
-    #   - notification-network
+    networks:
+      - notification-network
 
   redis:
     container_name: redis
@@ -179,8 +210,30 @@ services:
     restart: always
     volumes:
       - cache:/data
+    networks:
+      - notification-network
+
+  # nginx:
+    # container_name: nginx
+    # image: nginx:1.23
+    # volumes:
+    #   - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    #   - ./nginx/configs:/etc/nginx/conf.d:ro
+    # depends_on:
+    #   - admin-panel
+    #   - notification_api
+    # ports:
+    #   - 80:80
+    #   - 8080:8080
+    #   - 443:443
+    # restart: always
     # networks:
     #   - notification-network
+    # logging:
+    #   driver: gelf
+    #   options:
+    #     gelf-address: udp://localhost:5043
+    #     tag: nginx
 
 volumes:
   rabbitmq_data:
@@ -189,5 +242,12 @@ volumes:
   media:
   cache:
 
+<<<<<<< HEAD
 # networks:
 #   notification-network:
+=======
+
+networks:
+  notification-network:
+    external: true
+>>>>>>> main

@@ -1,5 +1,6 @@
 import aiohttp
 from aiohttp.client_exceptions import ClientError
+
 from core.config import settings
 from core.logger import get_logger
 from models.events import Event

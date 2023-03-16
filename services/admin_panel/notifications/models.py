@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -50,5 +52,26 @@ class Task(UUIDMixin, TimeStampedMixin):  # type: ignore[misc]
     class Meta:
         ordering = ['title']
 
+
+class ReviewInfo(UUIDMixin, TimeStampedMixin):  # type: ignore[misc]
+
+    movie_id = models.UUIDField(default=uuid.uuid4, unique=True)
+    author_id = models.UUIDField(default=uuid.uuid4, unique=True)
+    review_id = models.UUIDField(default=uuid.uuid4, unique=True)
+    likes_count = models.IntegerField(default=0)
+
     def __str__(self):
-        return f'{self.title:15} - {self.event_type:15} - {self.subject:15}'
+        return str(f'{self.review_id}')
+
+    class Meta:
+        ordering = ['review_id']
+
+
+class ReviewStorage(UUIDMixin, TimeStampedMixin):  # type: ignore[misc]
+    ...
+
+    def __str__(self):
+        return self.review_id
+
+    class Meta:
+        ordering = ['review_id']

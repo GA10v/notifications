@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from typing import Any
 
 from aio_pika import DeliveryMode, ExchangeType, Message
+
 from broker.rabbit import RabbitMQBroker
 from core.config import settings
 from core.logger import get_logger

@@ -1,15 +1,16 @@
-from models.base import DeliveryType
 from pydantic import BaseModel
+
+from models.base import DeliveryType
 
 
 class TemplateFromDB(BaseModel):
     subject: str
     template_files: str
     text_msg: str
-    text_to_promo: str | None
 
 
 class TemplateToSender(BaseModel):
+    notification_id: str
     user_id: str | None
     subject: str
     email_body: str

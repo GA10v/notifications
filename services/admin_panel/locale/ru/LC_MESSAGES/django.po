@@ -8,7 +8,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2023-03-14 10:27+0300\n"
+=======
+"POT-Creation-Date: 2023-03-10 12:45+0300\n"
+>>>>>>> 0a6fb26130234b1e197201a68d6ab054af2218d8
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -77,6 +81,15 @@ msgid "Template"
 msgstr "Шаблон"
 
 #: .\notifications\models.py:52
+#: .\notifications\models.py:12
+msgid "short_description"
+msgstr "содержимое шаблона для SMS и PUSH"
+
+#: .\notifications\models.py:16
+msgid "Template"
+msgstr "Шаблон"
+
+#: .\notifications\models.py:17
 msgid "Templates"
 msgstr "Шаблоны"
 

@@ -49,9 +49,6 @@ class Task(UUIDMixin, TimeStampedMixin):  # type: ignore[misc]
     movie_id = models.CharField(max_length=TEXT_FIELD_LEN, blank=True, default='')
     text_to_promo = models.CharField(max_length=PROMO_FIELD_LEN, blank=True, default='')
 
-    def __str__(self):
-        return self.title
-
     class Meta:
         ordering = ['title']
 

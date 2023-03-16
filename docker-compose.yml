@@ -1,6 +1,34 @@
 version: '3.9'
 
 services:
+  rabbit_worker:
+    container_name: rabbit_worker
+    build:
+      context: services/sender
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    command: >
+      bash -c "python -m v1.workers.rabbit_worker"
+
+
+  websocket_worker:
+    container_name: websocket_worker
+    build:
+      context: services/sender
+      dockerfile: Dockerfile
+    depends_on:
+      - rabbitmq
+    ports:
+      - "8765:8765"
+    env_file:
+      - .env
+    command: >
+      bash -c "python -m v1.workers.websocket_worker --port 8765 --ip 0.0.0.0"
+
   postgres:
     container_name: postgres
     image: postgres:15.2-alpine3.17
@@ -131,6 +159,11 @@ services:
       - rabbitmq_data:/var/lib/rabbitmq/
     env_file:
       - .env
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "5672" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
     networks:
       - notification-network
 
@@ -171,6 +204,8 @@ services:
     container_name: redis
     image: redis:7.0.4-alpine
     restart: always
+    expose:
+      - 6379
     volumes:
       - cache:/data
     networks:

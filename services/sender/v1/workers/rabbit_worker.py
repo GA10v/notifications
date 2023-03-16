@@ -1,6 +1,7 @@
 """Collect data from rabbit pass it to worker."""
 
 import asyncio
+import json
 import logging
 
 import aio_pika
@@ -8,6 +9,7 @@ from aio_pika.abc import AbstractRobustConnection
 from aio_pika.pool import Pool
 
 from core.config import settings
+from models.notifications import TemplateToSender
 from v1.workers import mail_worker, sms_worker, websocket_worker
 
 WORKERS = {
@@ -35,7 +37,8 @@ async def consume(channel_pool: Pool) -> None:
         )
         async with queue.iterator() as queue_iter:
             async for message in queue_iter:
-                await WORKERS[message['method']].send_message(message)
+                notification = TemplateToSender(json.loads(message))
+                await WORKERS[message['method']].send_message(notification)
                 await message.ack()
 
 

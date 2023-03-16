@@ -1,5 +1,6 @@
 import requests
-from utils.auth import get_access_token
+
+from generator.src.utils.auth import get_access_token
 
 
 class AuthenticatedSession:

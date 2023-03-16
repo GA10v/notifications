@@ -1,20 +1,14 @@
-import os
 from contextlib import closing
 
 import psycopg2
 from psycopg2.extras import DictCursor
 
+from admin_panel.core.config import settings
 from admin_panel.generator.src.models.notifications import Event
 from admin_panel.generator.src.models.user import User
 from admin_panel.generator.src.service.connector import AuthenticatedSession
 
-db_creds = {
-    'dbname': os.getenv('DB_NAME'),
-    'user': os.getenv('DB_USER'),
-    'password': os.getenv('DB_PASSWORD'),
-    'host': os.environ.get('DB_HOST', '127.0.0.1'),
-    'port': os.environ.get('DB_PORT', 5432),
-}
+db_creds = settings.django.db_creds
 
 
 class UGCConnection:
@@ -23,11 +17,11 @@ class UGCConnection:
 
     def get_content_subscribers(self, content_id: str) -> list[str]:
         """Return list of users, subscribed to new content events."""
-        return self.connector.get(url=f'/ugc/v1/subscribers/{content_id}')
+        return self.connector.post(url=f'{settings.ugc.subscribers_uri}{content_id}')
 
     def get_likes_count(self, review_id: str) -> int:
         """Return number of current likes on review."""
-        return self.connector.get(url=f'/ugc/v1/likes_count/{review_id}')
+        return self.connector.post(url=f'{settings.ugc.likes_count_uri}{review_id}')
 
     def close(self) -> None:
         """Close requests session."""
@@ -40,12 +34,12 @@ class AuthConnection:
 
     def get_user_data(self, user_id: str) -> User:
         """Return list of users, subscribed to new content events."""
-        response = self.connector.get(url=f'/auth/v1/user_info/{user_id}')
+        response = self.connector.post(url=f'{settings.auth.user_data_uri}{user_id}')
         return response if response.ok else response.raise_for_status()
 
     def get_user_group(self, group_id: str) -> list[str]:
         """Return list of users, belong to the group."""
-        response = self.connector.get(url=f'/auth/v1/user_group/{group_id}')
+        response = self.connector.post(url=f'{settings.auth.group_id_uri}{group_id}')
         return response if response.ok else response.raise_for_status()
 
     def filter_users(self, user_ids: list[str], conditions: list) -> list[str]:
@@ -62,7 +56,7 @@ class ApiConnection:
         self.connector = connector
 
     def send_event(self, event: Event):
-        response = self.connector.post(url='/test_new_content', payload=event)
+        response = self.connector.post(url=settings.api.send_uri, payload=event.dict())
         return response if response.ok else response.raise_for_status()
 
     def close(self) -> None:

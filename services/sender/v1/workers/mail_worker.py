@@ -4,7 +4,7 @@ import smtplib
 from email.message import EmailMessage
 
 from core.config import settings
-from models.notifications import NotificationToDelivery
+from models.notifications import TemplateToSender
 from v1.workers.generic_worker import Worker
 
 
@@ -26,36 +26,22 @@ class EmailWorker(Worker):
 
     def send_message(
         self,
-        notification: NotificationToDelivery,
+        notification: TemplateToSender,
     ) -> None:
         """Send emails.
 
         Args:
-            message: dict - includes reciepents, subject and body
+            notification: TemplateToSender - includes reciepents, subject and body
         """
 
         message = EmailMessage()
         message['From'] = settings.email.USER
-        message['To'] = settings.email.USER
+        message['To'] = ';'.join(notification.recipient)
         message['Subject'] = notification.subject
-        message.add_alternative(notification.message_body, subtype='html')
+        message.add_alternative(notification.email_body, subtype='html')
         self.connection.sendmail(
             settings.email.USER,
             notification.recipient,
             message.as_string(),
         )
         self.connection.close()
-
-
-if __name__ == '__main__':
-    fields = {
-        'text': 'Произошло что-то интересное',
-        'image': 'https://mcusercontent.com/597bc5462e8302e1e9db1d857/images/e27b9f2b-08d3-4736-b9b7-96e1c2d387fa.png',
-    }
-    mail_worker = EmailWorker()
-    mail_worker.send_message(
-        ['Павел Захаров <zpe25@yandex.ru>'],
-        'Привет!',
-        'mail.html',
-        fields,
-    )

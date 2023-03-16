@@ -7,6 +7,7 @@ import trio
 from trio_websocket import ConnectionClosed, serve_websocket
 
 from core.config import settings
+from models.notifications import TemplateToSender
 from v1.workers.generic_worker import Worker
 
 WEBSOCKET_CHECK_TIMEOUT = 10
@@ -18,7 +19,7 @@ class WebSocketWorker(Worker):
     def __init__(self):
         self.settings = settings
 
-    def send_message(self, recipients, subject, template, fields):
+    def send_message(notification: TemplateToSender):
         # Save state to database for request by user
         pass
 

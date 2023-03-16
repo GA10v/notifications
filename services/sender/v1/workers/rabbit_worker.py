@@ -8,11 +8,12 @@ from aio_pika.abc import AbstractRobustConnection
 from aio_pika.pool import Pool
 
 from core.config import settings
-from v1.workers import mail_worker, websocket_worker
+from v1.workers import mail_worker, sms_worker, websocket_worker
 
 WORKERS = {
     'mail': mail_worker,
     'websocket': websocket_worker,
+    'sms': sms_worker,
 }
 
 

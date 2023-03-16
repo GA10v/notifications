@@ -58,7 +58,7 @@ class PostgresSettings(BaseConfig):
 
     @property
     def uri(self):
-        return f'://{self.USER}:{self.PASSWORD}@{self.HOST}:{self.PORT}'
+        return f'postgresql+psycopg2://{self.USER}:{self.PASSWORD}@{self.HOST}:{self.PORT}/{self.DB}'
 
     class Config:
         env_prefix = 'POSTGRES_'

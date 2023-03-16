@@ -2,7 +2,7 @@ from datetime import date, datetime
 
 from pydantic import BaseModel
 
-from admin_panel.generator.src.models.notifications import DeliveryType
+from generator.src.models.notifications import DeliveryType
 
 
 class User(BaseModel):

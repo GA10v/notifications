@@ -3,10 +3,10 @@ from contextlib import closing
 import psycopg2
 from psycopg2.extras import DictCursor
 
-from admin_panel.core.config import settings
-from admin_panel.generator.src.models.notifications import Event
-from admin_panel.generator.src.models.user import User
-from admin_panel.generator.src.service.connector import AuthenticatedSession
+from core.config import settings
+from generator.src.models.notifications import Event
+from generator.src.models.user import User
+from generator.src.service.connector import AuthenticatedSession
 
 db_creds = settings.django.db_creds
 

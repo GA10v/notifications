@@ -2,7 +2,7 @@ from uuid import uuid4
 
 import jwt
 
-from admin_panel.core.config import settings
+from core.config import settings
 
 
 def get_access_token() -> str:

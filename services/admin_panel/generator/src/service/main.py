@@ -2,11 +2,11 @@ from collections import namedtuple
 from typing import Union
 from uuid import uuid4
 
-from admin_panel.generator.src.models.context import NewContent, NewPromo, NewReviewsLikes
-from admin_panel.generator.src.models.notifications import Event, EventType, Task
-from admin_panel.generator.src.service.communicators import ApiConnection, AuthConnection, PGConnection, UGCConnection
-from admin_panel.generator.src.service.connector import AuthenticatedSession
-from admin_panel.generator.src.utils.auth import get_access_token
+from generator.src.models.context import NewContent, NewPromo, NewReviewsLikes
+from generator.src.models.notifications import Event, EventType, Task
+from generator.src.service.communicators import ApiConnection, AuthConnection, PGConnection, UGCConnection
+from generator.src.service.connector import AuthenticatedSession
+from generator.src.utils.auth import get_access_token
 
 
 class ProcessTask:

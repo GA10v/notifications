@@ -9,8 +9,7 @@ services:
     env_file:
       - .env
     depends_on:
-      rabbitmq:
-        condition: service_healthy
+      - rabbitmq
     command: >
       bash -c "python -m v1.workers.rabbit_worker"
 
@@ -159,11 +158,6 @@ services:
       - rabbitmq_data:/var/lib/rabbitmq/
     env_file:
       - .env
-    healthcheck:
-      test: ["CMD", "nc", "-z", "localhost", "5672" ]
-      interval: 10s
-      timeout: 10s
-      retries: 5
     networks:
       - notification-network
 

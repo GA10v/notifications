@@ -35,7 +35,7 @@ class ReviewForm(forms.ModelForm):
     class Meta:
         """Just regular Meta class."""
 
-        model = Task
+        model = ReviewInfo
         fields = '__all__'
 
 
@@ -52,4 +52,12 @@ class TaskAdmin(admin.ModelAdmin):
     """General class ot work with model."""
 
     form = TaskAdminForm
+    save_as = True
+
+
+@admin.register(ReviewInfo)
+class ReviewInfoAdmin(admin.ModelAdmin):
+    """General class ot work with model."""
+
+    form = ReviewForm
     save_as = True

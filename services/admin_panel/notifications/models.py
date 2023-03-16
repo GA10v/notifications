@@ -68,7 +68,7 @@ class ReviewInfo(UUIDMixin, TimeStampedMixin):  # type: ignore[misc]
 
 
 class ReviewStorage(UUIDMixin, TimeStampedMixin):  # type: ignore[misc]
-    ...
+    review_id = models.UUIDField(default=uuid.uuid4, unique=True)
 
     def __str__(self):
         return self.review_id

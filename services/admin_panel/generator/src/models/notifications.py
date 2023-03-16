@@ -4,7 +4,7 @@ from uuid import UUID
 
 from pydantic import BaseModel
 
-from admin_panel.generator.src.models.context import NewContent, NewPromo, NewReviewsLikes
+from generator.src.models.context import NewContent, NewPromo, NewReviewsLikes
 
 
 class EventType(str, Enum):

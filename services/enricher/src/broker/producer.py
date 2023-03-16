@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from typing import Any
 
 from aio_pika import DeliveryMode, ExchangeType, Message
+
 from broker.rabbit import RabbitMQBroker
 from core.config import settings
 from core.logger import get_logger
@@ -52,7 +53,7 @@ class RabbitMQProducer(ProducerProtocol, RabbitMQBroker):
                 auto_delete=False,
                 arguments={
                     'x-dead-letter-exchange': self.retry_exchange,
-                    'x-message-ttl': 5000,
+                    'x-message-ttl': settings.rabbit.MESSAGE_TTL_MS,
                 },
             )
             retry_queue = await channel.declare_queue(

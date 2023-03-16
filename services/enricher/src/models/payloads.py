@@ -1,7 +1,9 @@
+from datetime import datetime
 from typing import Union
 
-from models.base import DeliveryType
 from pydantic import BaseModel
+
+from models.base import DeliveryType
 
 
 class BaseUserContext(BaseModel):
@@ -18,6 +20,17 @@ class NewUserContext(BaseModel):
     email: str
     link: str
     delivery_type: DeliveryType
+
+
+class UserShortContext(BaseModel):
+    user_id: str
+    url: str
+    created_at: datetime
+
+    def dict(self, *args, **kwargs) -> dict:
+        _dict: dict = super().dict(*args, **kwargs)
+        _dict['created_at'] = _dict['created_at'].strftime('%Y-%m-%d %H:%M:%S')
+        return _dict
 
 
 class NewReviewsLikesContext(BaseUserContext):

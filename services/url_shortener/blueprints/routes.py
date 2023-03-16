@@ -1,15 +1,15 @@
-import json
 import string
 from random import choice
 
 from flask import Blueprint, current_app, redirect, request
 from flask_api import status
-
-from models.shorturls import ShortUrl
 from shortener_service import db
 
-ID_LENGTH = 8
-URL_PREFIX = '/api/v1/shortener/'
+from core.config import settings
+from models.shorturls import ShortUrl
+
+ID_LENGTH = settings.url_shortner.ID_LENGTH
+URL_PREFIX = settings.url_shortner.PREFIX
 
 bp = Blueprint('shortener', __name__, url_prefix=URL_PREFIX)
 
@@ -30,7 +30,7 @@ def index():
         db.session.add(new_link)
         db.session.commit()
         short_url = request.host_url.rstrip('/') + URL_PREFIX + short_id
-        return json.dumps({'url': short_url}), status.HTTP_201_CREATED, {'ContentType': 'application/json'}
+        return {'url': short_url}, status.HTTP_201_CREATED, {'ContentType': 'application/json'}
 
 
 @bp.route('/<short_id>')

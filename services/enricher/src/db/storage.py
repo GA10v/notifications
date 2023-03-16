@@ -1,9 +1,10 @@
 from abc import ABC, abstractmethod
 from typing import Union
 
-from core.config import settings
 from databases import Database
 from sqlalchemy.sql import Delete, Insert, Select, Update
+
+from core.config import settings
 
 
 class StorageProtocol(ABC):

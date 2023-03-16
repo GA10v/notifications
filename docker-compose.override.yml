@@ -3,7 +3,9 @@ version: '3.9'
 services:
   admin-panel:
     ports:
-      - "8000:8000"
+      - 8000:8000
+    # expose:
+    #   - 8000
 
   rabbitmq:
     ports:
@@ -27,9 +29,16 @@ services:
       - 8083:8083
 
   redis:
-    expose:
-      - 6379
+    ports:
+      - 6379:6379
 
   url_shortener:
     ports:
       - "3000:3000"
+
+  notification_api:
+    ports:
+      - 8080:8080
+    # expose:
+    #   - 8080
+

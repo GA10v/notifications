@@ -1,7 +1,9 @@
 import json
 from abc import ABC, abstractmethod
+from enum import Enum, unique
 
 import aioredis
+
 from core.config import settings
 
 
@@ -15,6 +17,14 @@ class CacheProtocol(ABC):
         ...
 
 
+@unique
+class MSGStatus(Enum):
+    New = None
+    InProcess = 0
+    Error = 2
+    Done = 3
+
+
 class RedisCache(CacheProtocol):
     def __init__(self) -> None:
         self.session = aioredis.from_url(settings.redis.uri)
@@ -26,7 +36,7 @@ class RedisCache(CacheProtocol):
         return json.loads(value)
 
     async def set(self, key: str, value: str, exp: int = settings.redis.EXPIRE_SEC) -> None:
-        await self.session.set(key, json.dumps(value).encode('utf-8'), ex=exp)
+        await self.session.set(key, json.dumps(value.value).encode('utf-8'), ex=exp)
 
     async def close(self) -> None:
         await self.session.close()

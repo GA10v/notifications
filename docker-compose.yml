@@ -242,12 +242,7 @@ volumes:
   media:
   cache:
 
-<<<<<<< HEAD
-# networks:
-#   notification-network:
-=======
 
 networks:
   notification-network:
     external: true
->>>>>>> main

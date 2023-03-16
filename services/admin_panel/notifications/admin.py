@@ -2,7 +2,7 @@ from django import forms
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
-from .models import Task, Template
+from .models import ReviewInfo, Task, Template
 
 admin.site.site_title = _('My site name')
 admin.site.site_header = _('My site header')
@@ -29,6 +29,16 @@ class TaskAdminForm(forms.ModelForm):
         fields = '__all__'
 
 
+class ReviewForm(forms.ModelForm):
+    """Form to use with cleanup extra tinymce stuff."""
+
+    class Meta:
+        """Just regular Meta class."""
+
+        model = Task
+        fields = '__all__'
+
+
 @admin.register(Template)
 class TemplateAdmin(admin.ModelAdmin):
     """General class ot work with model."""
@@ -42,4 +52,12 @@ class TaskAdmin(admin.ModelAdmin):
     """General class ot work with model."""
 
     form = TaskAdminForm
+    save_as = True
+
+
+@admin.register(ReviewInfo)
+class ReviewInfoAdmin(admin.ModelAdmin):
+    """General class ot work with model."""
+
+    form = ReviewForm
     save_as = True

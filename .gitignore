@@ -136,6 +136,10 @@ dmypy.json
 
 # My test file
 1.py
+_app.docker-compose.yml
+_locak.docker-compose.yml
+_docker.env
+_local.env
 
 # flake8 artifact
 artifact/

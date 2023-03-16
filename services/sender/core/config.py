@@ -23,7 +23,8 @@ class RabbitMQSetting(BaseConfig):
     QUEUE_TO_SEND: str = 'Queue_to_send'
     QUEUE_RETRY_ENRICH: str = 'Queue_retry_to_enrich'
     QUEUE_RETRY_SEND: str = 'Queue_retry_to_send'
-    MESSAGE_TTL_MS: int = 10000
+    MESSAGE_TTL_MS: int = 500000
+    MAX_RETRY_COUNT: int = 3
     CONNECT_POOL_SIZE: int = 2
 
     @property
@@ -40,8 +41,8 @@ class EmailSettings(BaseConfig):
     USER: str
     PASSWORD: str
     SMTP_SERVER: str
-    SMTP_PORT: int
-    SMTP_SSL: bool | None = True
+    SMTP_PORT: int = 465
+    SMTP_SSL: bool | None = False
 
     class Config:
         """Configuration plugin."""

@@ -1,5 +1,4 @@
 import json
-import logging
 from contextlib import suppress
 
 import asyncclick as click
@@ -9,19 +8,20 @@ from sqlalchemy.orm import Session
 from trio_websocket import ConnectionClosed, serve_websocket
 
 from core.config import settings
+from core.logger import get_logger
 from models.db.notifications import Notification
 from models.notifications import TemplateToSender
 from v1.workers.generic_worker import Worker
 
 WEBSOCKET_CHECK_TIMEOUT = 10
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 class WebSocketWorker(Worker):
-    def __init__(self):
-        self.settings = settings
-        self.engine = create_engine(self.settings.postgres.uri)
+    def __init__(self, uri: str = settings.postgres.uri):
+        self.settings = uri
+        self.engine = create_engine(self.settings)
 
     def send_message(self, notification: TemplateToSender):
         with Session(self.engine) as session:

@@ -61,6 +61,10 @@ class JWTSettings(BaseConfig):
 
 class DebugSettings(BaseConfig):
     DEBUG: bool = True
+    TEST_EMAIL: list[str] = ''
+
+    class Config:
+        env_prefix = 'DEBUG_'
 
 
 class ProjectSettings(BaseConfig):

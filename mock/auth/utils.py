@@ -8,8 +8,9 @@ import jwt
 from config import settings
 from faker import Faker
 from jwt import DecodeError, ExpiredSignatureError
-from models import DeliveryType, EventType, NewUserInfo, UserInfo, WelcomeEvent
 from requests import post
+
+from models import DeliveryType, EventType, NewUserInfo, UserInfo, WelcomeEvent
 
 fake = Faker()
 
@@ -56,6 +57,20 @@ def get_fake_user(user_id: str | None = None) -> UserInfo:
     if not user_id:
         user_id = uuid4()
 
+    if settings.debug:
+        return UserInfo(
+            user_id=str(user_id),
+            name=fake.first_name(),
+            last_name=fake.last_name(),
+            email=settings.debug.TEST_EMAIL[0],
+            phone_number=str(fake.phone_number()),
+            gender=choice(['male', 'female']),
+            country=fake.country(),
+            telegram_name=f'@{fake.first_name()}',
+            time_zone=fake.timezone(),
+            birthday=fake.date(),
+            delivery_type=DeliveryType.email.value,
+        )
     return UserInfo(
         user_id=str(user_id),
         name=fake.first_name(),

@@ -4,6 +4,7 @@ from uuid import uuid4
 
 from faker import Faker
 
+from core.config import settings
 from models.base import EventType
 from models.context import NewContent, NewPromo, NewReviewsLikes, NewUser
 from models.events import Event
@@ -12,6 +13,12 @@ fake = Faker()
 
 
 def _get_user() -> NewUser:
+    if settings.debug:
+        return NewUser(
+            user_id=str(uuid4()),
+            name=fake.first_name(),
+            email=settings.debug.TEST_EMAIL[0],
+        ).dict()
     return NewUser(
         user_id=str(uuid4()),
         name=fake.first_name(),

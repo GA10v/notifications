@@ -33,7 +33,6 @@ class EmailWorker(Worker):
         Args:
             notification: TemplateToSender - includes reciepents, subject and body
         """
-
         message = EmailMessage()
         message['From'] = settings.email.USER
         message['To'] = ';'.join(notification.recipient)

@@ -1,11 +1,10 @@
 from sqlalchemy import String
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import Mapped, declarative_base, mapped_column
 
 TEXT_FIELD_LEN = 255
 
 
-class Base(DeclarativeBase):
-    ...
+Base = declarative_base()
 
 
 class Notification(Base):

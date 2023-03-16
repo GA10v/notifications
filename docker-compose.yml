@@ -6,12 +6,13 @@ services:
     build:
       context: services/sender
       dockerfile: Dockerfile
+    restart: always
     env_file:
       - .env
     depends_on:
       - rabbitmq
     command: >
-      bash -c "python -m v1.workers.rabbit_worker"
+      bash -c "python3 rabbit.py"
 
 
   websocket_worker:
@@ -19,6 +20,7 @@ services:
     build:
       context: services/sender
       dockerfile: Dockerfile
+    restart: always
     depends_on:
       - rabbitmq
     ports:
@@ -216,7 +218,7 @@ services:
       - notification_api
     ports:
       - 80:80
-      # - 8080:8080
+      - 8080:8080
       - 443:443
     restart: always
     networks:

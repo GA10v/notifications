@@ -6,13 +6,13 @@ services:
     build:
       context: services/sender
       dockerfile: Dockerfile
+    restart: always
     env_file:
       - .env
     depends_on:
-      rabbitmq:
-        condition: service_healthy
+      - rabbitmq
     command: >
-      bash -c "python -m v1.workers.rabbit_worker"
+      bash -c "python3 rabbit.py"
 
 
   websocket_worker:
@@ -20,6 +20,7 @@ services:
     build:
       context: services/sender
       dockerfile: Dockerfile
+    restart: always
     depends_on:
       - rabbitmq
     ports:
@@ -159,11 +160,6 @@ services:
       - rabbitmq_data:/var/lib/rabbitmq/
     env_file:
       - .env
-    healthcheck:
-      test: ["CMD", "nc", "-z", "localhost", "5672" ]
-      interval: 10s
-      timeout: 10s
-      retries: 5
     networks:
       - notification-network
 
@@ -211,27 +207,27 @@ services:
     networks:
       - notification-network
 
-  # nginx:
-    # container_name: nginx
-    # image: nginx:1.23
-    # volumes:
-    #   - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-    #   - ./nginx/configs:/etc/nginx/conf.d:ro
-    # depends_on:
-    #   - admin-panel
-    #   - notification_api
-    # ports:
-    #   - 80:80
-    #   - 8080:8080
-    #   - 443:443
-    # restart: always
-    # networks:
-    #   - notification-network
-    # logging:
-    #   driver: gelf
-    #   options:
-    #     gelf-address: udp://localhost:5043
-    #     tag: nginx
+  nginx:
+    container_name: nginx
+    image: nginx:1.23
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/configs:/etc/nginx/conf.d:ro
+    depends_on:
+      - admin-panel
+      - notification_api
+    ports:
+      - 80:80
+      - 8080:8080
+      - 443:443
+    restart: always
+    networks:
+      - notification-network
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:5043
+        tag: nginx
 
 volumes:
   rabbitmq_data:

@@ -2,7 +2,7 @@ import logging
 
 from celery import shared_task  # type: ignore[attr-defined]
 
-from admin_panel.generator.src.service.main import EventType, ProcessTask, Task
+from generator.src.service.main import EventType, ProcessTask, Task
 
 logger = logging.getLogger(__name__)
 

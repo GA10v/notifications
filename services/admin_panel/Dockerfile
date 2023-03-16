@@ -15,7 +15,7 @@ RUN apt install -y gcc gettext && apt install -u gcc musl-dev
 RUN python3 -m pip install -U pip
 RUN pip install "poetry==$POETRY_VERSION"
 WORKDIR /code
-COPY poetry.lock pyproject.toml /code/
+COPY pyproject.toml /code/
 RUN poetry config virtualenvs.create false \
   && poetry install $(test "$BUILD_TYPE" = "production" && echo "--without dev") --no-interaction --no-ansi --no-root
 

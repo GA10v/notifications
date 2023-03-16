@@ -8,11 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-<<<<<<< HEAD
-"POT-Creation-Date: 2023-03-14 10:27+0300\n"
-=======
-"POT-Creation-Date: 2023-03-10 12:45+0300\n"
->>>>>>> 0a6fb26130234b1e197201a68d6ab054af2218d8
+"POT-Creation-Date: 2023-03-16 21:27+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,15 +20,15 @@ msgstr ""
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
 "%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: .\notifications\admin.py:9
+#: .\notifications\admin.py:7
 msgid "My site name"
 msgstr "Сайт настройки уведомлений"
 
-#: .\notifications\admin.py:10
+#: .\notifications\admin.py:8
 msgid "My site header"
 msgstr "Уведомления"
 
-#: .\notifications\admin.py:11
+#: .\notifications\admin.py:9
 msgid "My index title"
 msgstr "Главная страница настройки"
 
@@ -48,51 +44,37 @@ msgstr "дата создания"
 msgid "modified"
 msgstr "дата изменения"
 
-#: .\notifications\models.py:38
+#: .\notifications\models.py:22 .\notifications\models.py:45
 msgid "title"
 msgstr "наименование"
 
-#: .\notifications\models.py:40
-msgid "event_type"
-msgstr "тип события"
-
-#: .\notifications\models.py:42
+#: .\notifications\models.py:24
 msgid "subject"
 msgstr "тема/заголовок"
 
-#: .\notifications\models.py:43
-msgid "template_files"
+#: .\notifications\models.py:32
+msgid "Template"
 msgstr "Шаблоны"
 
-#: .\notifications\models.py:44
-msgid "text_to_promo"
-msgstr "html описание (Email)"
-
-#: .\notifications\models.py:45
-msgid "text_msg"
-msgstr "текстовое описание (Push, SMS)."
-
-#: .\notifications\models.py:47
-msgid "user group"
-msgstr "группа пользователя"
-
-#: .\notifications\models.py:51
-msgid "Template"
-msgstr "Шаблон"
-
-#: .\notifications\models.py:52
-#: .\notifications\models.py:12
-msgid "short_description"
-msgstr "содержимое шаблона для SMS и PUSH"
-
-#: .\notifications\models.py:16
-msgid "Template"
-msgstr "Шаблон"
-
-#: .\notifications\models.py:17
+#: .\notifications\models.py:33
 msgid "Templates"
 msgstr "Шаблоны"
 
 #: .\users\apps.py:8
 msgid "Users"
 msgstr "Пользователи и Группы"
+
+#~ msgid "event_type"
+#~ msgstr "тип события"
+
+#~ msgid "template_files"
+#~ msgstr "Шаблоны"
+
+#~ msgid "text_to_promo"
+#~ msgstr "html описание (Email)"
+
+#~ msgid "text_msg"
+#~ msgstr "текстовое описание (Push, SMS)."
+
+#~ msgid "user group"
+#~ msgstr "группа пользователя"

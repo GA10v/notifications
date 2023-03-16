@@ -2,7 +2,7 @@ from django import forms
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
-from .models import Task, Template
+from .models import ReviewInfo, Task, Template
 
 admin.site.site_title = _('My site name')
 admin.site.site_header = _('My site header')
@@ -20,6 +20,16 @@ class TemplateAdminForm(forms.ModelForm):
 
 
 class TaskAdminForm(forms.ModelForm):
+    """Form to use with cleanup extra tinymce stuff."""
+
+    class Meta:
+        """Just regular Meta class."""
+
+        model = Task
+        fields = '__all__'
+
+
+class ReviewForm(forms.ModelForm):
     """Form to use with cleanup extra tinymce stuff."""
 
     class Meta:

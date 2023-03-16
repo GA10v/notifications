@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 
 import aio_pika
 from aio_pika import DeliveryMode, ExchangeType, Message
+
 from core.config import settings
 
 

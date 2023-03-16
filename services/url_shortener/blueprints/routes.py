@@ -3,10 +3,10 @@ from random import choice
 
 from flask import Blueprint, current_app, redirect, request
 from flask_api import status
+from shortener_service import db
 
 from core.config import settings
 from models.shorturls import ShortUrl
-from shortener_service import db
 
 ID_LENGTH = settings.url_shortner.ID_LENGTH
 URL_PREFIX = settings.url_shortner.PREFIX

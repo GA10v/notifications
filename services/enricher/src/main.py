@@ -10,6 +10,7 @@ from db.storage import PGStorage
 from models.events import Event
 from service.builder import BuilderService
 from service.enrich.handler import get_payload
+from service.review import update_storage
 from service.template import get_template
 
 logger = get_logger(__name__)
@@ -35,6 +36,9 @@ async def handler(message: dict[str, Any]) -> None:
         notification_id=event.notification_id,
     )
     await producer.publish(msg=new_message)
+    async with db as conn:
+        await update_storage(db=conn, data=event)
+        logger.info('Starting enricher process...')
 
 
 async def builder() -> None:

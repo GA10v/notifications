@@ -1,7 +1,7 @@
 import asyncio
 import json
 from abc import ABC, abstractmethod
-from typing import Coroutine, Optional
+from typing import Any
 
 from pydantic.error_wrappers import ValidationError
 
@@ -15,7 +15,7 @@ logger = get_logger(__name__)
 
 class ConsumerProtocol(ABC):
     @abstractmethod
-    async def consume(self, callback: Optional[Coroutine], **kwargs) -> None:
+    async def consume(self, callback: Any, **kwargs: dict[Any, Any]) -> None:
         ...
 
 
@@ -26,7 +26,7 @@ class RabbitMQConsumer(ConsumerProtocol, RabbitMQBroker):
         retry_queue: str = settings.rabbit.QUEUE_RETRY_ENRICH.lower(),
         incoming_exchange: str = settings.rabbit.EXCHENGE_INCOMING_1.lower(),
         retry_exchange: str = settings.rabbit.EXCHENGE_RETRY_1.lower(),
-        **kwargs,
+        **kwargs: dict[Any, Any],
     ) -> None:
         super().__init__(**kwargs)
         self.incoming_queue = incoming_queue
@@ -44,7 +44,7 @@ class RabbitMQConsumer(ConsumerProtocol, RabbitMQBroker):
             value=status,
         )
 
-    async def consume(self, callback: Optional[Coroutine] = None, **kwargs) -> None:
+    async def consume(self, callback: Any = None, **kwargs: dict[Any, Any]) -> None:
         if not self.channel_pool:
             await self.get_channel_pool()
 
@@ -81,10 +81,10 @@ class RabbitMQConsumer(ConsumerProtocol, RabbitMQBroker):
                             await callback(json.loads(message.body))
                             await message.ack()
                             await self.set_msg_status(message.message_id, MSGStatus.Done)
-                        except (RuntimeError, TypeError, ValidationError, Exception) as ex:
+                        except (RuntimeError, TypeError, ValidationError) as ex:
                             await self.set_msg_status(message.message_id, MSGStatus.Error)
                             await message.ack()
                             logger.exception(
-                                f'Drop death message from<{message.routing_key}> : body<{message.body}>: ex<{ex}>'
+                                f'Drop death message from<{message.routing_key}> : body<{message.body}>: ex<{ex}>',
                             )
         await asyncio.Future()

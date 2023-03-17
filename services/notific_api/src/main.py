@@ -1,15 +1,15 @@
 import logging
 
 import uvicorn
+from api.v1 import _notific, notific
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
+from middleware.auth import auth_middleware
+from middleware.logger import logging_middleware
 
-from api.v1 import _notific, notific
 from broker.rabbit import producer
 from core.config import settings
 from core.logger import LOGGING
-from middleware.auth import auth_middleware
-from middleware.logger import logging_middleware
 from utils.sentry import init_sentry
 
 init_sentry()
@@ -28,7 +28,7 @@ if not settings.debug.DEBUG:
 
 
 @app.on_event('startup')
-async def startup():
+async def startup() -> None:
     await producer.init_producer(
         uri=settings.rabbit.uri,
         incoming_queue=settings.rabbit.QUEUE_TO_ENRICH.lower(),
@@ -39,7 +39,7 @@ async def startup():
 
 
 @app.on_event('shutdown')
-async def shutdown():
+async def shutdown() -> None:
     await producer.connection.close()
 
 

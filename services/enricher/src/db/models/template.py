@@ -16,7 +16,7 @@ class EventType(enum.Enum):
     promo = 'promo'
 
 
-class Template(Base):
+class Template(Base):  # type: ignore[valid-type, misc]
     __tablename__ = 'notifications_template'
 
     pkid = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)

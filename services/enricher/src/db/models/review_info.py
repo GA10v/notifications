@@ -8,7 +8,7 @@ from sqlalchemy.orm import declarative_base
 Base = declarative_base()
 
 
-class ReviewInfo(Base):
+class ReviewInfo(Base):  # type: ignore[valid-type, misc]
     __tablename__ = 'notifications_reviewinfo'
 
     pkid = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)

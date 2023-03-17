@@ -1,6 +1,8 @@
+# type: ignore
 import json
 from abc import ABC, abstractmethod
 from enum import Enum, unique
+from typing import Any
 
 import aioredis
 
@@ -29,14 +31,14 @@ class RedisCache(CacheProtocol):
     def __init__(self) -> None:
         self.session = aioredis.from_url(settings.redis.uri)
 
-    async def get(self, key: str) -> str:
+    async def get(self, key: str) -> Any:
         value = await self.session.get(key)
         if value is None:
             return None
         return json.loads(value)
 
     async def set(self, key: str, value: str, exp: int = settings.redis.EXPIRE_SEC) -> None:
-        await self.session.set(key, json.dumps(value.value).encode('utf-8'), ex=exp)
+        await self.session.set(key, json.dumps(value).encode('utf-8'), ex=exp)
 
     async def close(self) -> None:
         await self.session.close()

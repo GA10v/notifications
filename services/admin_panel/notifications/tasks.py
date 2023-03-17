@@ -1,28 +1,28 @@
 import logging
+from typing import Any
 
 from celery import shared_task  # type: ignore[attr-defined]
-
 from generator.src.service.main import EventType, ProcessTask, Task
 
 logger = logging.getLogger(__name__)
 
 
 @shared_task(name='Создать задачу new_content')
-def create_new_content_task(*args, **kwargs):
+def create_new_content_task(*args: list[Any], **kwargs: dict[Any, Any]) -> None:
     task = Task(event_type=EventType.new_content, context=kwargs)
     generator = ProcessTask()
     generator.perform_task(task)
 
 
 @shared_task(name='Создать задачу new_promo')
-def create_new_promo_task(*args, **kwargs):
+def create_new_promo_task(*args: list[Any], **kwargs: dict[Any, Any]) -> None:
     task = Task(event_type=EventType.promo, context=kwargs)
     generator = ProcessTask()
     generator.perform_task(task)
 
 
 @shared_task(name='Создать задачу new_likes')
-def create_new_likes_task(*args, **kwargs):
+def create_new_likes_task(*args: list[Any], **kwargs: dict[Any, Any]) -> None:
     task = Task(event_type=EventType.new_likes, context=kwargs)
     generator = ProcessTask()
     generator.perform_task(task)

@@ -1,10 +1,11 @@
 from uuid import uuid4
 
 import jwt
+
 from core.config import settings
 
 
-def _headers() -> str:
+def _headers() -> dict[str, str]:
     data = {
         'sub': str(uuid4()),
         'permissions': [0, 3],

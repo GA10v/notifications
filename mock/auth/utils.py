@@ -1,7 +1,8 @@
 import re
+from contextlib import suppress
 from datetime import datetime
 from random import choice
-from typing import Optional
+from typing import Any, Optional
 from uuid import uuid4
 
 import jwt
@@ -19,7 +20,7 @@ def _parse_auth_header(
     auth_header: str,
     access_token_title: str = 'Bearer',
     refresh_token_title: str = 'Refresh',
-) -> dict:
+) -> dict[Any, Any]:
     """Parses a Authorization/Authentication http header and extracts the access + request
     tokens if present.
     Example header:
@@ -29,20 +30,23 @@ def _parse_auth_header(
     def _match_token(token_title: str) -> Optional[str]:
         expression = re.escape(token_title) + r' ([^\s,]+)'
         match = re.search(expression, auth_header)
-        try:
-            return match.group(1)
-        except (AttributeError, IndexError):
-            return None
+        with suppress(AttributeError, IndexError):
+            if match:
+                return match.group(1)
+        return None
 
     return {'access_token': _match_token(access_token_title), 'refresh_token': _match_token(refresh_token_title)}
 
 
-def parse_header(auth_header) -> dict:
+def parse_header(auth_header: str) -> dict[Any, Any]:
     jwt_token = _parse_auth_header(auth_header)['access_token']
     try:
-        return jwt.decode(jwt=jwt_token, key=settings.jwt.SECRET_KEY, algorithms=[settings.jwt.ALGORITHM])
+        return dict(
+            jwt.decode(jwt=jwt_token, key=settings.jwt.SECRET_KEY, algorithms=[settings.jwt.ALGORITHM]),
+        )
     except (DecodeError, ExpiredSignatureError):
         ...  # TODO Добавить логгер
+    return {}
 
 
 def get_new_user() -> NewUserInfo:
@@ -55,24 +59,10 @@ def get_new_user() -> NewUserInfo:
 
 def get_fake_user(user_id: str | None = None) -> UserInfo:
     if not user_id:
-        user_id = uuid4()
+        user_id = str(uuid4())
 
-    if settings.debug:
-        return UserInfo(
-            user_id=str(user_id),
-            name=fake.first_name(),
-            last_name=fake.last_name(),
-            email=settings.debug.TEST_EMAIL[0],
-            phone_number=str(fake.phone_number()),
-            gender=choice(['male', 'female']),
-            country=fake.country(),
-            telegram_name=f'@{fake.first_name()}',
-            time_zone=fake.timezone(),
-            birthday=fake.date(),
-            delivery_type=DeliveryType.email.value,
-        )
     return UserInfo(
-        user_id=str(user_id),
+        user_id=user_id,
         name=fake.first_name(),
         last_name=fake.last_name(),
         email=fake.email(),
@@ -103,7 +93,7 @@ def get_fake_group() -> list[str]:
     return [str(uuid4()) for _ in range(20)]
 
 
-def _headers() -> str:
+def _headers() -> dict[str, str]:
     data = {
         'sub': str(uuid4()),
         'permissions': [0, 3],

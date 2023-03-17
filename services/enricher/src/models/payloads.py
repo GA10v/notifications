@@ -27,8 +27,8 @@ class UserShortContext(BaseModel):
     url: str
     created_at: datetime
 
-    def dict(self, *args, **kwargs) -> dict:
-        _dict: dict = super().dict(*args, **kwargs)
+    def dict(self, *args, **kwargs) -> dict:  # type: ignore[no-untyped-def, type-arg]
+        _dict: dict = super().dict(*args, **kwargs)  # type: ignore[type-arg]
         _dict['created_at'] = _dict['created_at'].strftime('%Y-%m-%d %H:%M:%S')
         return _dict
 

@@ -17,7 +17,7 @@ class EventType(models.TextChoices):
     PROMO = 'promo'
 
 
-class Template(UUIDMixin, TimeStampedMixin):  # type: ignore[misc]
+class Template(UUIDMixin, TimeStampedMixin):
 
     title = models.CharField(_('title'), max_length=TEXT_FIELD_LEN, unique=True)
     event_type = models.CharField(max_length=TEXT_FIELD_LEN, choices=EventType.choices, default=EventType.NEW_CONTENT)
@@ -25,7 +25,7 @@ class Template(UUIDMixin, TimeStampedMixin):  # type: ignore[misc]
     template_files = models.FilePathField(path='templates/', allow_folders=True, allow_files=False)
     text_msg = models.TextField(max_length=MSG_FIELD_LEN, blank=True, default='')
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.event_type}:<{self.pkid}>'
 
     class Meta:
@@ -34,7 +34,7 @@ class Template(UUIDMixin, TimeStampedMixin):  # type: ignore[misc]
         ordering = ['title']
 
 
-class Task(UUIDMixin, TimeStampedMixin):  # type: ignore[misc]
+class Task(UUIDMixin, TimeStampedMixin):
     class UserGroup(models.TextChoices):
         ALL_USER = 'all'
         GROUP_1 = 'group_1'
@@ -53,25 +53,25 @@ class Task(UUIDMixin, TimeStampedMixin):  # type: ignore[misc]
         ordering = ['title']
 
 
-class ReviewInfo(UUIDMixin, TimeStampedMixin):  # type: ignore[misc]
+class ReviewInfo(UUIDMixin, TimeStampedMixin):
 
     movie_id = models.UUIDField(default=uuid.uuid4, unique=True)
     author_id = models.UUIDField(default=uuid.uuid4, unique=True)
     review_id = models.UUIDField(default=uuid.uuid4, unique=True)
     likes_count = models.IntegerField(default=0)
 
-    def __str__(self):
-        return str(f'{self.review_id}')
+    def __str__(self) -> str:
+        return f'{self.review_id}'
 
     class Meta:
         ordering = ['review_id']
 
 
-class ReviewStorage(UUIDMixin, TimeStampedMixin):  # type: ignore[misc]
+class ReviewStorage(UUIDMixin, TimeStampedMixin):
     review_id = models.UUIDField(default=uuid.uuid4, unique=True)
 
-    def __str__(self):
-        return self.review_id
+    def __str__(self) -> str:
+        return str(self.review_id)
 
     class Meta:
         ordering = ['review_id']

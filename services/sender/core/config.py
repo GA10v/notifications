@@ -23,12 +23,11 @@ class RabbitMQSetting(BaseConfig):
     QUEUE_TO_SEND: str = 'Queue_to_send'
     QUEUE_RETRY_ENRICH: str = 'Queue_retry_to_enrich'
     QUEUE_RETRY_SEND: str = 'Queue_retry_to_send'
-    MESSAGE_TTL_MS: int = 500000
-    MAX_RETRY_COUNT: int = 3
+    MESSAGE_TTL_MS: int = 10000
     CONNECT_POOL_SIZE: int = 2
 
     @property
-    def uri(self):
+    def uri(self) -> str:
         return f'amqp://{self.USER}:{self.PASSWORD}@{self.HOST}:{self.PORT}'
 
     class Config:
@@ -36,13 +35,11 @@ class RabbitMQSetting(BaseConfig):
 
 
 class EmailSettings(BaseConfig):
-    """Class is being used to keep all settings."""
-
-    USER: str
-    PASSWORD: str
-    SMTP_SERVER: str
-    SMTP_PORT: int = 465
-    SMTP_SSL: bool | None = False
+    USER: str = ''
+    PASSWORD: str = ''
+    SMTP_SERVER: str = ''
+    SMTP_PORT: int = 587
+    SMTP_SSL: bool | None = True
 
     class Config:
         """Configuration plugin."""
@@ -58,7 +55,7 @@ class PostgresSettings(BaseConfig):
     DB: str = 'some_db'
 
     @property
-    def uri(self):
+    def uri(self) -> str:
         return f'postgresql+psycopg2://{self.USER}:{self.PASSWORD}@{self.HOST}:{self.PORT}/{self.DB}'
 
     class Config:

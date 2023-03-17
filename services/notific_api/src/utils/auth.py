@@ -1,6 +1,7 @@
 import re
+from contextlib import suppress
 from http import HTTPStatus
-from typing import Optional
+from typing import Any, Optional
 
 import jwt
 from fastapi import HTTPException, Security
@@ -17,14 +18,14 @@ class AuthHandler:
     security = HTTPBearer()
     secret = settings.jwt.SECRET_KEY
 
-    async def decode_token(self, token):
+    async def decode_token(self, token: str) -> dict[Any, Any]:
         try:
-            token = jwt.decode(token, self.secret, algorithms=settings.jwt.ALGORITHM)
+            token_parsed: dict[Any, Any] = jwt.decode(token, self.secret, algorithms=settings.jwt.ALGORITHM)
             return {
-                'user_id': token['sub'],
+                'user_id': token_parsed['sub'],
                 'claims': {
-                    'permissions': token['permissions'],
-                    'is_super': token['is_super'],
+                    'permissions': token_parsed['permissions'],
+                    'is_super': token_parsed['is_super'],
                 },
             }
         except jwt.ExpiredSignatureError:
@@ -32,7 +33,7 @@ class AuthHandler:
         except jwt.InvalidTokenError:
             raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED, detail='Token is invalid')
 
-    async def auth_wrapper(self, auth: HTTPAuthorizationCredentials = Security(security)):
+    async def auth_wrapper(self, auth: HTTPAuthorizationCredentials = Security(security)) -> dict[Any, Any]:
         return await self.decode_token(auth.credentials)
 
 
@@ -40,7 +41,7 @@ def _parse_auth_header(
     auth_header: str,
     access_token_title: str = 'Bearer',
     refresh_token_title: str = 'Refresh',
-) -> dict:
+) -> dict[Any, Any]:
     """Parses a Authorization/Authentication http header and extracts the access + request
     tokens if present.
     Example header:
@@ -50,15 +51,15 @@ def _parse_auth_header(
     def _match_token(token_title: str) -> Optional[str]:
         expression = re.escape(token_title) + r' ([^\s,]+)'
         match = re.search(expression, auth_header)
-        try:
-            return match.group(1)
-        except (AttributeError, IndexError):
-            return None
+        with suppress(AttributeError, IndexError):
+            if match:
+                return match.group(1)
+        return None
 
     return {'access_token': _match_token(access_token_title), 'refresh_token': _match_token(refresh_token_title)}
 
 
-def parse_header(auth_header) -> dict:
+def parse_header(auth_header: str) -> dict[Any, Any]:
     jwt_token = _parse_auth_header(auth_header)['access_token']
     try:
         decoded_jwt = jwt.decode(
@@ -66,9 +67,10 @@ def parse_header(auth_header) -> dict:
             key=settings.jwt.SECRET_KEY,
             algorithms=[settings.jwt.ALGORITHM],
         )
-        return {
-            'user_id': decoded_jwt.identity,
-            'claims': decoded_jwt.additional_claims,
-        }
     except (DecodeError, ExpiredSignatureError) as ex:
         logger.exception('Error while decode access_token: \n %s', str(ex))
+        return {}
+    return {
+        'user_id': decoded_jwt.get('identity'),
+        'claims': decoded_jwt.get('additional_claims'),
+    }

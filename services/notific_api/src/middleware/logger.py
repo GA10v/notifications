@@ -1,11 +1,12 @@
 import logging
+from typing import Any
 
 from fastapi import FastAPI, Request
 
 
-def logging_middleware(app: FastAPI):
+def logging_middleware(app: FastAPI) -> None:
     @app.middleware('http')
-    async def dispatch(request: Request, call_next):
+    async def dispatch(request: Request, call_next: Any) -> Any:
         logger = logging.getLogger('fast_api_service')
         request_id = request.headers.get('X-Request-Id')
         logger.info(

@@ -1,29 +1,29 @@
 import json
+import logging
 from contextlib import suppress
 
 import asyncclick as click
 import trio
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
-from trio_websocket import ConnectionClosed, serve_websocket
+from trio_websocket import ConnectionClosed, WebSocketRequest, serve_websocket
+from v1.workers.generic_worker import Worker
 
 from core.config import settings
-from core.logger import get_logger
 from models.db.notifications import Notification
 from models.notifications import TemplateToSender
-from v1.workers.generic_worker import Worker
 
 WEBSOCKET_CHECK_TIMEOUT = 10
 
-logger = get_logger(__name__)
+logger = logging.getLogger(__name__)
 
 
 class WebSocketWorker(Worker):
-    def __init__(self, uri: str = settings.postgres.uri):
-        self.settings = uri
-        self.engine = create_engine(self.settings)
+    def __init__(self) -> None:
+        self.settings = settings
+        self.engine = create_engine(self.settings.postgres.uri)
 
-    def send_message(self, notification: TemplateToSender):
+    def send_message(self, notification: TemplateToSender) -> None:
         with Session(self.engine) as session:
             notification_object = Notification(
                 id=notification.notification_id,
@@ -35,7 +35,7 @@ class WebSocketWorker(Worker):
             session.commit()
 
 
-async def notification_server(request):
+async def notification_server(request: WebSocketRequest) -> None:
     engine = create_engine(settings.postgres.uri)
     ws = await request.accept()
     # getting user_id
@@ -57,7 +57,7 @@ async def notification_server(request):
 @click.command()
 @click.option('--port', default=8000, help='Port to listen')
 @click.option('--ip', default='127.0.0.1', help='Address to use')
-async def main(port: int, ip: str):
+async def main(port: int, ip: str) -> None:
     await serve_websocket(
         notification_server,
         ip,

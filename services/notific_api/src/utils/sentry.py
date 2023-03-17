@@ -7,7 +7,7 @@ from sentry_sdk.utils import BadDsn
 from core.config import settings
 
 
-def init_sentry():
+def init_sentry() -> None:
     try:
         sentry_sdk.init(dsn=settings.logging.SENTRY_DSN, integrations=[FastApiIntegration()])
     except BadDsn:

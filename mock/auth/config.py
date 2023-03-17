@@ -12,7 +12,7 @@ class BaseConfig(BaseSettings):
 
 class JWTSettings(BaseConfig):
     SECRET_KEY: str = '245585dbb5cbe2f151742298d61d364880575bff0bdcbf4ae383f0180e7e47dd'
-    JWT_TOKEN_LOCATION: list = ['headers']
+    JWT_TOKEN_LOCATION: list[str] = ['headers']
     ALGORITHM: str = 'HS256'
 
     class Config:
@@ -46,10 +46,6 @@ class PermissionSettings(Enum):
 
 class DebugSettings(BaseConfig):
     DEBUG: bool = True
-    TEST_EMAIL: list[str]
-
-    class Config:
-        env_prefix = 'DEBUG_'
 
 
 class ProjectSettings(BaseConfig):

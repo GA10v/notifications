@@ -13,7 +13,7 @@ logger = get_logger(__name__)
 
 class ProducerProtocol(ABC):
     @abstractmethod
-    async def publish(self, msg: dict[str, Any], **kwargs) -> None:
+    async def publish(self, msg: dict[str, Any], **kwargs: dict[Any, Any]) -> None:
         ...
 
 
@@ -24,7 +24,7 @@ class RabbitMQProducer(ProducerProtocol, RabbitMQBroker):
         retry_queue: str = settings.rabbit.QUEUE_RETRY_SEND.lower(),
         incoming_exchange: str = settings.rabbit.EXCHENGE_INCOMING_2.lower(),
         retry_exchange: str = settings.rabbit.EXCHENGE_RETRY_2.lower(),
-        **kwargs,
+        **kwargs: dict[Any, Any],
     ) -> None:
         super().__init__(**kwargs)
         self.incoming_queue = incoming_queue
@@ -32,7 +32,7 @@ class RabbitMQProducer(ProducerProtocol, RabbitMQBroker):
         self.incoming_exchange = incoming_exchange
         self.retry_exchange = retry_exchange
 
-    async def publish(self, msg: dict[str, Any], **kwargs) -> None:
+    async def publish(self, msg: dict[str, Any], **kwargs: dict[Any, Any]) -> None:
         if not self.channel_pool:
             await self.get_channel_pool()
 

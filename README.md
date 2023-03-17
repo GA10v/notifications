@@ -1,6 +1,7 @@
 # Проектная работа 10 спринта
 
-[Проект](https://github.com/GA10v/notifications_sprint_1)
+[Репозиторий](https://github.com/Student2506/notifications_sprint_1)
+~~[Оргинальный репозиторий](https://github.com/GA10v/notifications_sprint_1)~~
 
 Сервис уведомлений пользователя о новых событиях онлайн-кинотеатра
 

@@ -1,5 +1,5 @@
 from collections import namedtuple
-from typing import Union
+from typing import Any, Union
 from uuid import uuid4
 
 from generator.src.models.context import NewContent, NewPromo, NewReviewsLikes
@@ -10,11 +10,11 @@ from generator.src.utils.auth import get_access_token
 
 
 class ProcessTask:
-    def __init__(self):
+    def __init__(self) -> None:
         self.connection = next(self._get_connect())
 
     @staticmethod
-    def _get_connect(token=get_access_token()):
+    def _get_connect(token: str = get_access_token()) -> Any:
         """Establish connections with other app modules and close it at the end."""
         ugc_connection = UGCConnection(AuthenticatedSession(auth_token=token))
         auth_connection = AuthConnection(AuthenticatedSession(auth_token=token))
@@ -29,7 +29,7 @@ class ProcessTask:
         api_connection.close()
 
     @staticmethod
-    def _get_context(data: Task, kwargs: dict) -> Union[NewContent, NewReviewsLikes, NewPromo]:
+    def _get_context(data: Task, kwargs: dict[Any, Any]) -> Union[NewContent, NewReviewsLikes, NewPromo]:
         context = None
         if data.event_type == EventType.new_content:
             context = NewContent(**kwargs)
@@ -52,11 +52,13 @@ class ProcessTask:
             context=content,
         )
 
-    def _get_reviews_from_db(self) -> list[dict]:
+    def _get_reviews_from_db(self) -> list[dict[Any, Any]]:
         """Return reviews data from Notifications DB."""
-        return self.connection.postgres.fetch_table('SELECT * FROM ReviewInfo;')
+        return self.connection.postgres.fetch_table(  # type: ignore[no-any-return]
+            'SELECT * FROM ReviewInfo;',
+        )
 
-    def _filter_increased_likes(self) -> list[dict]:
+    def _filter_increased_likes(self) -> list[dict[Any, Any]]:
         """
         Return all records from Notifications DB, when likes count in DB is less than current amount.
         Record ID is removed to use record for create NewReviewLikes object.
@@ -96,7 +98,7 @@ class ProcessTask:
             event = self._form_event(task, content)
             self.connection.api.send_event(event)
 
-    def _process_email_task(self, task: Task):
+    def _process_email_task(self, task: Task) -> None:
         """Handle email tasks."""
         if task.event_type == EventType.new_content:
             self._send_new_content_events(task)
@@ -105,7 +107,7 @@ class ProcessTask:
         elif task.event_type == EventType.promo:
             self._send_promo_events(task)
 
-    def perform_task(self, task: Task):
+    def perform_task(self, task: Task) -> None:
         """
         Single entry to start generating and sending notifications to Enricher.
         Receive task from scheduler and proceed. Can be used with different source types.

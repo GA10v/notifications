@@ -2,9 +2,8 @@ from datetime import datetime
 from enum import Enum
 from uuid import UUID
 
-from pydantic import BaseModel
-
 from generator.src.models.context import NewContent, NewPromo, NewReviewsLikes
+from pydantic import BaseModel
 
 
 class EventType(str, Enum):
@@ -36,7 +35,7 @@ class Event(BaseModel):
     created_at: datetime
     source_name: str
 
-    def dict(self, *args, **kwargs) -> dict:
-        _dict: dict = super().dict(*args, **kwargs)
+    def dict(self, *args, **kwargs) -> dict:  # type: ignore[no-untyped-def, type-arg]
+        _dict: dict = super().dict(*args, **kwargs)  # type: ignore[type-arg]
         _dict['created_at'] = _dict['created_at'].strftime('%Y-%m-%d %H:%M:%S')
         return _dict

@@ -15,7 +15,7 @@ class FastapiSetting(BaseConfig):
     NOTIFIC_PREFIX: str = '/app/v1/notification'
 
     @property
-    def uri(self):
+    def uri(self) -> str:
         return f'http://{self.HOST}:{self.PORT}{self.NOTIFIC_PREFIX}'
 
     class Config:
@@ -48,7 +48,7 @@ class RabbitMQSetting(BaseConfig):
     MAX_RETRY_COUNT: int = 3
 
     @property
-    def uri(self):
+    def uri(self) -> str:
         return f'amqp://{self.USER}:{self.PASSWORD}@{self.HOST}:{self.PORT}'
 
     class Config:
@@ -57,7 +57,7 @@ class RabbitMQSetting(BaseConfig):
 
 class JWTSettings(BaseConfig):
     SECRET_KEY: str = '245585dbb5cbe2f151742298d61d364880575bff0bdcbf4ae383f0180e7e47dd'
-    JWT_TOKEN_LOCATION: list = ['headers']
+    JWT_TOKEN_LOCATION: list[str] = ['headers']
     ALGORITHM: str = 'HS256'
 
     class Config:
@@ -70,7 +70,7 @@ class AuthMock(BaseConfig):
     PREFIX: str = '/auth/v1/'
 
     @property
-    def uri(self):
+    def uri(self) -> str:
         return f'http://{self.HOST}:{self.PORT}{self.PREFIX}'
 
     class Config:
@@ -83,7 +83,7 @@ class AdminPanelMock(BaseConfig):
     PREFIX: str = '/admin_panel/v1/'
 
     @property
-    def uri(self):
+    def uri(self) -> str:
         return f'http://{self.HOST}:{self.PORT}{self.PREFIX}'
 
     class Config:
@@ -96,7 +96,7 @@ class UGCMock(BaseConfig):
     PREFIX: str = '/ugc/v1/'
 
     @property
-    def uri(self):
+    def uri(self) -> str:
         return f'http://{self.HOST}:{self.PORT}{self.PREFIX}'
 
     class Config:
@@ -111,7 +111,7 @@ class PostgresSettings(BaseConfig):
     PORT: int = 5432
 
     @property
-    def uri(self):
+    def uri(self) -> str:
         return f'postgresql+psycopg2://{self.USER}:{self.PASSWORD}@{self.HOST}:{self.PORT}/{self.DB}'
 
     class Config:
@@ -125,7 +125,7 @@ class RedisSettings(BaseConfig):
     EXPIRE_SEC: int = 5 * 60  # 5 minutes
 
     @property
-    def uri(self):
+    def uri(self) -> str:
         return f'redis://{self.HOST}:{self.PORT}/{self.INDEX}'
 
     class Config:
@@ -142,7 +142,7 @@ class URLShortnerSettings(BaseConfig):
     REDIRECT_URL: str = FastapiSetting().uri
 
     @property
-    def uri(self):
+    def uri(self) -> str:
         return f'http://{self.HOST}:{self.PORT}{self.PREFIX}'
 
     class Config:

@@ -3,9 +3,10 @@
 import smtplib
 from email.message import EmailMessage
 
+from v1.workers.generic_worker import Worker
+
 from core.config import settings
 from models.notifications import TemplateToSender
-from v1.workers.generic_worker import Worker
 
 
 class EmailWorker(Worker):
@@ -33,6 +34,7 @@ class EmailWorker(Worker):
         Args:
             notification: TemplateToSender - includes reciepents, subject and body
         """
+
         message = EmailMessage()
         message['From'] = settings.email.USER
         message['To'] = ';'.join(notification.recipient)

@@ -1,5 +1,6 @@
 import logging
 import logging.config
+from logging import Logger
 
 from core.config import settings
 
@@ -71,6 +72,6 @@ LOGGING = {
 logging.config.dictConfig(LOGGING)
 
 
-def get_logger(_name_: str) -> logging:
+def get_logger(_name_: str) -> Logger:
     """Логгер."""
     return logging.getLogger(_name_)

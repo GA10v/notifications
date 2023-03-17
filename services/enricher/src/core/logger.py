@@ -1,5 +1,6 @@
 import logging
 import logging.config
+from logging import Logger
 
 LOG_FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 LOG_DEFAULT_HANDLERS = [
@@ -35,6 +36,6 @@ LOGGING = {
 logging.config.dictConfig(LOGGING)
 
 
-def get_logger(name: str) -> logging:
+def get_logger(name: str) -> Logger:
     """Логгер."""
     return logging.getLogger(name)

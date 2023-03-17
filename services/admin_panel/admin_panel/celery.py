@@ -1,6 +1,6 @@
 import os
 
-from celery import Celery
+from celery import Celery  # type: ignore[attr-defined]
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'admin_panel.settings')
 

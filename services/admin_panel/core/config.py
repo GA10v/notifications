@@ -1,5 +1,6 @@
 """Module to store settings for django admin panel."""
 from pathlib import Path
+from typing import Any
 
 from pydantic import BaseSettings
 
@@ -26,7 +27,7 @@ class RabbitMQSetting(BaseConfig):
     MESSAGE_TTL_MS: int = 10000
 
     @property
-    def uri(self):
+    def uri(self) -> str:
         return f'amqp://{self.USER}:{self.PASSWORD}@{self.HOST}:{self.PORT}'
 
     class Config:
@@ -44,14 +45,14 @@ class DjangoSettings(BaseConfig):
     DEBUG: bool = True
 
     @property
-    def uri(self):
+    def uri(self) -> str:
         return (
             f'postgresql+psycopg2://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}'
             f'@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}'
         )
 
     @property
-    def db_creds(self):
+    def db_creds(self) -> dict[str, Any]:
         return {
             'dbname': self.POSTGRES_DB,
             'user': self.POSTGRES_USER,
@@ -66,7 +67,7 @@ class DjangoSettings(BaseConfig):
 
 class JWTSettings(BaseConfig):
     SECRET_KEY: str = '245585dbb5cbe2f151742298d61d364880575bff0bdcbf4ae383f0180e7e47dd'
-    JWT_TOKEN_LOCATION: list = ['headers']
+    JWT_TOKEN_LOCATION: list[Any] = ['headers']
     ALGORITHM: str = 'HS256'
 
     class Config:
@@ -79,15 +80,15 @@ class AuthMock(BaseConfig):
     PREFIX: str = '/auth/v1/'
 
     @property
-    def uri(self):
+    def uri(self) -> str:
         return f'http://{self.HOST}:{self.PORT}{self.PREFIX}'
 
     @property
-    def group_id_uri(self):
+    def group_id_uri(self) -> str:
         return f'http://{self.HOST}:{self.PORT}{self.PREFIX}auth/v1/user_group/'
 
     @property
-    def user_data_uri(self):
+    def user_data_uri(self) -> str:
         return f'http://{self.HOST}:{self.PORT}{self.PREFIX}auth/v1/user_info/'
 
     class Config:
@@ -100,15 +101,15 @@ class UGCMock(BaseConfig):
     PREFIX: str = '/ugc/v1/'
 
     @property
-    def uri(self):
+    def uri(self) -> str:
         return f'http://{self.HOST}:{self.PORT}{self.PREFIX}'
 
     @property
-    def subscribers_uri(self):
+    def subscribers_uri(self) -> str:
         return f'http://{self.HOST}:{self.PORT}{self.PREFIX}ugc/v1/subscribers/'
 
     @property
-    def likes_count_uri(self):
+    def likes_count_uri(self) -> str:
         return f'http://{self.HOST}:{self.PORT}{self.PREFIX}ugc/v1/likes_count/'
 
     class Config:
@@ -121,11 +122,11 @@ class FastapiSetting(BaseConfig):
     NOTIFIC_PREFIX: str = '/app/v1/notification'
 
     @property
-    def uri(self):
+    def uri(self) -> str:
         return f'http://{self.HOST}:{self.PORT}{self.NOTIFIC_PREFIX}'
 
     @property
-    def send_uri(self):
+    def send_uri(self) -> str:
         return f'http://{self.HOST}:{self.PORT}{self.NOTIFIC_PREFIX}/send'
 
     class Config:

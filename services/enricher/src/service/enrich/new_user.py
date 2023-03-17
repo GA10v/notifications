@@ -19,7 +19,7 @@ class NewUserPayload(PayloadsProtocol):
         self.url_short_endpoint = settings.url_shortner.uri
         self._headers = _headers()
 
-    def get_data_to_short(self):
+    def get_data_to_short(self) -> UserShortContext:
         return UserShortContext(
             user_id=self.data.context.user_id,
             created_at=datetime.now(),

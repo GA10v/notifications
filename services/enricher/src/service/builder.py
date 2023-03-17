@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import Any
 
 from models.payloads import NewUserContext, payload
 from models.template import TemplateFromDB, TemplateToSender
@@ -8,12 +9,24 @@ from service.render.ws_render import TextRender
 
 class BuilderProtocol(ABC):
     @abstractmethod
-    async def build(self, data: payload, template: TemplateFromDB, **kwargs):
+    async def build(
+        self,
+        data: payload,
+        template: TemplateFromDB,
+        notification_id: str,
+        **kwargs: dict[Any, Any],
+    ) -> TemplateToSender:
         ...
 
 
 class BuilderService(BuilderProtocol):
-    async def build(self, data: payload, template: TemplateFromDB, notification_id: str, **kwargs):
+    async def build(
+        self,
+        data: payload,
+        template: TemplateFromDB,
+        notification_id: str,
+        **kwargs: dict[Any, Any],
+    ) -> TemplateToSender:
         if isinstance(data, NewUserContext):
             return TemplateToSender(
                 notification_id=notification_id,

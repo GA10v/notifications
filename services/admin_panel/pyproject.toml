@@ -31,6 +31,7 @@ sqlalchemy = "1.4.45"
 databases = "^0.7.0"
 aioredis = "^2.0.1"
 python-jose = "^3.3.0"
+types-requests = "^2.28.11.15"
 
 
 [tool.poetry.dev-dependencies]

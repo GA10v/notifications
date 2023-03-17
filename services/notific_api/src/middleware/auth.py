@@ -1,4 +1,5 @@
 from http import HTTPStatus
+from typing import Any
 
 from fastapi import FastAPI, Request
 from fastapi.responses import Response
@@ -7,9 +8,9 @@ from core.config import settings
 from utils.auth import parse_header
 
 
-def auth_middleware(app: FastAPI):
+def auth_middleware(app: FastAPI) -> None:
     @app.middleware('http')
-    async def check_jwt(request: Request, call_next):
+    async def check_jwt(request: Request, call_next: Any) -> Any:
         auth_header = request.headers.get('Authorization')
         if auth_header is None:
             return Response('Authorization header is missing', HTTPStatus.UNAUTHORIZED)

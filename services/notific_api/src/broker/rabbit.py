@@ -1,8 +1,13 @@
 import json
 from abc import ABC, abstractmethod
+from typing import Any
 
 import aio_pika
 from aio_pika import DeliveryMode, ExchangeType, Message
+from aio_pika.channel.Channel import AbstractChannel
+from aio_pika.connection.Connection import AbstractRobustConnection
+from aio_pika.exchange.Exchange import AbstractExchange
+from aio_pika.queue.Queue import AbstractQueue
 
 from core.config import settings
 
@@ -16,23 +21,23 @@ class ProducerProtocol(ABC):
         retry_queue: str,
         incoming_exchange: str,
         retry_exchange: str,
-        **kwargs,
+        **kwargs: dict[Any, Any],
     ) -> None:
         ...
 
     @abstractmethod
-    async def send_msg(self, msg: dict, **kwargs) -> None:
+    async def send_msg(self, msg: dict[Any, Any], **kwargs: dict[Any, Any]) -> None:
         ...
 
 
 class RabbitMQProducer(ProducerProtocol):
     def __init__(self) -> None:
-        self.connection = None
-        self.channel = None
-        self.incoming_queue = None
-        self.retry_queue = None
-        self.incoming_exchange = None
-        self.retry_exchange = None
+        self.connection: AbstractRobustConnection | None = None
+        self.channel: AbstractChannel | None = None
+        self.incoming_queue: AbstractQueue | None = None
+        self.retry_queue: AbstractQueue | None = None
+        self.incoming_exchange: AbstractExchange | None = None
+        self.retry_exchange: AbstractExchange | None = None
 
     async def init_producer(
         self,
@@ -41,7 +46,7 @@ class RabbitMQProducer(ProducerProtocol):
         retry_queue: str,
         incoming_exchange: str,
         retry_exchange: str,
-        **kwargs,
+        **kwargs: dict[Any, Any],
     ) -> None:
         self.connection = await aio_pika.connect_robust(uri)
         self.channel = await self.connection.channel()
@@ -75,16 +80,17 @@ class RabbitMQProducer(ProducerProtocol):
         await self.incoming_queue.bind(self.incoming_exchange)
         await self.retry_queue.bind(self.retry_exchange)
 
-    async def send_msg(self, msg: dict, **kwargs) -> None:
+    async def send_msg(self, msg: dict[Any, Any], **kwargs: dict[Any, Any]) -> None:
         message = Message(
             body=json.dumps(msg).encode('utf-8'),
             delivery_mode=DeliveryMode.PERSISTENT,
             headers={},
         )
-        await self.incoming_exchange.publish(
-            message=message,
-            routing_key=self.incoming_queue.name,
-        )
+        if self.incoming_queue and self.incoming_exchange:
+            await self.incoming_exchange.publish(
+                message=message,
+                routing_key=self.incoming_queue.name,
+            )
 
 
 producer: RabbitMQProducer = RabbitMQProducer()

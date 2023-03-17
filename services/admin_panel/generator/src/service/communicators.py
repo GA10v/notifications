@@ -1,12 +1,13 @@
 from contextlib import closing
+from typing import Any
 
 import psycopg2
-from psycopg2.extras import DictCursor
-
-from core.config import settings
 from generator.src.models.notifications import Event
 from generator.src.models.user import User
 from generator.src.service.connector import AuthenticatedSession
+from psycopg2.extras import DictCursor
+
+from core.config import settings
 
 db_creds = settings.django.db_creds
 
@@ -15,13 +16,13 @@ class UGCConnection:
     def __init__(self, connector: AuthenticatedSession):
         self.connector = connector
 
-    def get_content_subscribers(self, content_id: str) -> list[str]:
+    def get_content_subscribers(self, content_id: str) -> Any:
         """Return list of users, subscribed to new content events."""
         return self.connector.post(url=f'{settings.ugc.subscribers_uri}{content_id}')
 
     def get_likes_count(self, review_id: str) -> int:
         """Return number of current likes on review."""
-        return self.connector.post(url=f'{settings.ugc.likes_count_uri}{review_id}')
+        return int(self.connector.post(url=f'{settings.ugc.likes_count_uri}{review_id}'))
 
     def close(self) -> None:
         """Close requests session."""
@@ -37,12 +38,12 @@ class AuthConnection:
         response = self.connector.post(url=f'{settings.auth.user_data_uri}{user_id}')
         return response if response.ok else response.raise_for_status()
 
-    def get_user_group(self, group_id: str) -> list[str]:
+    def get_user_group(self, group_id: str) -> Any:
         """Return list of users, belong to the group."""
         response = self.connector.post(url=f'{settings.auth.group_id_uri}{group_id}')
         return response if response.ok else response.raise_for_status()
 
-    def filter_users(self, user_ids: list[str], conditions: list) -> list[str]:
+    def filter_users(self, user_ids: list[str], conditions: list[str]) -> list[str]:
         """Filter users, that match the conditions."""
         return [self.get_user_data(user_id).user_id for user_id in user_ids if conditions]
 
@@ -55,7 +56,7 @@ class ApiConnection:
     def __init__(self, connector: AuthenticatedSession):
         self.connector = connector
 
-    def send_event(self, event: Event):
+    def send_event(self, event: Event) -> Any:
         response = self.connector.post(url=settings.api.send_uri, payload=event.dict())
         return response if response.ok else response.raise_for_status()
 
@@ -65,11 +66,11 @@ class ApiConnection:
 
 
 class PGConnection:
-    def __init__(self):
+    def __init__(self) -> None:
         with closing(psycopg2.connect(**db_creds)) as pg_conn:
             self.cursor = pg_conn.cursor(cursor_factory=DictCursor)
 
-    def fetch_table(self, command: str) -> list[dict]:
+    def fetch_table(self, command: str) -> list[dict[Any, Any]]:
         """Get data from table."""
         self.cursor.execute(command)
         data = self.cursor.fetchall()

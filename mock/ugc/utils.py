@@ -3,6 +3,7 @@ from random import randint
 from uuid import uuid4
 
 from faker import Faker
+
 from models import ReviewInfo
 
 fake = Faker()

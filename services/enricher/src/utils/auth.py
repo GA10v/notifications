@@ -1,6 +1,7 @@
 from uuid import uuid4
 
 import jwt
+
 from core.config import settings
 
 

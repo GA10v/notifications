@@ -2,6 +2,7 @@ import uvicorn
 from config import settings
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
+
 from utils import get_fake_movie
 
 app = FastAPI(

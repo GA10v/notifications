@@ -1,3 +1,5 @@
+[![Build Status](https://github.com/GA10v/notifications_sprint_1/actions/workflows/checks.yml/badge.svg?branch=main)](https://github.com/GA10v/notifications_sprint_1/actions/workflows/checks.yml)
+
 # Проектная работа 10 спринта
 
 [Проект](https://github.com/GA10v/notifications_sprint_1)

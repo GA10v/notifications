@@ -1,5 +1,4 @@
 import requests
-
 from generator.src.utils.auth import get_access_token
 
 

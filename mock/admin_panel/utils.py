@@ -1,6 +1,7 @@
 from uuid import uuid4
 
 from faker import Faker
+
 from models import MovieInfo, MovieType
 
 fake = Faker()

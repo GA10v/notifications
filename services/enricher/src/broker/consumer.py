@@ -81,10 +81,10 @@ class RabbitMQConsumer(ConsumerProtocol, RabbitMQBroker):
                             await callback(json.loads(message.body))
                             await message.ack()
                             await self.set_msg_status(message.message_id, MSGStatus.Done)
-                        except (RuntimeError, TypeError, ValidationError, Exception) as ex:
+                        except (RuntimeError, TypeError, ValidationError) as ex:
                             await self.set_msg_status(message.message_id, MSGStatus.Error)
                             await message.ack()
                             logger.exception(
-                                f'Drop death message from<{message.routing_key}> : body<{message.body}>: ex<{ex}>'
+                                f'Drop death message from<{message.routing_key}> : body<{message.body}>: ex<{ex}>',
                             )
         await asyncio.Future()

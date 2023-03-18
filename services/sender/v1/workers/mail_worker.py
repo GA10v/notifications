@@ -3,9 +3,10 @@
 import smtplib
 from email.message import EmailMessage
 
+from v1.workers.generic_worker import Worker
+
 from core.config import settings
 from models.notifications import TemplateToSender
-from v1.workers.generic_worker import Worker
 
 
 class EmailWorker(Worker):

@@ -10,8 +10,11 @@ ENV UWSGI_THREADS 16
 ENV UWSGI_HARAKIRI 240
 ENV POETRY_VERSION=1.4.0
 
-RUN apt update
-RUN apt install -y gcc gettext && apt install -u gcc musl-dev
+RUN apt update && apt install -y \
+  gcc \
+  gettext \
+  musl-dev \
+  && rm -rf /var/lib/apt/lists/*
 RUN python3 -m pip install -U pip
 RUN pip install "poetry==$POETRY_VERSION"
 WORKDIR /code

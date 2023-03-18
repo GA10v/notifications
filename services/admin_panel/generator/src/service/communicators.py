@@ -5,6 +5,7 @@ from psycopg2.extras import DictCursor
 
 from core.config import settings
 from generator.src.models.notifications import Event
+from generator.src.models.task import Task
 from generator.src.models.user import User
 from generator.src.service.connector import AuthenticatedSession
 
@@ -74,3 +75,10 @@ class PGConnection:
         self.cursor.execute(command)
         data = self.cursor.fetchall()
         return [dict(el) for el in data]
+
+    def get_task(self, task_id: str) -> Task:
+        command = f"""SELECT * from notifications_task
+                    WHERE notifications_task.pkid = {task_id}"""
+        self.cursor.execute(command)
+        _data = self.cursor.fetchone()
+        return Task(**_data)

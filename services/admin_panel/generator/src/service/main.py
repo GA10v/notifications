@@ -3,7 +3,8 @@ from typing import Union
 from uuid import uuid4
 
 from generator.src.models.context import NewContent, NewPromo, NewReviewsLikes
-from generator.src.models.notifications import Event, EventType, Task
+from generator.src.models.notifications import Event, EventType
+from generator.src.models.task import Task
 from generator.src.service.communicators import ApiConnection, AuthConnection, PGConnection, UGCConnection
 from generator.src.service.connector import AuthenticatedSession
 from generator.src.utils.auth import get_access_token
@@ -32,11 +33,11 @@ class ProcessTask:
     def _get_context(data: Task, kwargs: dict) -> Union[NewContent, NewReviewsLikes, NewPromo]:
         context = None
         if data.event_type == EventType.new_content:
-            context = NewContent(**kwargs)
+            context = NewContent(**Task)
         elif data.event_type == EventType.new_likes:
             context = NewReviewsLikes(**kwargs)
         elif data.event_type == EventType.promo:
-            context = NewContent(**kwargs)
+            context = NewContent(**Task)
         return context
 
     @staticmethod
@@ -54,7 +55,10 @@ class ProcessTask:
 
     def _get_reviews_from_db(self) -> list[dict]:
         """Return reviews data from Notifications DB."""
-        return self.connection.postgres.fetch_table('SELECT * FROM ReviewInfo;')
+        return self.connection.postgres.fetch_table('SELECT * FROM notifications_reviewinfo;')
+
+    def _get_task(self, task_id: str) -> Task:
+        return self.connection.postgres.get_task(task_id=task_id)
 
     def _filter_increased_likes(self) -> list[dict]:
         """

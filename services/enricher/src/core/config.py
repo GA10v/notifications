@@ -121,12 +121,12 @@ class PostgresSettings(BaseConfig):
 class RedisSettings(BaseConfig):
     HOST: str = 'localhost'
     PORT: int = 6379
-    INDEX: int = 0
+    INDEX_ENRICH: int = 0
     EXPIRE_SEC: int = 5 * 60  # 5 minutes
 
     @property
     def uri(self):
-        return f'redis://{self.HOST}:{self.PORT}/{self.INDEX}'
+        return f'redis://{self.HOST}:{self.PORT}/{self.INDEX_ENRICH}'
 
     class Config:
         env_prefix = 'REDIS_'

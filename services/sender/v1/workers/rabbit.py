@@ -7,13 +7,13 @@ import aio_pika
 from aio_pika import ExchangeType
 from aio_pika.abc import AbstractRobustConnection
 from aio_pika.pool import Pool
+from v1.workers.mail_worker import EmailWorker
+from v1.workers.sms_worker import SMSWorker
+from v1.workers.websocket_worker import WebSocketWorker
 
 from core.config import settings
 from core.logger import get_logger
 from models.notifications import TemplateToSender
-from v1.workers.mail_worker import EmailWorker
-from v1.workers.sms_worker import SMSWorker
-from v1.workers.websocket_worker import WebSocketWorker
 
 logger = get_logger(__name__)
 

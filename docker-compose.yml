@@ -10,9 +10,12 @@ services:
     env_file:
       - .env
     depends_on:
-      - rabbitmq
-      - enricher
-      - notification_api
+      rabbitmq:
+        condition: service_healthy
+      enricher:
+        condition: service_started
+      notification_api:
+        condition: service_started
     networks:
       - notification-network
     command: >
@@ -26,7 +29,8 @@ services:
       dockerfile: Dockerfile
     restart: always
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
     ports:
       - "8765:8765"
     env_file:
@@ -117,14 +121,22 @@ services:
       dockerfile: Dockerfile
     restart: always
     depends_on:
-      - admin-panel
-      - url_shortener
-      - celery
-      - rabbitmq
-      - mock_admin
-      - mock_auth
-      - redis
-      - postgres
+      rabbitmq:
+        condition: service_healthy
+      admin-panel:
+        condition: service_started
+      url_shortener:
+        condition: service_started
+      celery:
+        condition: service_started
+      mock_admin:
+        condition: service_started
+      mock_auth:
+        condition: service_started
+      redis:
+        condition: service_started
+      postgres:
+        condition: service_started
     env_file:
       - .env
     networks:
@@ -166,6 +178,11 @@ services:
       - rabbitmq_data:/var/lib/rabbitmq/
     env_file:
       - .env
+    healthcheck:
+        test: ["CMD", "nc", "-z", "localhost", "5672" ]
+        interval: 10s
+        timeout: 10s
+        retries: 5
     networks:
       - notification-network
 

@@ -18,7 +18,7 @@ def generate_short_id(link_length: int):
     return ''.join(choice(string.ascii_letters + string.digits) for _ in range(link_length))
 
 
-@bp.route('/', methods=('GET', 'POST'))
+@bp.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
         url = request.get_json().get('url')

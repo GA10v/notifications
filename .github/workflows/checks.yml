@@ -36,6 +36,7 @@ jobs:
             pre-commit run double-quote-string-fixer --all-files
             pre-commit run black --all-files
             pre-commit run flake8 --all-files
+            pre-commit run isort --all-files
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2

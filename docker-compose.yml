@@ -79,7 +79,7 @@ services:
     logging:
       driver: gelf
       options:
-        gelf-address: udp://localhost:5043
+        gelf-address: udp://127.0.0.1:5044
         tag: admin-panel
 
   celery:
@@ -132,7 +132,7 @@ services:
     logging:
       driver: gelf
       options:
-        gelf-address: udp://localhost:5043
+        gelf-address: udp://127.0.0.1:5044
         tag: enricher
 
   notification_api:
@@ -152,7 +152,7 @@ services:
     logging:
       driver: gelf
       options:
-        gelf-address: udp://localhost:5043
+        gelf-address: udp://127.0.0.1:5044
         tag: API
 
   rabbitmq:
@@ -232,7 +232,7 @@ services:
     logging:
       driver: gelf
       options:
-        gelf-address: udp://localhost:5043
+        gelf-address: udp://127.0.0.1:5044
         tag: nginx
 
 volumes:

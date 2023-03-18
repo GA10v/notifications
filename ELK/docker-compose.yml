@@ -26,6 +26,8 @@ services:
       environment:
         # Указываем ES запуститься в одном экземпляре
         discovery.type: single-node
+        xpack.security.enabled: false
+        ES_JAVA_OPTS: "-Xms2g -Xmx2g"
       ports:
         - 9200:9200
       volumes:

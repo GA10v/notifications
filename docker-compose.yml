@@ -11,8 +11,10 @@ services:
       - .env
     depends_on:
       - rabbitmq
+      - enricher
+      - notification_api
     command: >
-      bash -c "python3 rabbit.py"
+      bash -c "python3 main.py"
 
 
   websocket_worker:

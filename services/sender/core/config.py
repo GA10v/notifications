@@ -38,9 +38,9 @@ class RabbitMQSetting(BaseConfig):
 class EmailSettings(BaseConfig):
     """Class is being used to keep all settings."""
 
-    USER: str = 'hhcvbot@yandex.ru'
-    PASSWORD: str = 'oklwjunxeaghguwv'
-    SMTP_SERVER: str = 'smtp.yandex.ru'
+    USER: str = ''
+    PASSWORD: str = ''
+    SMTP_SERVER: str = ''
     SMTP_PORT: int = 465
     SMTP_SSL: bool | None = False
 

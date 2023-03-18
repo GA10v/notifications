@@ -2,8 +2,8 @@ import uvicorn
 from config import settings
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
-from middleware import auth_middleware
 
+from middleware import auth_middleware
 from utils import create_event, get_fake_group, get_fake_user
 
 app = FastAPI(

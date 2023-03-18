@@ -23,9 +23,9 @@ class RabbitMQSetting(BaseConfig):
     QUEUE_TO_SEND: str = 'Queue_to_send'
     QUEUE_RETRY_ENRICH: str = 'Queue_retry_to_enrich'
     QUEUE_RETRY_SEND: str = 'Queue_retry_to_send'
-    MESSAGE_TTL_MS: int = 500000
+    MESSAGE_TTL_MS: int = 10000
     MAX_RETRY_COUNT: int = 3
-    CONNECT_POOL_SIZE: int = 2
+    CONNECT_POOL_SIZE: int = 10
 
     @property
     def uri(self):
@@ -38,9 +38,9 @@ class RabbitMQSetting(BaseConfig):
 class EmailSettings(BaseConfig):
     """Class is being used to keep all settings."""
 
-    USER: str
-    PASSWORD: str
-    SMTP_SERVER: str
+    USER: str = ''
+    PASSWORD: str = ''
+    SMTP_SERVER: str = ''
     SMTP_PORT: int = 465
     SMTP_SSL: bool | None = False
 
@@ -65,12 +65,27 @@ class PostgresSettings(BaseConfig):
         env_prefix = 'POSTGRES_'
 
 
+class RedisSettings(BaseConfig):
+    HOST: str = 'localhost'
+    PORT: int = 6379
+    INDEX_SEND: int = 1
+    EXPIRE_SEC: int = 5 * 60  # 5 minutes
+
+    @property
+    def uri(self):
+        return f'redis://{self.HOST}:{self.PORT}/{self.INDEX_SEND}'
+
+    class Config:
+        env_prefix = 'REDIS_'
+
+
 class ProjectSettings(BaseConfig):
     PROJECT_NAME: str = 'Notification_api'
     BASE_DIR = Path(__file__).parent.parent
     email: EmailSettings = EmailSettings()
     rabbit: RabbitMQSetting = RabbitMQSetting()
     postgres: PostgresSettings = PostgresSettings()
+    redis: RedisSettings = RedisSettings()
 
 
 settings = ProjectSettings()

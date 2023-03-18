@@ -1,12 +1,12 @@
 import asyncio
 from typing import Any
 
+from db.storage import PGStorage
 from pydantic.error_wrappers import ValidationError
 
 from broker.consumer import RabbitMQConsumer
 from broker.producer import RabbitMQProducer
 from core.logger import get_logger
-from db.storage import PGStorage
 from models.events import Event
 from service.builder import BuilderService
 from service.enrich.handler import get_payload

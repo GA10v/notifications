@@ -1,6 +1,6 @@
 from datetime import date, datetime
 
-from generator.src.models.notifications import DeliveryType
+from generator.src.models.base import DeliveryType
 from pydantic import BaseModel
 
 

@@ -1,12 +1,12 @@
 from datetime import datetime
 from uuid import uuid4
 
+from db.models.review_info import ReviewInfo
+from db.storage import PGStorage
 from sqlalchemy import insert, select, update
 
 from core.config import settings
 from core.logger import get_logger
-from db.models.review_info import ReviewInfo
-from db.storage import PGStorage
 from models.base import EventType
 from models.events import Event
 

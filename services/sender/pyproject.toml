@@ -13,6 +13,11 @@ trio-websocket = "^0.9.2"
 anyio = {extras = ["trio"], version = "^3.6.2"}
 sqlalchemy = "^2.0.6"
 alembic = "^1.10.2"
+aioredis = "^2.0.1"
+asyncpg = "^0.27.0"
+sentry-sdk = "^1.16.0"
+python-logstash = "^0.4.8"
+asyncio = "^3.4.3"
 
 
 [tool.poetry.dev-dependencies]

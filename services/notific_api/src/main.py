@@ -1,15 +1,15 @@
 import logging
 
 import uvicorn
-from api.v1 import _notific, notific
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
-from middleware.auth import auth_middleware
-from middleware.logger import logging_middleware
 
+from api.v1 import _notific, notific
 from broker.rabbit import producer
 from core.config import settings
 from core.logger import LOGGING
+from middleware.auth import auth_middleware
+from middleware.logger import logging_middleware
 from utils.sentry import init_sentry
 
 init_sentry()

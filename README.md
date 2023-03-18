@@ -38,7 +38,7 @@
    `$ docker network create 'notification-network'`
 4. Запустить контейнер командой
    `$ docker-compose up`
-5. Перейти к документации Admin_panel по url: `http://localhost:8000/admin`(USER='asdmin', PASSWORD='admin')
+5. Перейти к документации Admin_panel по url: `http://localhost:80/admin/`(USER='asdmin', PASSWORD='admin')
 6. Перейти к документации API по url: `http://localhost:8080/api/openapi`
 7. Перейти к документации Mock_Auth по url: `http://localhost:8081/api/openapi`
 8. Перейти к документации Mock_Admin_panel по url: `http://localhost:8082/api/openapi`

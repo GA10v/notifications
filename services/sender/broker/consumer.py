@@ -22,10 +22,10 @@ class ConsumerProtocol(ABC):
 class RabbitMQConsumer(ConsumerProtocol, RabbitMQBroker):
     def __init__(
         self,
-        incoming_queue: str = settings.rabbit.QUEUE_TO_ENRICH.lower(),
-        retry_queue: str = settings.rabbit.QUEUE_RETRY_ENRICH.lower(),
-        incoming_exchange: str = settings.rabbit.EXCHENGE_INCOMING_1.lower(),
-        retry_exchange: str = settings.rabbit.EXCHENGE_RETRY_1.lower(),
+        incoming_queue: str = settings.rabbit.QUEUE_TO_SEND.lower(),
+        retry_queue: str = settings.rabbit.QUEUE_RETRY_SEND.lower(),
+        incoming_exchange: str = settings.rabbit.EXCHENGE_INCOMING_2.lower(),
+        retry_exchange: str = settings.rabbit.EXCHENGE_RETRY_2.lower(),
         **kwargs,
     ) -> None:
         super().__init__(**kwargs)

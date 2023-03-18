@@ -3,10 +3,9 @@
 import smtplib
 from email.message import EmailMessage
 
-from v1.workers.generic_worker import Worker
-
 from core.config import settings
 from models.notifications import TemplateToSender
+from v1.workers.generic_worker import Worker
 
 
 class EmailWorker(Worker):
@@ -39,9 +38,11 @@ class EmailWorker(Worker):
         message['To'] = ';'.join(notification.recipient)
         message['Subject'] = notification.subject
         message.add_alternative(notification.email_body, subtype='html')
-        self.connection.sendmail(
-            settings.email.USER,
-            notification.recipient,
-            message.as_string(),
-        )
-        self.connection.close()
+        try:
+            self.connection.sendmail(
+                settings.email.USER,
+                notification.recipient,
+                message.as_string(),
+            )
+        finally:
+            self.connection.close()

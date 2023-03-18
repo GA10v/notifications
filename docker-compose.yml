@@ -13,6 +13,8 @@ services:
       - rabbitmq
       - enricher
       - notification_api
+    networks:
+      - notification-network
     command: >
       bash -c "python3 main.py"
 
@@ -29,6 +31,8 @@ services:
       - "8765:8765"
     env_file:
       - .env
+    networks:
+      - notification-network
     command: >
       bash -c "python -m v1.workers.websocket_worker --port 8765 --ip 0.0.0.0"
 

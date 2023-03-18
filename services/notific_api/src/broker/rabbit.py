@@ -116,7 +116,7 @@ class RabbitMQProducer(ProducerProtocol):
             delivery_mode=DeliveryMode.PERSISTENT,
             headers={},
         )
-        await self.incoming_exchange.publish(
+        await self.incoming_exchange_to_enrich.publish(
             message=message,
             routing_key=self.incoming_queue_to_enrich.name,
         )

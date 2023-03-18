@@ -3,15 +3,15 @@ from contextlib import suppress
 
 import asyncclick as click
 import trio
-from sqlalchemy import create_engine, select
+from sqlalchemy import async_sessionmaker, create_async_engine, create_engine, select
 from sqlalchemy.orm import Session
 from trio_websocket import ConnectionClosed, serve_websocket
-from v1.workers.generic_worker import Worker
 
 from core.config import settings
 from core.logger import get_logger
 from models.db.notifications import Notification
 from models.notifications import TemplateToSender
+from v1.workers.generic_worker import Worker
 
 WEBSOCKET_CHECK_TIMEOUT = 10
 
@@ -36,7 +36,8 @@ class WebSocketWorker(Worker):
 
 
 async def notification_server(request):
-    engine = create_engine(settings.postgres.uri)
+    engine = create_async_engine(settings.postgres.uri)
+    async_session = async_sessionmaker(engine, expire_on_commit=False)
     ws = await request.accept()
     # getting user_id
     user_id = None
@@ -46,7 +47,7 @@ async def notification_server(request):
                 message = await ws.get_message()
                 if message.lower() == 'list_notifications':
                     stmt = select(Notification).filter_by(user_id=user_id)
-                    with Session(engine) as session:
+                    async with async_session() as session:
                         messages_list = [obj.as_dict() for obj in session.execute(stmt).scalars.all()]
                     await ws.send_message(json.dumps(messages_list))
             continue

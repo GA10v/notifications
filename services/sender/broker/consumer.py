@@ -3,12 +3,12 @@ import json
 from abc import ABC, abstractmethod
 from typing import Coroutine, Optional
 
+from db.redis import MSGStatus, RedisCache
 from pydantic.error_wrappers import ValidationError
 
 from broker.rabbit import RabbitMQBroker
 from core.config import settings
 from core.logger import get_logger
-from db.redis import MSGStatus, RedisCache
 
 logger = get_logger(__name__)
 

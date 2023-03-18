@@ -2,12 +2,12 @@ import asyncio
 from typing import Any
 
 from pydantic.error_wrappers import ValidationError
+from v1.workers.generic_worker import Worker
+from v1.workers.handler import get_worker
 
 from broker.consumer import RabbitMQConsumer
 from core.logger import get_logger
 from models.notifications import TemplateToSender
-from v1.workers.generic_worker import Worker
-from v1.workers.handler import get_worker
 
 logger = get_logger(__name__)
 

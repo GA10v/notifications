@@ -31,10 +31,14 @@ if not settings.debug.DEBUG:
 async def startup():
     await producer.init_producer(
         uri=settings.rabbit.uri,
-        incoming_queue=settings.rabbit.QUEUE_TO_ENRICH.lower(),
-        retry_queue=settings.rabbit.QUEUE_RETRY_ENRICH.lower(),
-        incoming_exchange=settings.rabbit.EXCHENGE_INCOMING_1.lower(),
-        retry_exchange=settings.rabbit.EXCHENGE_RETRY_1.lower(),
+        incoming_queue_to_enrich=settings.rabbit.QUEUE_TO_ENRICH.lower(),
+        retry_queue_to_enrich=settings.rabbit.QUEUE_RETRY_ENRICH.lower(),
+        incoming_exchange_to_enrich=settings.rabbit.EXCHENGE_INCOMING_1.lower(),
+        retry_exchange_to_enrich=settings.rabbit.EXCHENGE_RETRY_1.lower(),
+        incoming_queue_to_send=settings.rabbit.QUEUE_TO_SEND.lower(),
+        retry_queue_to_send=settings.rabbit.QUEUE_RETRY_SEND.lower(),
+        incoming_exchange_to_send=settings.rabbit.EXCHENGE_INCOMING_2.lower(),
+        retry_exchange_to_send=settings.rabbit.EXCHENGE_RETRY_2.lower(),
     )
 
 

@@ -18,6 +18,7 @@ flask-sqlalchemy = "^3.0.3"
 flask-migrate = "^4.0.4"
 gevent = "^22.10.2"
 flask-api = "^3.0.post1"
+psycopg2-binary = "^2.9.5"
 
 
 [tool.poetry.dev-dependencies]

@@ -1,18 +1,14 @@
 """Class to implement late."""
 import abc
 
+from models.notifications import TemplateToSender
+
 
 class Worker(abc.ABC):
     """Class to implement."""
 
     @abc.abstractmethod
-    def send_message(
-        self,
-        recipients: list[str],
-        subject: str,
-        template: str,
-        fields: dict[str, str],
-    ) -> None:
+    def send_message(self, notification: TemplateToSender) -> None:
         """Send general message.
 
         Args:
@@ -24,4 +20,4 @@ class Worker(abc.ABC):
         Raises:
             NotImplementedError: abstract instance
         """
-        raise NotImplementedError
+        ...

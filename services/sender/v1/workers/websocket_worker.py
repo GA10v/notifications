@@ -6,12 +6,12 @@ import trio
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
 from trio_websocket import ConnectionClosed, serve_websocket
+from v1.workers.generic_worker import Worker
 
 from core.config import settings
 from core.logger import get_logger
 from models.db.notifications import Notification
 from models.notifications import TemplateToSender
-from v1.workers.generic_worker import Worker
 
 WEBSOCKET_CHECK_TIMEOUT = 10
 

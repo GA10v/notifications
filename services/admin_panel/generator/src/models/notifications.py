@@ -2,9 +2,8 @@ from datetime import datetime
 from enum import Enum
 from uuid import UUID
 
-from pydantic import BaseModel
-
 from generator.src.models.context import NewContent, NewPromo, NewReviewsLikes
+from pydantic import BaseModel
 
 
 class EventType(str, Enum):

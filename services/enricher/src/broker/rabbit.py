@@ -4,6 +4,7 @@ from abc import ABC, abstractmethod
 import aio_pika
 from aio_pika.abc import AbstractChannel, AbstractConnection
 from aio_pika.pool import Pool
+
 from core.config import settings
 
 

@@ -1,7 +1,6 @@
 import logging
 
 from celery import shared_task  # type: ignore[attr-defined]
-
 from generator.src.service.main import EventType, ProcessTask, Task
 
 logger = logging.getLogger(__name__)

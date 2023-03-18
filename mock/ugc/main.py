@@ -4,6 +4,7 @@ import uvicorn
 from config import settings
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
+
 from utils import get_fake_group, get_fake_review_info
 
 app = FastAPI(

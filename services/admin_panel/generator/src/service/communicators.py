@@ -1,12 +1,12 @@
 from contextlib import closing
 
 import psycopg2
-from psycopg2.extras import DictCursor
-
-from core.config import settings
 from generator.src.models.notifications import Event
 from generator.src.models.user import User
 from generator.src.service.connector import AuthenticatedSession
+from psycopg2.extras import DictCursor
+
+from core.config import settings
 
 db_creds = settings.django.db_creds
 

@@ -1,7 +1,8 @@
 """Module to use to send SMS."""
 
-from models.notifications import TemplateToSender
 from v1.workers.generic_worker import Worker
+
+from models.notifications import TemplateToSender
 
 
 class SMSWorker(Worker):

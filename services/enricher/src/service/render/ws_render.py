@@ -9,14 +9,20 @@ class TextRender(RenderProtocol):
             return None
 
         elif isinstance(data, NewReviewsLikesContext):
-            return template.text_msg.replace('{{user_name}}', data.user_name)\
-                .replace('{{movie_title}}', data.movie_title)\
-                    .replace('{{likes}}', str(data.likes))
+            return (
+                template.text_msg.replace('{{user_name}}', data.user_name)
+                .replace('{{movie_title}}', data.movie_title)
+                .replace('{{likes}}', str(data.likes))
+            )
 
         elif isinstance(data, NewContentContext):
-            return template.text_msg.replace('{{user_name}}', data.user_name)\
-                .replace('{{movie_title}}', data.movie_title)
+            return template.text_msg.replace('{{user_name}}', data.user_name).replace(
+                '{{movie_title}}',
+                data.movie_title,
+            )
 
         elif isinstance(data, NewPromoContext):
-            return template.text_msg.replace('{{user_name}}', data.user_name)\
-                .replace('{{text_to_promo}}', data.text_to_promo)
+            return template.text_msg.replace('{{user_name}}', data.user_name).replace(
+                '{{text_to_promo}}',
+                data.text_to_promo,
+            )

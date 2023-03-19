@@ -114,6 +114,10 @@ class PostgresSettings(BaseConfig):
     def uri(self):
         return f'postgresql+psycopg2://{self.USER}:{self.PASSWORD}@{self.HOST}:{self.PORT}/{self.DB}'
 
+    @property
+    def a_uri(self):
+        return f'postgresql+asyncpg://{self.USER}:{self.PASSWORD}@{self.HOST}:{self.PORT}/{self.DB}'
+
     class Config:
         env_prefix = 'POSTGRES_'
 

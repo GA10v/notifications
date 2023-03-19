@@ -3,7 +3,8 @@ from contextlib import suppress
 
 import asyncclick as click
 import trio
-from sqlalchemy import async_sessionmaker, create_async_engine, create_engine, select
+from sqlalchemy import create_engine, select
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlalchemy.orm import Session
 from trio_websocket import ConnectionClosed, serve_websocket
 

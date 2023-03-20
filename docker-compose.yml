@@ -88,6 +88,7 @@ services:
       - .env
     networks:
       - notification-network
+    command: [ "sh", "shell_scripts/entrypoint_admin_panel.sh" ]
     logging:
       driver: gelf
       options:
@@ -109,7 +110,7 @@ services:
       - .env
     networks:
       - notification-network
-    command: celery -A admin_panel worker -l info
+    command: [ "sh", "shell_scripts/entrypoint_worker.sh" ]
 
   celery-beat:
     container_name: celery_beat
@@ -126,7 +127,7 @@ services:
       - .env
     networks:
       - notification-network
-    command: celery -A admin_panel beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    command: [ "sh", "shell_scripts/entrypoint_beat.sh" ]
 
   enricher:
     container_name: enricher

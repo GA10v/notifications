@@ -24,4 +24,4 @@ RUN poetry config virtualenvs.create false \
 
 COPY uwsgi/uwsgi.ini uwsgi.ini
 COPY . .
-ENTRYPOINT ["sh", "run.sh"]
+# ENTRYPOINT ["sh", "run.sh"]

@@ -1,4 +1,5 @@
 import requests
+
 from generator.src.utils.auth import get_access_token
 
 
@@ -12,10 +13,12 @@ class AuthenticatedSession:
         self.session.headers.update({'Authorization': f'Bearer {_token}'})
 
     def get(self, url, **kwargs):
-        return self.session.get(url=url, **kwargs)
+        resp = self.session.get(url=url, **kwargs)
+        return resp.json()
 
     def post(self, url, payload=None, **kwargs):
-        return self.session.post(url=url, data=payload, **kwargs)
+        resp = self.session.post(url=url, data=payload, **kwargs)
+        return resp.json()
 
     def close(self):
         self.session.close()

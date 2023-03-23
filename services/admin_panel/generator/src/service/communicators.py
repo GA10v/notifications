@@ -43,7 +43,11 @@ class AuthConnection:
 
     def filter_users(self, user_ids: list[str], conditions: list) -> list[str]:
         """Filter users, that match the conditions."""
+        #
         return [self.get_user_data(user_id).user_id for user_id in user_ids if conditions]
+
+    # TODO: Как должна работать эта строчка? что такое self.get_user_data(user_id).user_id ?
+    #
 
     def close(self) -> None:
         """Close requests session."""

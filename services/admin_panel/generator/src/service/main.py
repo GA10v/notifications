@@ -69,7 +69,9 @@ class ProcessTask:
         for record in db_records:
             current_likes = self.connection.ugc.get_likes_count(record['review_id'])
             if current_likes['likes_count'] > record['likes_count']:
-                record.pop('id')
+                #
+                record.pop('id')  # TODO: Что делает эта строчка?
+                #
                 filtered_reviews.append(record)
         return filtered_reviews
 

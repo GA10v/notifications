@@ -1,6 +1,7 @@
 import logging
 
 from celery import shared_task  # type: ignore[attr-defined]
+
 from generator.src.service.main import EventType, ProcessTask, Task  # noqa: F401
 
 logger = logging.getLogger(__name__)
@@ -28,3 +29,8 @@ def create_new_likes_task(*args, task_id: str, **kwargs):
     generator = ProcessTask()
     task = generator._get_task(task_id)
     generator.perform_task(task)
+
+
+@shared_task(bind=True, name='Debug')
+def hello_world(self):
+    print('Hi ========================')  # noqa: T201

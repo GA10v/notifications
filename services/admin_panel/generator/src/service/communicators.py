@@ -1,13 +1,11 @@
-from contextlib import closing
-
 import psycopg2
+from psycopg2.extras import DictCursor
+
+from core.config import settings
 from generator.src.models.notifications import Event
 from generator.src.models.task import Task
 from generator.src.models.user import User
 from generator.src.service.connector import AuthenticatedSession
-from psycopg2.extras import DictCursor
-
-from core.config import settings
 
 db_creds = settings.django.db_creds
 
@@ -67,7 +65,7 @@ class ApiConnection:
 
 class PGConnection:
     def __init__(self):
-        with closing(psycopg2.connect(**db_creds)) as pg_conn:
+        with psycopg2.connect(**db_creds) as pg_conn:
             self.cursor = pg_conn.cursor(cursor_factory=DictCursor)
 
     def fetch_table(self, command: str) -> list[dict]:
@@ -77,8 +75,8 @@ class PGConnection:
         return [dict(el) for el in data]
 
     def get_task(self, task_id: str) -> Task:
-        command = f"""SELECT * from notifications_task
-                    WHERE notifications_task.pkid = {task_id}"""
+        command = f"""SELECT * from notifications_task \
+                    WHERE notifications_task.pkid = '{task_id}';"""
         self.cursor.execute(command)
         _data = self.cursor.fetchone()
         return Task(**_data)

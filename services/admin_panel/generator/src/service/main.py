@@ -7,7 +7,6 @@ from generator.src.models.notifications import Event, EventType
 from generator.src.models.task import Task
 from generator.src.service.communicators import ApiConnection, AuthConnection, PGConnection, UGCConnection
 from generator.src.service.connector import AuthenticatedSession
-from generator.src.utils.auth import get_access_token
 
 
 class ProcessTask:
@@ -15,11 +14,11 @@ class ProcessTask:
         self.connection = next(self._get_connect())
 
     @staticmethod
-    def _get_connect(token=get_access_token()):
+    def _get_connect():
         """Establish connections with other app modules and close it at the end."""
-        ugc_connection = UGCConnection(AuthenticatedSession(auth_token=token))
-        auth_connection = AuthConnection(AuthenticatedSession(auth_token=token))
-        api_connection = ApiConnection(AuthenticatedSession(auth_token=token))
+        ugc_connection = UGCConnection(AuthenticatedSession())
+        auth_connection = AuthConnection(AuthenticatedSession())
+        api_connection = ApiConnection(AuthenticatedSession())
         pg_connection = PGConnection()
 
         Connection = namedtuple('Connection', ['ugc', 'auth', 'api', 'postgres'])
@@ -69,7 +68,7 @@ class ProcessTask:
         filtered_reviews = []
         for record in db_records:
             current_likes = self.connection.ugc.get_likes_count(record['review_id'])
-            if current_likes > record['likes_count']:
+            if current_likes['likes_count'] > record['likes_count']:
                 record.pop('id')
                 filtered_reviews.append(record)
         return filtered_reviews

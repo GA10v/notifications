@@ -84,11 +84,11 @@ class AuthMock(BaseConfig):
 
     @property
     def group_id_uri(self):
-        return f'http://{self.HOST}:{self.PORT}{self.PREFIX}auth/v1/user_group/'
+        return f'http://{self.HOST}:{self.PORT}{self.PREFIX}user_group/'
 
     @property
     def user_data_uri(self):
-        return f'http://{self.HOST}:{self.PORT}{self.PREFIX}auth/v1/user_info/'
+        return f'http://{self.HOST}:{self.PORT}{self.PREFIX}user_info/'
 
     class Config:
         env_prefix = 'AUTH_MOCK_'
@@ -105,11 +105,11 @@ class UGCMock(BaseConfig):
 
     @property
     def subscribers_uri(self):
-        return f'http://{self.HOST}:{self.PORT}{self.PREFIX}ugc/v1/subscribers/'
+        return f'http://{self.HOST}:{self.PORT}{self.PREFIX}subscribers/'
 
     @property
     def likes_count_uri(self):
-        return f'http://{self.HOST}:{self.PORT}{self.PREFIX}ugc/v1/likes_count/'
+        return f'http://{self.HOST}:{self.PORT}{self.PREFIX}likes_count/'
 
     class Config:
         env_prefix = 'UGC_MOCK_'

@@ -65,7 +65,7 @@ class ApiConnection:
 
     def send_event(self, event: Event):
         response = self.connector.post(url=settings.api.send_uri, payload=event.dict())
-        return response if response.ok else response.raise_for_status()
+        return response
 
     def close(self) -> None:
         """Close requests session."""

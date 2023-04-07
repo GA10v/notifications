@@ -105,7 +105,7 @@ class ProcessTask:
             logger.info(f'prepare review {review["review_id"]} to send')
             content = self._get_context(task, review)
             event = self._form_event(task, content)
-            logger.info(f'event ready for send: {event}')
+            logger.info(f'send event: {event}')
             self.connection.api.send_event(event)
 
     def _send_promo_events(self, task: Task) -> None:

@@ -36,7 +36,7 @@ async def update_storage(db: PGStorage, data: Event) -> None:
             update(ReviewInfo)
             .where(ReviewInfo.review_id == data.context.review_id)
             .values(
-                likes_count=int(data.context.likes),
+                likes_count=int(data.context.likes_count),
                 modified=data.created_at,
             )
         )

@@ -19,7 +19,6 @@ async def send_notific(
     payload: EventConf,
     service: RabbitMQProducerService = Depends(get_producer_service),
 ) -> HTTPStatus:
-
     try:
         _payload = Event(**payload)
     except ValidationError:

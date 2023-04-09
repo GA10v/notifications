@@ -38,18 +38,22 @@ class AuthConnection:
 
     def get_user_data(self, user_id: str) -> User:
         """Return list of users, subscribed to new content events."""
+        logger.info(f'get user data with id {user_id}')
         response = self.connector.post(url=f'{settings.auth.user_data_uri}{user_id}')
-        return response if response.ok else response.raise_for_status()
+        return response
 
     def get_user_group(self, group_id: str) -> list[str]:
         """Return list of users, belong to the group."""
+        logger.info(f'get user group with id {group_id}')
         response = self.connector.post(url=f'{settings.auth.group_id_uri}{group_id}')
-        return response if response.ok else response.raise_for_status()
+        logger.info(f'response: {response}')
+        return response
 
     def filter_users(self, user_ids: list[str], conditions: list) -> list[str]:
         """Filter users, that match the conditions."""
         #
-        return [self.get_user_data(user_id).user_id for user_id in user_ids if conditions]
+        logger.info('filter users by conditions')
+        return [self.get_user_data(user_id)["user_id"] for user_id in user_ids if conditions]
 
     # TODO: Как должна работать эта строчка? что такое self.get_user_data(user_id).user_id ?
     #
@@ -64,7 +68,9 @@ class ApiConnection:
         self.connector = connector
 
     def send_event(self, event: Event):
-        response = self.connector.post(url=settings.api.send_uri, payload=event.dict())
+        logger.info(f'Send event. Payload: {event}')
+        response = self.connector.post(url=settings.api.send_uri, payload=event)
+        logger.info(f'response: {response}')
         return response
 
     def close(self) -> None:
@@ -89,7 +95,6 @@ class PGConnection:
                     WHERE notifications_task.pkid = '{task_id}';"""
         self.cursor.execute(command)
         _data = self.cursor.fetchone()
-        # logger.info(f'DB request for task {task_id}: {_data}')
         task = Task(**_data)
         logger.info(f'Task from DB: {task}')
         return task

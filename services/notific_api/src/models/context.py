@@ -13,7 +13,7 @@ class NewReviewsLikes(BaseModel):
     review_id: str
     author_id: str
     movie_id: str
-    likes: int
+    likes_count: int
 
 
 class NewContent(BaseModel):

@@ -35,15 +35,13 @@ class ProcessTask:
     @staticmethod
     def _get_context(data: Task, kwargs: dict) -> Union[NewContent, NewReviewsLikes, NewPromo]:
         logger.info('get context')
-        logger.info(f'Task: {data}')
-        logger.info(f'kwargs: {kwargs}')
         context = None
         if data.event_type == EventType.new_content:
-            context = NewContent(**Task)
+            context = NewContent(**kwargs)
         elif data.event_type == EventType.new_likes:
             context = NewReviewsLikes(**kwargs)
         elif data.event_type == EventType.promo:
-            context = NewContent(**Task)
+            context = NewPromo(**kwargs)
         logger.info(f'context: {context}')
         return context
 
@@ -53,13 +51,15 @@ class ProcessTask:
         content: NewContent | NewPromo | NewReviewsLikes,
     ) -> Event:
         """Form Event that should be sent."""
-        return Event(
+        event = Event(
             notification_id=str(uuid4()),
             event_type=task.event_type,
             created_at=datetime.utcnow(),
             source_name='Generator',
             context=content,
-        )
+        ).dict()
+        logger.info(f'prepared Event: {event}')
+        return event
 
     def _get_reviews_from_db(self) -> list[dict]:
         """Return reviews data from Notifications DB."""
@@ -71,8 +71,7 @@ class ProcessTask:
         Record ID is removed to use record for create NewReviewLikes object.
         """
         db_records = self._get_reviews_from_db()
-        records = [{key: record[key] for key in record if key not in ["created", "modified"]} for record in db_records]
-        logger.info(f'all reviews: {records}')
+        logger.info(f'all reviews: {[record["review_id"] for record in db_records]}')
         filtered_reviews = []
         for record in db_records:
             logger.info(f'proceed with review {record["review_id"]}')
@@ -90,9 +89,14 @@ class ProcessTask:
 
     def _send_new_content_events(self, task: Task) -> None:
         """Send NewContent or NewPromo events."""
+        logger.info('--- SEND NEW CONTENT TASK ---')
+        logger.info(f'Task: {task}')
         all_subscribed_users = self.connection.ugc.get_content_subscribers(task.movie_id)
+        logger.info(f'new content subscribers: {all_subscribed_users}')
         filtered_users = self.connection.auth.filter_users(all_subscribed_users, [{'TZ': True}])
+        logger.info(f'filtered subscribers: {filtered_users}')
         for user in filtered_users:
+            logger.info(f'proceed with user_id {user}')
             content = self._get_context(task, {'movie_id': task.movie_id, 'user_id': user})
             event = self._form_event(task, content)
             self.connection.api.send_event(event)
@@ -105,17 +109,18 @@ class ProcessTask:
             logger.info(f'prepare review {review["review_id"]} to send')
             content = self._get_context(task, review)
             event = self._form_event(task, content)
-            logger.info(f'send event: {event}')
             self.connection.api.send_event(event)
 
     def _send_promo_events(self, task: Task) -> None:
         """Send promo events."""
+        logger.info('--- SEND PROMO TASK ---')
+        logger.info(f'Task: {task}')
         group_users = self.connection.auth.get_user_group(task.group_id)
         filtered_users = self.connection.auth.filter_users(group_users, [{'TZ': True}])
         for user in filtered_users:
+            logger.info(f'proceed with user_id {user}')
             content = self._get_context(task, {'user_id': user, 'text_to_promo': task.text_to_promo})
             event = self._form_event(task, content)
-            logger.info(f'event ready for send: {event}')
             self.connection.api.send_event(event)
 
     def _process_email_task(self, task):
